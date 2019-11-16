@@ -26,7 +26,7 @@ class Bozo extends FlxSprite
         facing = FlxObject.LEFT;
         
         animation.add("idle", [0, 1, 2], 6, true);
-        animation.add("lr", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 12, true);
+        animation.add("lr", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 6, true);
     }
 
     override public function update(elapsed:Float):Void
