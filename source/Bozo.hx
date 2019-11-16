@@ -39,24 +39,30 @@ class Bozo extends FlxSprite
         var _right:Bool = false;
         var _angle:Float = 0.0;
         var _pointCurrent:FlxPoint = new FlxPoint(this.x, this.y);
+        var mA:Float = 0;
 
         for (touch in FlxG.touches.list)
         {
             if (touch.justPressed || touch.pressed) {
-                FlxVelocity.moveTowardsTouch(this, touch, speed);
+                velocity.set(speed, 0);
                 _angle = _pointCurrent.angleBetween(touch.getPosition());
                 
                 if (_angle >= -90 && _angle < 90) {
                     facing = FlxObject.RIGHT;
+                     mA = 0;
                 } else if (_angle >= 91 && _angle <= 180) {
                     facing = FlxObject.LEFT;
+                     mA = -180;
                 } else if (_angle >= -180 && _angle < -90) {
                     facing = FlxObject.LEFT;
+                     mA = -180;
                 }
-                animation.play("lr");                
+                animation.play("lr");
+                velocity.rotate(FlxPoint.weak(0, 0), mA);              
             }
             if (touch.justReleased) {
                 animation.play("idle");
+                velocity.set(0, 0);
             }
         }
 
@@ -67,11 +73,13 @@ class Bozo extends FlxSprite
             _left = _right = false;
 
         if ( _left || _right) {
-            var mA:Float = 0;
             velocity.set(speed, 0);
+
             if (_left) { facing = FlxObject.LEFT; mA = -180; }
             if (_right) { facing = FlxObject.RIGHT; mA = 0; }
+
             velocity.rotate(FlxPoint.weak(0, 0), mA);
+
             if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE) // if the player is moving (velocity is not 0 for either axis), we need to change the animation to match their facing
             {
                 switch (facing)
