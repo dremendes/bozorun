@@ -24,7 +24,7 @@ class Bozo extends FlxSprite
         facing = FlxObject.LEFT;
         
         animation.add("idle", [0, 1, 2], 6, true);
-        animation.add("lr", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], 12, true);
+        animation.add("lr", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 12, true);
     }
 
     override public function update(elapsed:Float):Void
@@ -39,7 +39,7 @@ class Bozo extends FlxSprite
         var _right:Bool = false;
         var _angle:Float = 0.0;
         var _pointCurrent:FlxPoint = new FlxPoint(this.x, this.y);
-        var mA:Float = 0;
+        var mA:Float = 0.0;
 
         for (touch in FlxG.touches.list)
         {
