@@ -4,6 +4,7 @@ import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
+import flixel.math.FlxVelocity;
 
 class Bozo extends FlxSprite
 {
@@ -36,6 +37,28 @@ class Bozo extends FlxSprite
     {
         var _left:Bool = false;
         var _right:Bool = false;
+        var _angle:Float = 0.0;
+        var _pointCurrent:FlxPoint = new FlxPoint(this.x, this.y);
+
+        for (touch in FlxG.touches.list)
+        {
+            if (touch.justPressed || touch.pressed) {
+                FlxVelocity.moveTowardsTouch(this, touch, speed);
+                _angle = _pointCurrent.angleBetween(touch.getPosition());
+                
+                if (_angle >= -90 && _angle < 90) {
+                    facing = FlxObject.RIGHT;
+                } else if (_angle >= 91 && _angle <= 180) {
+                    facing = FlxObject.LEFT;
+                } else if (_angle >= -180 && _angle < -90) {
+                    facing = FlxObject.LEFT;
+                }
+                animation.play("lr");                
+            }
+            if (touch.justReleased) {
+                animation.play("idle");
+            }
+        }
 
         _left = FlxG.keys.anyPressed([LEFT, A]);
         _right = FlxG.keys.anyPressed([RIGHT, D]);
