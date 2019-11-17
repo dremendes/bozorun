@@ -5,12 +5,11 @@ import flixel.FlxObject;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVelocity;
-import flixel.text.FlxText;
 
 class Bozo extends FlxSprite
 {
     public var speed:Float = 100.0;
-    public var _barAngle:FlxText;
+    public var _angle:Float = 0.0;
 
     public function new(?X:Float=0, ?Y:Float=0)
     {
@@ -22,15 +21,13 @@ class Bozo extends FlxSprite
 
         setFacingFlip(FlxObject.RIGHT, false, false);
         setFacingFlip(FlxObject.LEFT, true, false);
-
-        facing = FlxObject.LEFT;
         
-        animation.add("idle", [0, 1, 2], 6, true);
-        animation.add("lr", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 6, true);
+        animation.add("idle", [0, 1, 2], 7, true);
+        animation.add("lr", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 7, true);
     }
 
     override public function update(elapsed:Float):Void
-    {
+    {    
         movement();
         super.update(elapsed);
     }
@@ -39,7 +36,6 @@ class Bozo extends FlxSprite
     {
         var _left:Bool = false;
         var _right:Bool = false;
-        var _angle:Float = 0.0;
         var _pointCurrent:FlxPoint = new FlxPoint(this.x, this.y);
         var mA:Float = 0.0;
 

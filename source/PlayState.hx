@@ -15,11 +15,15 @@ class PlayState extends FlxState
 	var _map:FlxOgmoLoader;
 	var _mWalls:FlxTilemap;
 	var _lula:Lula;
+    public var _barAngle:FlxText;
 
 	override public function create():Void
 	{
 		_bg = new Background();
 		add(_bg);
+
+		_barAngle = new FlxText(2, 12);
+	    add(_barAngle);
 
 		_map = new FlxOgmoLoader(AssetPaths.bozorun__oel);
 		_mWalls = _map.loadTilemap(AssetPaths.groundtiles__png, 16, 16, "fg");
@@ -28,15 +32,9 @@ class PlayState extends FlxState
 		add(_mWalls);
 
 		_bozo = new Bozo();
-		_bozo.scale.set(0.5, 0.5);
-		_bozo.updateHitbox();
-		_bozo.scale.set(1,1);
  		add(_bozo);
 
 		_lula = new Lula();
-		_lula.scale.set(0.5, 0.5);
-		_lula.updateHitbox();
-		_lula.scale.set(1,1);
  		add(_lula);
 
 		_map.loadEntities(placeEntities, "entities");
@@ -67,6 +65,8 @@ class PlayState extends FlxState
 		FlxG.collide(_bozo, _lula);
 		FlxG.collide(_bozo, _mWalls);
 		FlxG.collide(_lula, _mWalls);
+
+        _barAngle.text = "Angle: " + _bozo.angle;
 	}
 
 }
