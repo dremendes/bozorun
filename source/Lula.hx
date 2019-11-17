@@ -12,7 +12,7 @@ class Lula extends FlxSprite
         super(X, Y);
 
         loadGraphic(AssetPaths.Lula__png, true, 104, 122, true);
-        offset.subtract(34,10);
+        offset.subtract(1,10);
 
         drag.x = drag.y = 1600;
 
