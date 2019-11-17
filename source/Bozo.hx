@@ -48,15 +48,18 @@ class Bozo extends FlxSprite
                 velocity.set(speed, 0);
                 _angle = _pointCurrent.angleBetween(touch.getPosition());
                 
-                if (_angle >= -90 && _angle < 90) {
+                if (_angle >= -90 && _angle < 0) {
+                    facing = FlxObject.RIGHT;
+                     mA = 0;
+                } else if (_angle >= 1 && _angle <= 90) {
                     facing = FlxObject.RIGHT;
                      mA = 0;
                 } else if (_angle >= 91 && _angle <= 180) {
                     facing = FlxObject.LEFT;
-                     mA = -180;
-                } else if (_angle >= -180 && _angle < -90) {
+                    mA = -180;
+                } else if (_angle >= -180 && _angle <= -91) {
                     facing = FlxObject.LEFT;
-                     mA = -180;
+                    mA = -180;
                 }
                 animation.play("lr");
                 velocity.rotate(FlxPoint.weak(0, 0), mA);              
@@ -91,7 +94,6 @@ class Bozo extends FlxSprite
             }
         } else {
             animation.play("idle");
-            velocity.set(0, 0);
         }
     }
 }
