@@ -15,7 +15,10 @@ class Bozo extends FlxSprite
     {
         super(X, Y);
 
-        loadGraphic(AssetPaths.Jair__png, true, 104, 122);
+        loadGraphic(AssetPaths.Jair__png, true, 104, 122, true);
+        width = 19;
+        height = 22;
+        offset.set(x,y);
 
         drag.x = drag.y = 1600;
 

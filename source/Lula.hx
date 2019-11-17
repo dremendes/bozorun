@@ -11,12 +11,17 @@ class Lula extends FlxSprite
     {
         super(X, Y);
 
-        loadGraphic(AssetPaths.Lula__png, true, 104, 122);
+        loadGraphic(AssetPaths.Lula__png, true, 104, 122, true);
+        width = 19;
+        height = 22;
+        offset.set(x,y);
 
         drag.x = drag.y = 1600;
 
         setFacingFlip(FlxObject.RIGHT, false, false);
         setFacingFlip(FlxObject.LEFT, true, false);
+
+        facing = FlxObject.LEFT;
         
         animation.add("idle", [0, 1, 2], 6, true);
     }

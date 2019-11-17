@@ -32,6 +32,8 @@ class PlayState extends FlxState
 		add(_mWalls);
 
 		_bozo = new Bozo();
+		_bozo.width = 80;
+		_bozo.height = 90;
  		add(_bozo);
 
 		_lula = new Lula();
@@ -66,7 +68,7 @@ class PlayState extends FlxState
 		FlxG.collide(_bozo, _mWalls);
 		FlxG.collide(_lula, _mWalls);
 
-        _barAngle.text = "Angle: " + _bozo.angle;
+        _barAngle.text = "Ângulo: " + _bozo.angle;
 	}
 
 }
