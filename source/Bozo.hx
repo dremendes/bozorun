@@ -53,10 +53,10 @@ class Bozo extends FlxSprite
                     facing = FlxObject.LEFT;
                      mA = 0;
                 } else if (_angle >= 91 && _angle <= 180) {
-                    facing = FlxObject.RIGHT;
+                    facing = FlxObject.LEFT;
                     mA = -180;
                 } else if (_angle >= -180 && _angle <= -91) {
-                    facing = FlxObject.LEFT;
+                    facing = FlxObject.RIGHT;
                     mA = -180;
                 }
                 animation.play("lr");
