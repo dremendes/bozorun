@@ -40,28 +40,6 @@ class Bozo extends FlxSprite
         var _pointCurrent:FlxPoint = new FlxPoint(this.x, this.y);
         var mA:Float = 0.0;
 
-        for (touch in FlxG.touches.list)
-        {
-            if (touch.justPressed || touch.pressed) {
-                velocity.set(speed, 0);
-                _angle = _pointCurrent.angleBetween(touch.getPosition());
-                
-                if (_angle >= 0 && _angle < 180) {
-                    facing = FlxObject.RIGHT;
-                     mA = 0;
-                } else if (_angle >= -180 && _angle < 0) {
-                    facing = FlxObject.LEFT;
-                    mA = -180;
-                }
-                animation.play("lr");
-                velocity.rotate(FlxPoint.weak(0, 0), mA);              
-            }
-            if (touch.justReleased) {
-                animation.play("idle");
-                velocity.set(0, 0);
-            }
-        }
-
         _left = FlxG.keys.anyPressed([LEFT, A]);
         _right = FlxG.keys.anyPressed([RIGHT, D]);
 
@@ -86,6 +64,28 @@ class Bozo extends FlxSprite
             }
         } else {
             animation.play("idle");
+        }
+
+        for (touch in FlxG.touches.list)
+        {
+            if (touch.justPressed || touch.pressed) {
+                velocity.set(speed, 0);
+                _angle = _pointCurrent.angleBetween(touch.getPosition());
+                
+                if (_angle >= 0 && _angle < 180) {
+                    facing = FlxObject.RIGHT;
+                     mA = 0;
+                } else if (_angle >= -180 && _angle < 0) {
+                    facing = FlxObject.LEFT;
+                    mA = -180;
+                }
+                animation.play("lr");
+                velocity.rotate(FlxPoint.weak(0, 0), mA);              
+            }
+            if (touch.justReleased) {
+                animation.play("idle");
+                velocity.set(0, 0);
+            }
         }
     }
 }
