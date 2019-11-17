@@ -62,7 +62,7 @@ class Bozo extends FlxSprite
                         animation.play("lr");
                 }
             }
-        } else {
+        } else if (FlxG.keys.anyJustReleased([LEFT, RIGHT, A, D])) {
             animation.play("idle");
         }
 
