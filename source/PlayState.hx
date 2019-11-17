@@ -28,15 +28,11 @@ class PlayState extends FlxState
 		add(_mWalls);
 
 		_bozo = new Bozo();
-		_bozo.scale.set(0.5, 0.5);
-		_bozo.updateHitbox();
-		_bozo.scale.set(1,1);
+		_bozo.width = 80;
+		_bozo.height = 90;
  		add(_bozo);
 
 		_lula = new Lula();
-		_lula.scale.set(0.5, 0.5);
-		_lula.updateHitbox();
-		_lula.scale.set(1,1);
  		add(_lula);
 
 		_map.loadEntities(placeEntities, "entities");
