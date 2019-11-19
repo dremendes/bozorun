@@ -25,6 +25,7 @@ class Bozo extends FlxSprite
         
         animation.add("idle", [0, 1, 2], 7, true);
         animation.add("lr", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 7, true);
+        animation.add("jump", [14, 15, 16, 17], 7, true);
     }
 
     override public function update(elapsed:Float):Void
@@ -37,11 +38,16 @@ class Bozo extends FlxSprite
     {
         var _left:Bool = false;
         var _right:Bool = false;
+        var _jumpPressed:Bool = false;
         var _pointCurrent:FlxPoint = new FlxPoint(this.x, this.y);
         var mA:Float = 0.0;
+        var jumped:Bool = false;
+        var jump:Float = 0.0;
+        var _walking:Bool = false;
 
         _left = FlxG.keys.anyPressed([LEFT, A]);
         _right = FlxG.keys.anyPressed([RIGHT, D]);
+        _jumpPressed = FlxG.keys.anyPressed([SPACE]);
 
         if (_left && _right)
             _left = _right = false;
@@ -60,10 +66,39 @@ class Bozo extends FlxSprite
                 {
                     case FlxObject.LEFT, FlxObject.RIGHT:
                         animation.play("lr");
+                        _walking = true;
                 }
             }
         } else if (FlxG.keys.anyJustReleased([LEFT, RIGHT, A, D])) {
             animation.play("idle");
+            _walking = false;
+        }
+
+        if (jumped && !_jumpPressed)
+        jumped = false;
+
+        if (isTouching(FlxObject.DOWN) && !jumped && !_walking) {
+            jump = 0;
+            animation.play("idle");
+        }
+
+        if (jump >= 0 && _jumpPressed)
+        {
+            jumped = true;
+            jump += FlxG.elapsed;
+            if (jump > 0.33)
+                jump = -1;
+            animation.play("jump");
+        } else
+            jump = -1;
+
+        if (jump > 0) {
+            if (jump < 0.065)
+                velocity.y = -360;
+            else
+                acceleration.y = 10;
+        }  else {
+            velocity.y = 600;
         }
 
         for (touch in FlxG.touches.list)
