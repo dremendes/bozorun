@@ -29,7 +29,7 @@ class PlayState extends FlxState
 
 		_bozo = new Bozo();
 		_bozo.width = 80;
-		_bozo.height = 90;
+		_bozo.height = 122 ;
  		add(_bozo);
 
 		_lula = new Lula();
