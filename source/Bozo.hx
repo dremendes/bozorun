@@ -8,8 +8,17 @@ import flixel.math.FlxVelocity;
 
 class Bozo extends FlxSprite
 {
-    public var speed:Float = 100.0;
+    public var maxSpeed:Float = 100.0;
     public var _angle:Float = 0.0;
+    public var _left:Bool = false;
+    public var _right:Bool = false;
+    public var _jumpPressed:Bool = false;
+    public var mA:Float = 0.0;
+    public var jumped:Bool = false;
+    public var jump:Float = 0.0;
+    public var _walking:Bool = false;
+    public var _idle:Bool = false;
+    public var _pointCurrent:FlxPoint;
 
     public function new(?X:Float=0, ?Y:Float=0)
     {
@@ -28,6 +37,8 @@ class Bozo extends FlxSprite
         animation.add("jump", [14, 15, 16, 17], 7, true);
         animation.add("arminha_com_a_mao", [18, 19, 20, 21], 7, true);
         animation.add("hit", [22, 23], 7, true);
+
+        _pointCurrent = new FlxPoint(this.x, this.y);
     }
 
     override public function update(elapsed:Float):Void
@@ -38,21 +49,10 @@ class Bozo extends FlxSprite
 
     function movement():Void
     {
-        var _left:Bool = false;
-        var _right:Bool = false;
-        var _jumpPressed:Bool = false;
-        var mA:Float = 0.0;
-        var jumped:Bool = false;
-        var jump:Float = 0.0;
-        var _walking:Bool = false;
-
-        var _pointCurrent:FlxPoint = new FlxPoint(this.x, this.y);
-
         _jumpPressed = FlxG.keys.anyJustReleased([SPACE]);
 
         if (isTouching(FlxObject.ANY) && !jumped && !_walking) {
             jump = 0;
-            animation.play("idle");
         }
 
         if (jump >= 0 && _jumpPressed) {
@@ -80,7 +80,7 @@ class Bozo extends FlxSprite
             _left = _right = false;
 
         if ( _left || _right) {
-            velocity.set(speed, 0);
+            velocity.set(maxSpeed, 0);
             _walking = true;
 
             if (_left) { facing = FlxObject.LEFT; mA = -180; }
@@ -98,12 +98,19 @@ class Bozo extends FlxSprite
         } else if (FlxG.keys.anyJustReleased([LEFT, RIGHT, A, D])) {
             animation.play("idle");
             _walking = false;
+            _idle = true;
+        }
+
+        if (FlxG.keys.anyJustPressed([X])) {
+            animation.play("arminha_com_a_mao");
+            _walking = false;
+            _idle = false;
         }
 
         for (touch in FlxG.touches.list)
         {
             if (touch.justPressed || touch.pressed) {
-                velocity.set(speed, 0);
+                velocity.set(maxSpeed, 0);
                 _angle = _pointCurrent.angleBetween(touch.getPosition());
                 
                 if (_angle >= 0 && _angle < 180) {
