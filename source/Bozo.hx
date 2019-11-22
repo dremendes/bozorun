@@ -88,7 +88,7 @@ class Bozo extends FlxSprite
 
             velocity.rotate(FlxPoint.weak(0, 0), mA);
 
-            if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE) {
+            if ((velocity.x != 0 || velocity.y != 0)) {
                 switch (facing)
                 {
                     case FlxObject.LEFT, FlxObject.RIGHT:
