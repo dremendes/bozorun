@@ -27,7 +27,7 @@ class Bozo extends FlxSprite
 
         drag.x = drag.y = 300;
 
-        maxVelocity.set(80, 500);
+        maxVelocity.set(140, 500);
 		acceleration.y = 200;
 
         setFacingFlip(FlxObject.RIGHT, false, false);
@@ -56,12 +56,12 @@ class Bozo extends FlxSprite
 		{
 			acceleration.x = -maxVelocity.x * 4;
             facing = FlxObject.LEFT;
-            animation.play("lr");
+            if (isTouching(FlxObject.DOWN)) animation.play("lr");
 		} else if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			acceleration.x = maxVelocity.x * 4;
             facing = FlxObject.RIGHT;
-            animation.play("lr");
+            if (isTouching(FlxObject.DOWN)) animation.play("lr");
 		} else if (FlxG.keys.anyJustPressed([SPACE, UP, W]) && isTouching(FlxObject.DOWN))
 		{
 			velocity.y = -maxVelocity.y / 2;
