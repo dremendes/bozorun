@@ -8,14 +8,12 @@ import flixel.math.FlxVelocity;
 
 class Bozo extends FlxSprite
 {
-    public var maxSpeed:Float = 100.0;
+    public var maxSpeed:Float = 200.0;
     public var _angle:Float = 0.0;
     public var _left:Bool = false;
     public var _right:Bool = false;
     public var _jumpPressed:Bool = false;
     public var mA:Float = 0.0;
-    public var jumped:Bool = false;
-    public var jump:Float = 0.0;
     public var _walking:Bool = false;
     public var _idle:Bool = false;
     public var _pointCurrent:FlxPoint;
@@ -27,7 +25,10 @@ class Bozo extends FlxSprite
         loadGraphic(AssetPaths.Jair__png, true, 104, 122, true);
         offset.subtract(34,10);
 
-        drag.x = drag.y = 1600;
+        drag.x = drag.y = 300;
+
+        maxVelocity.set(80, 500);
+		acceleration.y = 200;
 
         setFacingFlip(FlxObject.RIGHT, false, false);
         setFacingFlip(FlxObject.LEFT, true, false);
@@ -49,68 +50,37 @@ class Bozo extends FlxSprite
 
     function movement():Void
     {
-        _jumpPressed = FlxG.keys.anyJustReleased([SPACE]);
+        _jumpPressed = FlxG.keys.anyJustPressed([SPACE]);
 
-        if (isTouching(FlxObject.ANY) && !jumped && !_walking) {
-            jump = 0;
-        }
-
-        if (jump >= 0 && _jumpPressed) {
-            jumped = true;
-            jump += FlxG.elapsed;
-            if (jump > 0.33)
-                jump = -1;
+        if (FlxG.keys.anyPressed([LEFT, A]))
+		{
+			acceleration.x = -maxVelocity.x * 4;
+            facing = FlxObject.LEFT;
+            animation.play("lr");
+		} else if (FlxG.keys.anyPressed([RIGHT, D]))
+		{
+			acceleration.x = maxVelocity.x * 4;
+            facing = FlxObject.RIGHT;
+            animation.play("lr");
+		} else if (FlxG.keys.anyJustPressed([SPACE, UP, W]) && isTouching(FlxObject.DOWN))
+		{
+			velocity.y = -maxVelocity.y / 2;
             animation.play("jump");
-        } else
-            jump = 0;
-
-        if (jump > 0) {
-            if (jump < 1.065)
-                velocity.y = -360;
-            else
-                acceleration.y = 10;
-        }  else {
-            velocity.y = 350;
-        }
-
-        _left = FlxG.keys.anyPressed([LEFT, A]);
-        _right = FlxG.keys.anyPressed([RIGHT, D]);
-
-        if (_left && _right)
-            _left = _right = false;
-
-        if ( _left || _right) {
-            velocity.set(maxSpeed, 0);
-            _walking = true;
-
-            if (_left) { facing = FlxObject.LEFT; mA = -180; }
-            if (_right) { facing = FlxObject.RIGHT; mA = 0; }
-
-            velocity.rotate(FlxPoint.weak(0, 0), mA);
-
-            if ((velocity.x != 0 || velocity.y != 0)) {
-                switch (facing)
-                {
-                    case FlxObject.LEFT, FlxObject.RIGHT:
-                        animation.play("lr");
-                }
-            }
+		} else if (FlxG.keys.anyJustPressed([X])) {
+            animation.play("arminha_com_a_mao");
+            _walking = false;
+            _idle = false;
         } else if (FlxG.keys.anyJustReleased([LEFT, RIGHT, A, D])) {
             animation.play("idle");
             _walking = false;
             _idle = true;
-        }
-
-        if (FlxG.keys.anyJustPressed([X])) {
-            animation.play("arminha_com_a_mao");
-            _walking = false;
-            _idle = false;
+            acceleration.set(0.0, acceleration.y);
         }
 
         for (touch in FlxG.touches.list)
         {
             if (touch.justPressed || touch.pressed) {
-                velocity.set(maxSpeed, 0);
+                velocity.set(maxSpeed, velocity.y);
                 _angle = _pointCurrent.angleBetween(touch.getPosition());
                 
                 if (_angle >= 0 && _angle < 180) {
