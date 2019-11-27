@@ -90,11 +90,13 @@ class Bozo extends FlxSprite
             if (touch.justPressed || touch.pressed) {
                 _showVs = false;
                 velocity.set(maxSpeed, velocity.y);
+                _pointCurrent.x = this.x;
+                _pointCurrent.y = this.y;
                 _angle = _pointCurrent.angleBetween(touch.getPosition());
                 
                 if (_angle >= 0 && _angle < 180) {
                     facing = FlxObject.RIGHT;
-                     mA = 0;
+                    mA = 0;
                 } else if (_angle >= -180 && _angle < 0) {
                     facing = FlxObject.LEFT;
                     mA = -180;
