@@ -10,15 +10,17 @@ import flixel.FlxObject;
 
 class PlayState extends FlxState
 {
-	var _bg:Background;
+	var _bg:AssetLoader; 
+	var _vs:AssetLoader;
 	var _bozo:Bozo;
 	var _map:FlxOgmoLoader;
 	var _mWalls:FlxTilemap;
 	var _lula:Lula;
+	var didntOnce:Bool=true;
 
 	override public function create():Void
 	{
-		_bg = new Background();
+		_bg = new AssetLoader(AssetPaths.brasilia__png, 300, 300);
 		add(_bg);
 
 		_map = new FlxOgmoLoader(AssetPaths.bozorun__oel);
@@ -36,6 +38,10 @@ class PlayState extends FlxState
  		add(_lula);
 
 		_map.loadEntities(placeEntities, "entities");
+
+		_vs = new AssetLoader(AssetPaths.vs__png, 84, 63);
+		_vs.setPosition(95,140);
+		add(_vs);
 
 		super.create();
 	}
@@ -63,6 +69,11 @@ class PlayState extends FlxState
 		FlxG.collide(_bozo, _lula);
 		FlxG.collide(_bozo, _mWalls);
 		FlxG.collide(_lula, _mWalls);
+
+		if(_bozo._showVs == false) {
+			remove(_vs);
+			didntOnce = false;
+		}
 	}
 
 }
