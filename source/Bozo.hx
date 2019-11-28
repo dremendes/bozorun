@@ -28,7 +28,7 @@ class Bozo extends FlxSprite
 
         drag.x = drag.y = 500;
 
-        maxVelocity.set(140, 500);
+        maxVelocity.set(140, 1000);
 		acceleration.y = 900;
 
         setFacingFlip(FlxObject.RIGHT, false, false);

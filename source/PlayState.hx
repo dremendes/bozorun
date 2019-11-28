@@ -29,13 +29,13 @@ class PlayState extends FlxState
 		_mWalls.setTileProperties(10, FlxObject.ANY);
 		add(_mWalls);
 
+		_lula = new Lula();
+ 		add(_lula);
+		 
 		_bozo = new Bozo();
 		_bozo.width = 80;
 		_bozo.height = 122;
  		add(_bozo);
-
-		_lula = new Lula();
- 		add(_lula);
 
 		_map.loadEntities(placeEntities, "entities");
 
