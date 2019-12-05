@@ -12,7 +12,9 @@ class Lula extends FlxSprite
         super(X, Y);
 
         loadGraphic(AssetPaths.Lula__png, true, 104, 122, true);
-        offset.subtract(1,10);
+        setGraphicSize(40, 120);
+        updateHitbox();
+        setGraphicSize(104, 122);
 
         drag.x = drag.y = 1600;
 

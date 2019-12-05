@@ -20,7 +20,8 @@ class PlayState extends FlxState
 
 	override public function create():Void
 	{
-		_bg = new AssetLoader(AssetPaths.brasilia__png, 300, 300);
+		//FlxG.debugger.visible = true;
+		_bg = new AssetLoader(AssetPaths.brasilia__png, 1200, 300);
 		add(_bg);
 
 		_map = new FlxOgmoLoader(AssetPaths.bozorun__oel);
@@ -31,17 +32,21 @@ class PlayState extends FlxState
 
 		_lula = new Lula();
  		add(_lula);
-		 
+
 		_bozo = new Bozo();
 		_bozo.width = 80;
 		_bozo.height = 122;
  		add(_bozo);
+		 _bozo.updateHitbox();
+		 _bozo.setGraphicSize(104, 122);
 
 		_map.loadEntities(placeEntities, "entities");
 
 		_vs = new AssetLoader(AssetPaths.vs__png, 84, 63);
 		_vs.setPosition(95,140);
 		add(_vs);
+
+		FlxG.camera.follow(_bozo, TOPDOWN, 1);
 
 		super.create();
 	}
@@ -50,14 +55,13 @@ class PlayState extends FlxState
 	{
 		var x:Int = Std.parseInt(entityData.get("x"));
 		var y:Int = Std.parseInt(entityData.get("y"));
-		if (entityName == "bozo")
-		{
+
+		if (entityName == "bozo") {
 			_bozo.x = x;
 			_bozo.y = y;
 		}
 
-		if (entityName == "lula")
-		{
+		if (entityName == "lula") {
 			_lula.x = x;
 			_lula.y = y;
 		}

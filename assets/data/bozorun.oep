@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <OgmoVersion>2.1.0.6</OgmoVersion>
-  <Name>New Project</Name>
+  <Name>Bozorun</Name>
   <BackgroundColor A="255" R="125" G="160" B="255" />
   <GridColor A="255" R="255" G="240" B="90" />
   <LevelDefaultSize>
-    <Width>300</Width>
+    <Width>5000</Width>
     <Height>300</Height>
   </LevelDefaultSize>
   <LevelMinimumSize>
@@ -14,9 +14,9 @@
   </LevelMinimumSize>
   <LevelMaximumSize>
     <Width>30000</Width>
-    <Height>300</Height>
+    <Height>30000</Height>
   </LevelMaximumSize>
-  <Filename>C:\Users\dre\Documents\bozorun.oep</Filename>
+  <Filename>H:\assets\data\bozorun.oep</Filename>
   <AngleMode>Radians</AngleMode>
   <CameraEnabled>false</CameraEnabled>
   <CameraSize>
@@ -54,7 +54,7 @@
   <Tilesets>
     <Tileset>
       <Name>ground</Name>
-      <FilePath>..\Pictures\groundtiles.png</FilePath>
+      <FilePath>..\images\groundtiles.png</FilePath>
       <TileSize>
         <Width>16</Width>
         <Height>16</Height>
@@ -62,5 +62,36 @@
       <TileSep>0</TileSep>
     </Tileset>
   </Tilesets>
-  <EntityDefinitions />
+  <EntityDefinitions>
+    <EntityDefinition Name="bozo" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
+      <Size>
+        <Width>16</Width>
+        <Height>16</Height>
+      </Size>
+      <Origin>
+        <X>0</X>
+        <Y>0</Y>
+      </Origin>
+      <ImageDefinition DrawMode="Rectangle" ImagePath="" Tiled="false">
+        <RectColor A="255" R="255" G="0" B="0" />
+      </ImageDefinition>
+      <ValueDefinitions />
+      <NodesDefinition Enabled="false" Limit="-1" DrawMode="None" Ghost="false" />
+    </EntityDefinition>
+    <EntityDefinition Name="lula" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
+      <Size>
+        <Width>16</Width>
+        <Height>16</Height>
+      </Size>
+      <Origin>
+        <X>0</X>
+        <Y>0</Y>
+      </Origin>
+      <ImageDefinition DrawMode="Rectangle" ImagePath="" Tiled="false">
+        <RectColor A="255" R="255" G="0" B="0" />
+      </ImageDefinition>
+      <ValueDefinitions />
+      <NodesDefinition Enabled="false" Limit="-1" DrawMode="None" Ghost="false" />
+    </EntityDefinition>
+  </EntityDefinitions>
 </project>

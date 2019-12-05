@@ -24,11 +24,12 @@ class Bozo extends FlxSprite
         super(X, Y);
 
         loadGraphic(AssetPaths.Jair__png, true, 104, 122, true);
-        offset.subtract(34,10);
+        scale.set(0.4, 1);
+        updateHitbox();
 
         drag.x = drag.y = 500;
 
-        maxVelocity.set(140, 1000);
+        maxVelocity.set(160, 1000);
 		acceleration.y = 900;
 
         setFacingFlip(FlxObject.RIGHT, false, false);
@@ -37,7 +38,7 @@ class Bozo extends FlxSprite
         animation.add("idle", [0, 1, 2], 7, true);
         animation.add("lr", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 7, true);
         animation.add("jump", [15, 14, 16, 17], 7, false);
-        animation.add("arminha_com_a_mao", [20, 21, 19], 7, false);
+        animation.add("arminha_com_a_mao", [20, 19], 7, false);
         animation.add("hit", [22, 23], 7, false);
 
         _pointCurrent = new FlxPoint(this.x, this.y);
