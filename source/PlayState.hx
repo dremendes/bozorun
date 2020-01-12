@@ -10,6 +10,9 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.math.FlxPoint;
 import flixel.util.FlxCollision;
+import flixel.util.FlxGradient;
+import flixel.addons.display.FlxBackdrop;
+
 /**
  * This code is based on the excelent HaxeRunner
  * which is authored by william.thompsonj
@@ -23,13 +26,13 @@ class PlayState extends FlxState
 	private static inline var TILE_HEIGHT:Int = 55;
 	
 	// base speed for player, stands for xVelocity
-	private static inline var BASE_SPEED:Int = 250;
+	private static inline var BASE_SPEED:Int = 150;
 	
 	// how fast the player speeds up going to the right
-	private static inline var xAcceleration:Int = 500;
+	private static inline var xAcceleration:Int = 150;
 	
 	// force that pulls sprite to the right
-	private static inline var xDrag:Int = 200;
+	private static inline var xDrag:Int = 100;
 	
 	// represents how strong gravity pulls up or down
 	private static inline var yAcceleration:Int = 1400;
@@ -58,6 +61,7 @@ class PlayState extends FlxState
 	private var _bgImgGrp:FlxGroup;
 	private var _bgImg1:FlxSprite;
 	private var _bgImg2:FlxSprite;
+	private var _bgImg3:FlxSprite;
 	private var _bgImages:Array<String>;
 	
 	// collision group for generated platforms
@@ -120,15 +124,19 @@ class PlayState extends FlxState
 	
 	private function setupBg():Void
 	{
-		_bgImg1 = new FlxSprite();
-		_bgImg2 = new FlxSprite();
-		_bgImg1.loadGraphic("assets/images/brasilia.png", false, 300, 300);
-		_bgImg2.loadGraphic("assets/images/brasilia2.png", false, 900, 300);
+		var sky:FlxSprite = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xff6dcff6, 0xff333333], 16);
+		sky.scrollFactor.set();
+		add(sky);
+		_bgImg1 = new FlxBackdrop("assets/images/far-buildings.png", 0.001, 0, true, false, 256, 192);
+		_bgImg2 = new FlxBackdrop("assets/images/back-buildings.png", 0.2, 0, true, false, 256, 102);
+		_bgImg3 = new FlxBackdrop("assets/images/foreground.png", 0.4, 0, true, false, 256, 102);
 		_bgImgGrp = new FlxGroup();
-		
-		this.add(_bgImgGrp);
+
 		_bgImgGrp.add(_bgImg1);
 		_bgImgGrp.add(_bgImg2);
+		_bgImgGrp.add(_bgImg3);
+		
+		this.add(_bgImgGrp);
 	}
 	
 	private function setupPlayer():Void
@@ -193,24 +201,15 @@ class PlayState extends FlxState
 	
 	private inline function initBg():Void
 	{
-		var i:Int = Std.random(4);
-		_bgImg1.x = _player.x - TILE_WIDTH;
-		_bgImg2.x = _bgImg1.x + _bgImg1.width;
 
-		_bgImg1.frame = _bgImg1.frames.getByIndex(i);
-		_bgImg2.frame = _bgImg2.frames.getByIndex(i);
+		_bgImg1.scale.set(2, 2);
+		_bgImg2.scale.set(2, 2);
+		_bgImg3.scale.set(2, 2);
+
 		_bgImgGrp.update(FlxG.elapsed);
 		
-		if (i < 1)
-		{
-			_helperText.color = 0xFFFFFF;
-			_scoreText.color = 0xFFFFFF;
-		}
-		else
-		{
-			_helperText.color = 0x000000;
-			_scoreText.color = 0x000000;
-		}
+		_helperText.color = 0xFFFFFF;
+		_scoreText.color = 0xFFFFFF;
 	}
 	
 	private inline function initPlayer():Void
@@ -292,7 +291,7 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		#if !(android || blackberry || iphone || ios || mobile)
-		// check if player hit keyboard reset key
+		// player hit keyboard reset key?
 		if (FlxG.keys.anyJustReleased(["R"]))
 		{
 			onReset();
@@ -300,7 +299,7 @@ class PlayState extends FlxState
 		}
 		#end
 		
-		// check if player fell off the screen
+		// player fell off the screen?
 		if(_player.y > FlxG.height)
 		{
 			// call super.update so reset button works
@@ -313,13 +312,11 @@ class PlayState extends FlxState
 		// platform garbage handling
 		updatePlatforms();
 		
-		// update player position, etc.
 		updatePlayer();
 		
-		// update background
 		updateBg();
 		
-		// check if collision group changed
+		// collision group changed?
 		if (_change)
 		{
 			// update collision group so it doesn't freak out
@@ -329,12 +326,12 @@ class PlayState extends FlxState
 			_change = false;
 		}
 		
-		// check for collision with platforms
+		// collision with platform?
 		if (FlxG.collide(_player, _collisions))
 		{
 			_playJump = false;
 			
-			// check if player hit the wall
+			// player hit the wall?
 			if (_player.velocity.x == 0)
 			{
 				// player went splat
@@ -445,17 +442,6 @@ class PlayState extends FlxState
 	
 	private inline function updateBg():Void
 	{
-		if (_bgImg2.x < (_player.x - _bgImg2.width))
-		{
-			_bgImg1.x = _player.x;
-			_bgImg2.x = _bgImg1.x + _bgImg1.width;
-		}
-
-		if (_bgImg1.x < (_player.x - _bgImg1.width))
-		{
-			_bgImg2.x = _player.x;
-			_bgImg1.x = _bgImg2.x + _bgImg2.width;
-		}
 	}
 	
 	private inline function updatePlatforms():Void
@@ -551,7 +537,7 @@ class PlayState extends FlxState
 		{
 			_auxX = _player.x + _edge + (Std.random(350) * 20);
 
-			var obj = new AssetLoader(AssetPaths.mamadeira__png, 37, 84);
+			var obj = new AssetLoader(AssetPaths.mamadeira__png, 65, 145);
 			obj.x = _auxX;
 			obj.y = (Std.random(21) * -4) + 220;
 			obj.allowCollisions = FlxObject.ANY;
@@ -562,7 +548,9 @@ class PlayState extends FlxState
 		}
 		
 		// buffer for distance between platforms
-		_edge += Std.int(_player.x / TILE_WIDTH) + ((Std.random(3) + 1) * TILE_WIDTH);
+		var edge = Std.int(_player.x / TILE_WIDTH) + ((Std.random(3) + 1) * Std.int(TILE_WIDTH/2));
+		if (edge < 100) edge = 110;
+		_edge += edge;
 
 		_change = true;
 	}

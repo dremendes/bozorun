@@ -5,6 +5,7 @@ import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
+import flixel.FlxObject;
 
 /**
  * Based on work from
@@ -13,6 +14,9 @@ import flixel.ui.FlxButton;
 class MainMenuState extends FlxState
 {
 	private var background:FlxSprite;
+	private var bozo:FlxSprite;
+	private var lula:FlxSprite;
+	private var vs:FlxSprite;
 	private var title:FlxText;
 	private var BtnRun:FlxButton;
 	
@@ -21,9 +25,29 @@ class MainMenuState extends FlxState
 		var division:Int = Std.int(FlxG.height / 3);
 		
 		background = new FlxSprite();
-		background.loadGraphic("assets/images/screen.png", false, 300, 300);
+		background.loadGraphic("assets/images/brasilia.png", false, 300, 300);
 		add(background);
 		
+		bozo = new FlxSprite();
+		bozo.loadGraphic("assets/images/Jair.png", true, 104, 122, true);
+		bozo.animation.add("idle", [0, 1, 2], 7, true);
+		bozo.animation.play("idle");
+		bozo.setPosition(0,150);
+		add(bozo);
+
+		lula = new FlxSprite();
+		lula.loadGraphic("assets/images/Lula.png", true, 104, 122, true);
+		lula.flipX = true;
+		lula.animation.add("idle", [0, 1, 2], 7, true);
+		lula.animation.play("idle");
+		lula.setPosition(195,150);
+		add(lula);
+
+		vs = new FlxSprite();
+		vs.loadGraphic("assets/images/vs.png", false, 84, 63, true);
+		vs.setPosition(100,130);
+		add(vs);
+
 		title = new FlxText(0, division*.5 + 20, FlxG.width, "BOZORUN!");
 		title.setFormat(null, 34, 0xFFFFFFFF, "center");
 		add(title);
