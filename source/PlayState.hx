@@ -22,8 +22,8 @@ import flixel.addons.display.FlxBackdrop;
  */
 class PlayState extends FlxState
 {
-	private static inline var TILE_WIDTH:Int = 70;
-	private static inline var TILE_HEIGHT:Int = 55;
+	private static inline var TILE_WIDTH:Int = 16;
+	private static inline var TILE_HEIGHT:Int = 16;
 	
 	// base speed for player, stands for xVelocity
 	private static inline var BASE_SPEED:Int = 150;
@@ -94,7 +94,7 @@ class PlayState extends FlxState
 		FlxG.worldBounds.setSize(TILE_WIDTH * 100000, 300);
 		
 		// background music
-		FlxG.sound.playMusic("assets/music/Chip Bit Danger.ogg");
+		FlxG.sound.playMusic("assets/music/We're the Resistors.ogg");
 		
 		// setup background image
 		setupBg();
@@ -184,7 +184,7 @@ class PlayState extends FlxState
 	private function setupPlatforms():Void
 	{
 		// pool to hold platform objects
-		_pool = new ObjectPool(TILE_WIDTH, TILE_HEIGHT, "assets/images/tiles.png");
+		_pool = new ObjectPool(TILE_WIDTH, TILE_HEIGHT, "assets/images/groundtiles.png");
 		
 		// keep track of objects currently in use
 		_tiles = new Array<FlxSprite>();
@@ -486,7 +486,7 @@ class PlayState extends FlxState
 		while (ticker && _tiles.length != 0)
 		{
 			// tile is past player, remove it
-			if (_tiles[0].x < distance)
+			if (_tiles[0].x + 30 < distance)
 			{
 				// temp holder for block
 				_block = _tiles.shift();
@@ -514,14 +514,8 @@ class PlayState extends FlxState
 	
 	private function makePlatform(wide:Int=0, high:Int=0):Void
 	{
-		if (wide == 0)
-		{
-			wide = Std.random(5) + 40 + Std.int(_player.x*.0001);
-		}
-
-		
 		// which set of tiles to use for this platform
-		var line:Int = Std.random(9) * 4;
+		var line:Int = 0;
 		
 		var top:Int = FlxG.height - TILE_HEIGHT;
 		
@@ -533,7 +527,7 @@ class PlayState extends FlxState
 		_edge += TILE_WIDTH*2;
 
 
-		for (i in 0...Std.random(5))
+		for (i in 0...Std.random(2))
 		{
 			_auxX = _player.x + _edge + (Std.random(350) * 20);
 
@@ -548,8 +542,8 @@ class PlayState extends FlxState
 		}
 		
 		// buffer for distance between platforms
-		var edge = Std.int(_player.x / TILE_WIDTH) + ((Std.random(3) + 1) * Std.int(TILE_WIDTH/2));
-		if (edge < 100) edge = 110;
+		var edge = Std.int(_player.x / TILE_WIDTH) + 10;
+		if (edge < 100) edge = 0;
 		_edge += edge;
 
 		_change = true;
