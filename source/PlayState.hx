@@ -94,7 +94,7 @@ class PlayState extends FlxState
 		FlxG.worldBounds.setSize(TILE_WIDTH * 100000, 300);
 		
 		// background music
-		FlxG.sound.playMusic("assets/music/We're the Resistors.ogg");
+		FlxG.sound.playMusic("assets/music/We're the Resistors.mp3");
 		
 		// setup background image
 		setupBg();
