@@ -541,10 +541,6 @@ class PlayState extends FlxState
 			_collisions.add(obj);
 		}
 		
-		// buffer for distance between platforms
-		var edge = Std.int(_player.x / TILE_WIDTH) + 10;
-		if (edge < 100) edge = 0;
-		_edge += edge;
 
 		_change = true;
 	}
