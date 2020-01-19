@@ -13,7 +13,6 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxCollision;
 import flixel.util.FlxGradient;
 import flixel.addons.display.FlxBackdrop;
-import flixel.math.FlxRandom;
 
 /**
  * This code is based on the excelent HaxeRunner
@@ -99,16 +98,13 @@ class PlayState extends FlxState
 		// background music
 		FlxG.sound.playMusic("assets/music/We're the Resistors.mp3");
 		
-		// setup background image
 		setupBg();
 		
-		// prepare the player
 		setupPlayer();
 		
 		// prepare player related variables
 		initPlayer();
 		
-		// setup UI
 		setupUI();
 		
 		// prepare UI variables
@@ -130,6 +126,7 @@ class PlayState extends FlxState
 		var sky:FlxSprite = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xff6dcff6, 0xff333333], 16);
 		sky.scrollFactor.set();
 		add(sky);
+
 		_bgImg1 = new FlxBackdrop("assets/images/far-buildings.png", 0.001, 0, true, false, 256, 192);
 		_bgImg2 = new FlxBackdrop("assets/images/back-buildings.png", 0.2, 0, true, false, 256, 192);
 		_bgImg3 = new FlxBackdrop("assets/images/foreground.png", 0.4, 0, true, false, 256, 192);
@@ -291,16 +288,14 @@ class PlayState extends FlxState
 	{
 		#if !(android || blackberry || iphone || ios || mobile)
 		// player hit keyboard reset key?
-		if (FlxG.keys.anyJustReleased(["R"]))
-		{
+		if (FlxG.keys.anyJustReleased(["R"])) {
 			onReset();
 			return;
 		}
 		#end
 		
 		// player fell off the screen?
-		if(_player.y > FlxG.height)
-		{
+		if(_player.y > FlxG.height) {
 			// call super.update so reset button works
 			super.update(FlxG.elapsed);
 			
@@ -316,8 +311,7 @@ class PlayState extends FlxState
 		updateBg();
 		
 		// collision group changed?
-		if (_change)
-		{
+		if (_change) {
 			// update collision group so it doesn't freak out
 			_collisions.update(FlxG.elapsed);
 			
@@ -326,20 +320,16 @@ class PlayState extends FlxState
 		}
 		
 		// collision with platform?
-		if (FlxG.collide(_player, _collisions))
-		{
+		if (FlxG.collide(_player, _collisions)) {
 			_playJump = false;
 			
 			// player hit the wall?
-			if (_player.velocity.x == 0)
-			{
+			if (_player.velocity.x == 0) {
 				// player went splat
 				_jump = -1;
 				_playJump = false;
 				sfxDie();
-			}
-			else if(!_jumpPressed)
-			{
+			} else if(!_jumpPressed) {
 				// reset jump variable
 				_jump = 0;
 				_sfxDie = true;
@@ -350,18 +340,17 @@ class PlayState extends FlxState
 		playerAnimation();
 		super.update(FlxG.elapsed);
 		
-		// update ui stuff
 		updateUI();
 	}
 	
 	private inline function updateUI():Void
 	{
-		// update score
 		_score = Std.int(_player.x / (TILE_WIDTH));
-		if (_score*.3 > _startDistance)
-		{
+		
+		if (_score*.3 > _startDistance) {
 			_startDistance = Std.int(_score * .3);
 		}
+		
 		_scoreText.text = Std.string(_score + " metros\nInício: " + _startDistance);
 		
 		positionText();
@@ -388,16 +377,14 @@ class PlayState extends FlxState
 		if (_jump != -1 && _jumpPressed)
 		{
 			// play jump sound just once
-			if (_jump == 0)
-			{
+			if (_jump == 0) {
 				sfxJump();
 			}
 			
 			// Duration of jump
 			_jump += FlxG.elapsed;
 			
-			if (_player.velocity.y >= 0)
-			{
+			if (_player.velocity.y >= 0) {
 				// play jump animation
 				_playJump = true;
 				
@@ -411,8 +398,7 @@ class PlayState extends FlxState
 				_player.acceleration.y = -yAcceleration;
 			}
 			
-			if (_jump > jumpDuration)
-			{
+			if (_jump > jumpDuration) {
 				// set minimum velocity
 				_player.velocity.y = -yAcceleration * .5;
 				
@@ -423,10 +409,8 @@ class PlayState extends FlxState
 				_playJump = true;
 			}
 		}
-		else if (!_jumpPressed || _jump == -1)
-		{
-			if (_player.velocity.y < 0)
-			{
+		else if (!_jumpPressed || _jump == -1) {
+			if (_player.velocity.y < 0) {
 				// set acceleration to pull to ground
 				_player.acceleration.y = yAcceleration;
 				
@@ -473,8 +457,7 @@ class PlayState extends FlxState
 		var distance:Float = _player.x - (TILE_WIDTH * 2);
 		
 		// reset the level
-		if (_resetPlatforms)
-		{
+		if (_resetPlatforms) {
 			distance += _edge;
 		}
 		
@@ -485,8 +468,7 @@ class PlayState extends FlxState
 		while (ticker && _tiles.length != 0)
 		{
 			// tile is past player, remove it
-			if (_tiles[0].x + 30 < distance)
-			{
+			if (_tiles[0].x + 30 < distance) {
 				// temp holder for block
 				_block = _tiles.shift();
 				
@@ -501,9 +483,7 @@ class PlayState extends FlxState
 				
 				// contents of collision group have changed
 				_change = true;
-			}
-			else
-			{
+			} else {
 				ticker = false;
 			}
 		}
