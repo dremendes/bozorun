@@ -1,5 +1,6 @@
 package;
 
+import flixel.math.FlxRandom;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -12,6 +13,7 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxCollision;
 import flixel.util.FlxGradient;
 import flixel.addons.display.FlxBackdrop;
+import flixel.math.FlxRandom;
 
 /**
  * This code is based on the excelent HaxeRunner
@@ -24,6 +26,7 @@ class PlayState extends FlxState
 {
 	private static inline var TILE_WIDTH:Int = 16;
 	private static inline var TILE_HEIGHT:Int = 16;
+	private static var random = new FlxRandom();
 	
 	// base speed for player, stands for xVelocity
 	private static inline var BASE_SPEED:Int = 150;
@@ -128,8 +131,8 @@ class PlayState extends FlxState
 		sky.scrollFactor.set();
 		add(sky);
 		_bgImg1 = new FlxBackdrop("assets/images/far-buildings.png", 0.001, 0, true, false, 256, 192);
-		_bgImg2 = new FlxBackdrop("assets/images/back-buildings.png", 0.2, 0, true, false, 256, 102);
-		_bgImg3 = new FlxBackdrop("assets/images/foreground.png", 0.4, 0, true, false, 256, 102);
+		_bgImg2 = new FlxBackdrop("assets/images/back-buildings.png", 0.2, 0, true, false, 256, 192);
+		_bgImg3 = new FlxBackdrop("assets/images/foreground.png", 0.4, 0, true, false, 256, 192);
 		_bgImgGrp = new FlxGroup();
 
 		_bgImgGrp.add(_bgImg1);
@@ -252,10 +255,6 @@ class PlayState extends FlxState
 		
 		// reset edge screen where we generate new platforms
 		_edge = (_startDistance-1)*TILE_WIDTH;
-		
-		// make initial platforms for starting place
-		makePlatform(15, 1);
-		makePlatform();
 	}
 	
 	private function onReset():Void
@@ -450,7 +449,7 @@ class PlayState extends FlxState
 		removeBlocks();
 		
 		// check if we need to make more platforms
-		while (_player.x + FlxG.width > _edge)
+		while (( _player.x + FlxG.width) * 1.3 > _edge )
 		{
 			makePlatform();
 		}
@@ -514,26 +513,16 @@ class PlayState extends FlxState
 	
 	private function makePlatform(wide:Int=0, high:Int=0):Void
 	{
-		// which set of tiles to use for this platform
-		var line:Int = 0;
-		
 		var top:Int = FlxG.height - TILE_HEIGHT;
 		
-		// grass tuft on left edge
-		makeBlock(_edge, top, line);
+		makeBlock(_edge, top, 0);
 
-		
-		// update screen edge and width of platform lower part
 		_edge += TILE_WIDTH*2;
 
-
-		for (i in 0...Std.random(2))
-		{
-			_auxX = _player.x + _edge + (Std.random(350) * 20);
-
+		if (random.int(0, 2) / 2 == 0) {
 			var obj = new AssetLoader(AssetPaths.mamadeira__png, 65, 145);
-			obj.x = _auxX;
-			obj.y = (Std.random(21) * -4) + 220;
+			obj.x = (_player.x + _edge) * random.int(0, 20) + random.int(300, 3000);
+			obj.y = random.int(140, 250);
 			obj.allowCollisions = FlxObject.ANY;
 			obj.solid = true;
 			obj.immovable = true;
@@ -541,7 +530,6 @@ class PlayState extends FlxState
 			_collisions.add(obj);
 		}
 		
-
 		_change = true;
 	}
 
@@ -552,30 +540,20 @@ class PlayState extends FlxState
 		_block.setPosition(x, y);
 		_block.frame = _block.frames.frames[tile];
 
-		// add platform block to tile array
 		_tiles.push(_block);
 		
-		// add block to collisions group
 		_collisions.add(_block);
 	}
 	
 	private inline function playerAnimation():Void
 	{
-		// ANIMATION
-		if (_player.velocity.x == 0)
-		{
+		if (_player.velocity.x == 0) {
 			_player.animation.play("die");
-		}
-		else if (_playJump)
-		{
+		} else if (_playJump) {
 			_player.animation.play("jump");
-		}
-		else if (_player.velocity.y != 0)
-		{
+		} else if (_player.velocity.y != 0) {
 			_player.animation.play("fall");
-		}
-		else
-		{
+		} else {
 			_player.animation.play("run");
 		}
 	}
@@ -590,17 +568,13 @@ class PlayState extends FlxState
 	
 	private inline function positionText():Void
 	{
-		// position helper text
 		_helperText.x = _player.x + TILE_WIDTH * 2;
-		
-		// position score text
 		_scoreText.x = _player.x + FlxG.width - (4 * TILE_WIDTH);
 	}
 	
 	private inline function sfxDie():Void
 	{
-		if (_sfxDie)
-		{
+		if (_sfxDie) {
 			FlxG.sound.play("assets/sounds/goblin-9.ogg");
 			_sfxDie = false;
 		}
