@@ -81,6 +81,7 @@ class PlayState extends FlxState
 	// score counter and timer
 	private var _score:Int;
 	private var _startDistance:Int;
+	private var _record:Int;
 	
 	// button to reset and some text
 	private var _resetButton:FlxButton;
@@ -149,6 +150,7 @@ class PlayState extends FlxState
 		_player.setGraphicSize(104, 122);
 		
 		_startDistance = Std.int(_player.x);
+		_record = Std.int(_player.x);
 		
 		// set animations to use this run
 		setAnimations();
@@ -172,7 +174,7 @@ class PlayState extends FlxState
 		add(_resetButton);
 		
 		// add score counter 
-		_scoreText = new FlxText(0, 0, TILE_WIDTH * 3, Std.string("0 metros\nInício: "+_startDistance));
+		_scoreText = new FlxText(0, 0, TILE_WIDTH * 3, Std.string("0m\n\nInício: "+_startDistance+"m\n\nRecorde: "+_record+"m"));
 		_scoreText.alignment = "right";
 		add(_scoreText);
 		
@@ -288,7 +290,7 @@ class PlayState extends FlxState
 	{
 		#if !(android || blackberry || iphone || ios || mobile)
 		// player hit keyboard reset key?
-		if (FlxG.keys.anyJustReleased(["R"])) {
+		if (FlxG.keys.anyJustReleased(["R", "ENTER"])) {
 			onReset();
 			return;
 		}
@@ -351,7 +353,11 @@ class PlayState extends FlxState
 			_startDistance = Std.int(_score * .3);
 		}
 		
-		_scoreText.text = Std.string(_score + " metros\nInício: " + _startDistance);
+		if (_player.x > (_record * TILE_WIDTH)) {
+			_record = _score;
+		}
+		
+		_scoreText.text = Std.string(_score+"m\n\nInício: "+_startDistance+"m\n\nRecorde: "+_record+"m");
 		
 		positionText();
 		
@@ -364,7 +370,7 @@ class PlayState extends FlxState
 		// make player go faster as they go farther in j curve
 		_player.maxVelocity.x = BASE_SPEED + Std.int(_player.x*.05);
 		
-		_jumpPressed = FlxG.keys.anyPressed(["UP", "W"]);
+		_jumpPressed = FlxG.keys.anyPressed(["UP", "W", "SPACE"]);
 
 		for (touch in FlxG.touches.list) {
         	if(touch.justReleased) {
