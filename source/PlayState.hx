@@ -47,6 +47,7 @@ class PlayState extends FlxState
 	
 	// player object and related jump variable
 	private var _player:FlxSprite;
+	private var _hold:FlxSprite;
 	private var _jump:Float;
 	private var _playJump:Bool;
 	private var _jumpPressed:Bool;
@@ -61,8 +62,8 @@ class PlayState extends FlxState
 	
 	// background image
 	private var _bgImgGrp:FlxGroup;
+	private var _bgImg0:FlxSprite;
 	private var _bgImg1:FlxSprite;
-	private var _bgImg2:FlxSprite;
 	private var _bgImg3:FlxSprite;
 	private var _bgImages:Array<String>;
 	
@@ -128,13 +129,13 @@ class PlayState extends FlxState
 		sky.scrollFactor.set();
 		add(sky);
 
-		_bgImg1 = new FlxBackdrop("assets/images/far-buildings.png", 0.001, 0, true, false, 256, 192);
-		_bgImg2 = new FlxBackdrop("assets/images/back-buildings.png", 0.2, 0, true, false, 256, 192);
-		_bgImg3 = new FlxBackdrop("assets/images/foreground.png", 0.4, 0, true, false, 256, 192);
+		_bgImg0 = new FlxBackdrop("assets/images/sky.png", 0.1, 0, true, false, 0, 0);
+		_bgImg1 = new FlxBackdrop("assets/images/background.png", 0.06, 0, true, false, 0, 0);	
+		_bgImg3 = new FlxBackdrop("assets/images/foreground.png", 0.4, 0, true, false, 0, 0);
 		_bgImgGrp = new FlxGroup();
 
+		_bgImgGrp.add(_bgImg0);
 		_bgImgGrp.add(_bgImg1);
-		_bgImgGrp.add(_bgImg2);
 		_bgImgGrp.add(_bgImg3);
 		
 		this.add(_bgImgGrp);
@@ -148,6 +149,9 @@ class PlayState extends FlxState
 		_player.scale.set(0.4, 1);
         _player.updateHitbox();
 		_player.setGraphicSize(104, 122);
+
+		_hold = new FlxSprite();
+		_hold.loadGraphic("assets/images/touch_and_hold_smaller.png", true, 50, 30, true);
 		
 		_startDistance = Std.int(_player.x);
 		_record = Std.int(_player.x);
@@ -160,6 +164,7 @@ class PlayState extends FlxState
 		
 		// add player to FlxState
 		add(_player);
+		add(_hold);
 		
 		// something that follows player's x movement
 		_ghost = new FlxSprite(_player.x+FlxG.width-TILE_WIDTH, FlxG.height / 2);
@@ -175,11 +180,13 @@ class PlayState extends FlxState
 		
 		// add score counter 
 		_scoreText = new FlxText(0, 0, TILE_WIDTH * 3, Std.string("0m\n\nInício: "+_startDistance+"m\n\nRecorde: "+_record+"m"));
+		_scoreText.borderStyle = OUTLINE;
 		_scoreText.alignment = "right";
 		add(_scoreText);
 		
 		// helper text. Tells player what controls are
-		_helperText = new FlxText(0, 0, TILE_WIDTH*5, "⬆ / touch p/ pular");
+		_helperText = new FlxText(0, 0, TILE_WIDTH*5, "touch p/ pular");
+		_helperText.borderStyle = OUTLINE;
 		add(_helperText);
 	}
 	
@@ -203,11 +210,6 @@ class PlayState extends FlxState
 	
 	private inline function initBg():Void
 	{
-
-		_bgImg1.scale.set(2, 2);
-		_bgImg2.scale.set(2, 2);
-		_bgImg3.scale.set(2, 2);
-
 		_bgImgGrp.update(FlxG.elapsed);
 		
 		_helperText.color = 0xFFFFFF;
@@ -506,7 +508,7 @@ class PlayState extends FlxState
 		_edge += TILE_WIDTH*2;
 
 		if (random.int(0, 2) / 2 == 0) {
-			var obj = new AssetLoader(AssetPaths.mamadeira__png, 65, 145);
+			var obj = new AssetLoader(AssetPaths.livros__png, 46, 55);
 			obj.x = (_player.x + _edge) * random.int(0, 20) + random.int(300, 3000);
 			obj.y = random.int(140, 250);
 			obj.allowCollisions = FlxObject.ANY;
@@ -550,12 +552,17 @@ class PlayState extends FlxState
 		_player.animation.add("jump",  [15, 14], 7, false);
 		_player.animation.add("fall", [16, 17], 7, false);
 		_player.animation.add("die", [22, 23], 7, false);
+
+		_hold.animation.add("idle", [0, 1, 2, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15], 16, true);
+		_hold.animation.play("idle");
 	}
 	
 	private inline function positionText():Void
 	{
 		_helperText.x = _player.x + TILE_WIDTH * 2;
 		_scoreText.x = _player.x + FlxG.width - (4 * TILE_WIDTH);
+		_hold.x = _player.x - 40 + TILE_WIDTH * 2;
+		_hold.y = 40;
 	}
 	
 	private inline function sfxDie():Void

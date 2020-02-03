@@ -48,16 +48,16 @@ class MainMenuState extends FlxState
 		vs.setPosition(100,130);
 		add(vs);
 
-		title = new FlxText(0, division*.5 + 20, FlxG.width, "BOZORUN!");
+		title = new FlxText(0, division* 1.5 - 100, FlxG.width, "BOZORUN!");
 		title.setFormat(null, 34, 0xFFFFFFFF, "center");
 		add(title);
 		
-		BtnRun = new FlxButton(10, division * 1.5, "Fugir!", startGame);
+		BtnRun = new FlxButton(10, division * 1.5 + 40, "Fugir!", startGame);
 		BtnRun.label.size = 20;
 		BtnRun.loadGraphic("assets/images/buttons.png", false, 20, 15);
 		BtnRun.scale.set(.6, .9);
 		BtnRun.x = (FlxG.width - BtnRun.width) * .5;
-		BtnRun.y += 60;
+		BtnRun.y += 25;
 		add(BtnRun);
 	}
 	
