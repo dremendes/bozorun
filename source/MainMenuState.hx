@@ -32,21 +32,8 @@ class MainMenuState extends FlxState
 		bozo.loadGraphic("assets/images/Jair.png", true, 104, 122, true);
 		bozo.animation.add("idle", [0, 1, 2], 7, true);
 		bozo.animation.play("idle");
-		bozo.setPosition(0,150);
+		bozo.setPosition(95,90);
 		add(bozo);
-
-		lula = new FlxSprite();
-		lula.loadGraphic("assets/images/Lula.png", true, 104, 122, true);
-		lula.flipX = true;
-		lula.animation.add("idle", [0, 1, 2], 7, true);
-		lula.animation.play("idle");
-		lula.setPosition(195,150);
-		add(lula);
-
-		vs = new FlxSprite();
-		vs.loadGraphic("assets/images/vs.png", false, 84, 63, true);
-		vs.setPosition(100,130);
-		add(vs);
 
 		title = new FlxText(0, division* 1.5 - 100, FlxG.width, "BOZORUN!");
 		title.setFormat(null, 34, 0xFFFFFFFF, "center");

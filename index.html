@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		
+		<meta property="og:title" content="Bozorun" />
+		<meta property="og:url" content="http://bozorun.netlify.com" />
+		<meta property="og:type" content="website" />
+		<meta property="og:description" content="Bozonaro enfrenta seus obstáculos e inimigos diários!" />
+		<meta property="og:image" content="https://andremendesc.github.io/assets/images/screen.png" />
+		
+		<link rel="shortcut icon" type="image/png" href="./favicon.png">
+		
+		<title>Bozorun</title>
+		
+		<script src="https://www.w3counter.com/tracker.js?id=129378"></script>
+		<script>
+			window.addEventListener ("touchmove", function (event) { event.preventDefault (); }, { capture: false, passive: false });
+			if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
+				var meta = document.getElementById ("viewport");
+				meta.setAttribute ('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
+			}
+		</script>
+		<style>
+			@font-face {
+			  font-family: 'FiraSans-Regular';
+			  src: url(fonts/FiraSans-Regular.ttf);
+			}
+			html {
+			  box-sizing: border-box;
+			  font-size: 16px;
+			}
+			
+			div {
+				font-family:'FiraSans-Regular';
+			}
+
+			*, *:before, *:after {
+			  box-sizing: inherit;
+			}
+
+			body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+			  margin: 0;
+			  padding: 0;
+			  font-weight: normal;
+			}
+
+			ol, ul {
+			  list-style: none;
+			}
+
+			img {
+			  max-width: 100%;
+			  height: auto;
+			}
+			/* Adds grid css from Mark Miller's website (https://zeph.co/grid)  */
+			.grid {
+				display: flex;
+				flex-wrap: wrap;
+			}
+
+			.column {
+				box-sizing: border-box;
+				flex: 1;
+			}
+
+			.bigger { flex: 2.5; }
+
+			.halves .column  { flex: 0 0 50%; }
+			.thirds .column  { flex: 0 0 33.3333%; }
+			.fourths .column { flex: 0 0 25%; }
+
+			@media (max-width: 900px) {
+				.grid { display: block; }
+			}
+			/* Ends */
+			.box {
+				margin: 3px;
+				padding: 3px;
+			}
+			
+			html,body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #f4f8ff; line-height: 25px;}
+			#openfl-content { background: #000000; width: 300px; height: 300px; }
+			@font-face {
+				font-family: 'Nokia Cellphone FC Small';
+				src: url('flixel/fonts/nokiafc22.eot?#iefix') format('embedded-opentype'),
+				url('flixel/fonts/nokiafc22.woff') format('woff'),
+				url('flixel/fonts/nokiafc22.ttf') format('truetype'),
+				url('flixel/fonts/nokiafc22.svg#Nokia%20Cellphone%20FC%20Small') format('svg');
+				font-weight: normal;
+				font-style: normal;
+			}
+			@font-face {
+				font-family: 'Monsterrat';
+				src: url('flixel/fonts/monsterrat.eot?#iefix') format('embedded-opentype'),
+				url('flixel/fonts/monsterrat.woff') format('woff'),
+				url('flixel/fonts/monsterrat.ttf') format('truetype'),
+				url('flixel/fonts/monsterrat.svg#Monsterrat') format('svg');
+				font-weight: normal;
+				font-style: normal;
+			}
+		</style>
+	</head>
+	<body>
+		<noscript>This webpage makes extensive use of JavaScript. Please enable JavaScript in your web browser to view this page.</noscript>
+
+		<div class="grid">
+			<div class="bigger column box">
+				<div id="openfl-content"></div>
+				<script type="text/javascript" src="./Bozorun.js"></script>
+				<script type="text/javascript">
+					lime.embed ("Bozorun", "openfl-content", 300, 300, { parameters: {} });
+				</script>
+				<br>
+				Feito por <a href="https://twitter.com/fullynotanalien">@fullynotanalien</a> e <a href="https://twitter.com/ErikizitoX">@ErikizitoX</a> e <a href="https://instagram.com/ilcamaleontica">Inaraí</a>. </br>
+				Feito com <a href="code.haxe.org">Haxe</a> +  <a href="https://haxeflixel.com/">HaxeFlixel</a>. <br>
+			</div>
+			<div class="column box">
+				<div class="grid">
+					<div class="column"><a href="https://dremendes.wordpress.com">Blog antigo</a></div>
+					<div class="column"><a href="mailto:andre.mendesc@gmail.com">Email</a></div>
+					<div class="column"><a href="https://github.com/andremendesc">Github</a></div>
+				</div>
+			</div>
+		</div>
+		<footer>
+		</footer>
+	</body>
+</html>
