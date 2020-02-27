@@ -53,6 +53,13 @@ class PlayState extends FlxState
 	private var _jumpPressed:Bool;
 	private var _sfxDie:Bool;
 	private var _auxX:Float = 0.0;
+	private var _livesTotal = 5;
+	private var _live0:FlxSprite;
+	private var _live1:FlxSprite;
+	private var _live2:FlxSprite;
+	private var _live3:FlxSprite;
+	private var _live4:FlxSprite;
+	
 	
 	// used to help with tracking camera movement
 	private var _ghost:FlxSprite;
@@ -65,8 +72,7 @@ class PlayState extends FlxState
 	private var _bgImg0:FlxSprite;
 	private var _bgImg1:FlxSprite;
 	private var _bgImg3:FlxSprite;
-	private var _bgImages:Array<String>;
-	
+
 	// collision group for generated platforms
 	private var _collisions:FlxGroup;
 	
@@ -125,10 +131,6 @@ class PlayState extends FlxState
 	
 	private function setupBg():Void
 	{
-		var sky:FlxSprite = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xff6dcff6, 0xff333333], 16);
-		sky.scrollFactor.set();
-		add(sky);
-
 		_bgImg0 = new FlxBackdrop("assets/images/sky.png", 0.1, 0, true, false, 0, 0);
 		_bgImg1 = new FlxBackdrop("assets/images/background.png", 0.06, 0, true, false, 0, 0);	
 		_bgImg3 = new FlxBackdrop("assets/images/foreground.png", 0.4, 0, true, false, 0, 0);
@@ -144,14 +146,13 @@ class PlayState extends FlxState
 	private function setupPlayer():Void
 	{
 		// make a player sprite
-		_player = new FlxSprite();
-		_player.loadGraphic("assets/images/Jair.png", true, 104, 122);
+		_player = new FlxSprite().loadGraphic("assets/images/Jair.png", true, 104, 122);
 		_player.scale.set(0.4, 1);
+
         _player.updateHitbox();
 		_player.setGraphicSize(104, 122);
 
-		_hold = new FlxSprite();
-		_hold.loadGraphic("assets/images/touch_and_hold_smaller.png", true, 50, 30, true);
+		_hold = new FlxSprite().loadGraphic("assets/images/touch_and_hold_smaller.png", true, 50, 30, true);
 		
 		_startDistance = Std.int(_player.x);
 		_record = Std.int(_player.x);
@@ -188,6 +189,24 @@ class PlayState extends FlxState
 		_helperText = new FlxText(0, 0, TILE_WIDTH*5, "touch p/ pular");
 		_helperText.borderStyle = OUTLINE;
 		add(_helperText);
+
+		// add lives indicator
+		_live0 = new FlxSprite(0, 260, "assets/images/coracao.png");
+		add(_live0);
+
+		_live1 = new FlxSprite(15, 260, "assets/images/coracao.png");
+		add(_live1);
+
+		_live2 = new FlxSprite(30, 260, "assets/images/coracao.png");
+		add(_live2);
+
+		_live3 = new FlxSprite(45, 260, "assets/images/coracao.png");
+		add(_live3);
+
+		_live4 = new FlxSprite(60, 260, "assets/images/coracao.png");
+		add(_live4);
+
+		_bgImg3.y -= 94;
 	}
 	
 	private function setupPlatforms():Void
@@ -242,9 +261,10 @@ class PlayState extends FlxState
 	
 	private inline function initUI():Void
 	{
-		_resetButton.setPosition(20, 20);
+		_resetButton.setPosition(150, 20);
 		_scoreText.y = 20;
 		_helperText.y = 50;
+
 		_score = _startDistance;
 		positionText();
 	}
@@ -260,22 +280,36 @@ class PlayState extends FlxState
 	
 	private function onReset():Void
 	{
-		// move the edge we're watching, then remove blocks
-		_resetPlatforms = true;
-		removeBlocks();
-		_resetPlatforms = false;
-		
-		// re-initialize player physics and position
-		initPlayer();
-		
-		// re-initialize UI
-		initUI();
-		
-		// reset platforms and draw starting area
-		initPlatforms();
-		
-		// setup background
-		initBg();
+		_livesTotal--;
+		if (_livesTotal >= 1) {	
+			switch (_livesTotal) {
+				case 1:
+					_live1.visible = false;
+					remove(_resetButton);
+				case 2:
+					_live2.visible = false;
+				case 3:
+					_live3.visible = false;
+				case 4:
+					_live4.visible = false;
+			}
+			// move the edge we're watching, then remove blocks
+			_resetPlatforms = true;
+			removeBlocks();
+			_resetPlatforms = false;
+			
+			// re-initialize player physics and position
+			initPlayer();
+			
+			// re-initialize UI
+			initUI();
+			
+			// reset platforms and draw starting area
+			initPlatforms();
+			
+			// setup background
+			initBg();
+		}
 	}
 	
 	/*************************
@@ -351,8 +385,8 @@ class PlayState extends FlxState
 	{
 		_score = Std.int(_player.x / (TILE_WIDTH));
 		
-		if (_score*.3 > _startDistance) {
-			_startDistance = Std.int(_score * .3);
+		if (_score*.5 > _startDistance) {
+			_startDistance = Std.int(_score * .5);
 		}
 		
 		if (_player.x > (_record * TILE_WIDTH)) {
@@ -548,12 +582,12 @@ class PlayState extends FlxState
 	
 	private inline function setAnimations():Void
 	{	
-		_player.animation.add("run", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 7, true);
+		_player.animation.add("run", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 30, true);
 		_player.animation.add("jump",  [15, 14], 7, false);
 		_player.animation.add("fall", [16, 17], 7, false);
-		_player.animation.add("die", [22, 23], 7, false);
+		_player.animation.add("die", [22, 23], 15, false);
 
-		_hold.animation.add("idle", [0, 1, 2, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15], 16, true);
+		_hold.animation.add("idle", [0, 1, 2, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15], 30, true);
 		_hold.animation.play("idle");
 	}
 	
@@ -561,8 +595,21 @@ class PlayState extends FlxState
 	{
 		_helperText.x = _player.x + TILE_WIDTH * 2;
 		_scoreText.x = _player.x + FlxG.width - (4 * TILE_WIDTH);
+		
 		_hold.x = _player.x - 40 + TILE_WIDTH * 2;
 		_hold.y = 40;
+		
+		_live0.x = _player.x - 20 + TILE_WIDTH * 2;
+		_live1.x = _player.x + 5 + TILE_WIDTH * 2;
+		_live2.x = _player.x + 30 + TILE_WIDTH * 2;
+		_live3.x = _player.x + 55 + TILE_WIDTH * 2;
+		_live4.x = _player.x + 80 + TILE_WIDTH * 2;
+		
+		_live0.y = 20;
+		_live1.y = 20;
+		_live2.y = 20;
+		_live3.y = 20;
+		_live4.y = 20;
 	}
 	
 	private inline function sfxDie():Void

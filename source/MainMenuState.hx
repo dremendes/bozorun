@@ -32,7 +32,7 @@ class MainMenuState extends FlxState
 		bozo.loadGraphic("assets/images/Jair.png", true, 104, 122, true);
 		bozo.animation.add("idle", [0, 1, 2], 7, true);
 		bozo.animation.play("idle");
-		bozo.setPosition(95,90);
+		bozo.setPosition(90,90);
 		add(bozo);
 
 		title = new FlxText(0, division* 1.5 - 100, FlxG.width, "BOZORUN!");
