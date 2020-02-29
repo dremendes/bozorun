@@ -70,7 +70,6 @@ class PlayState extends FlxState
 	// background image
 	private var _bgImgGrp:FlxGroup;
 	private var _bgImg0:FlxSprite;
-	private var _bgImg1:FlxSprite;
 	private var _bgImg3:FlxSprite;
 
 	// collision group for generated platforms
@@ -132,12 +131,10 @@ class PlayState extends FlxState
 	private function setupBg():Void
 	{
 		_bgImg0 = new FlxBackdrop("assets/images/sky.png", 0.1, 0, true, false, 0, 0);
-		_bgImg1 = new FlxBackdrop("assets/images/background.png", 0.06, 0, true, false, 0, 0);	
 		_bgImg3 = new FlxBackdrop("assets/images/foreground.png", 0.4, 0, true, false, 0, 0);
 		_bgImgGrp = new FlxGroup();
 
 		_bgImgGrp.add(_bgImg0);
-		_bgImgGrp.add(_bgImg1);
 		_bgImgGrp.add(_bgImg3);
 		
 		this.add(_bgImgGrp);
