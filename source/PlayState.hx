@@ -284,11 +284,11 @@ class PlayState extends FlxState
 					_live1.visible = false;
 					remove(_resetButton);
 				case 2:
-					_live2.visible = false;
+					remove(_live2);
 				case 3:
-					_live3.visible = false;
+					remove(_live3);
 				case 4:
-					_live4.visible = false;
+					remove(_live4);
 			}
 			// move the edge we're watching, then remove blocks
 			_resetPlatforms = true;
