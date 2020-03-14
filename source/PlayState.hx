@@ -13,6 +13,8 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxCollision;
 import flixel.util.FlxGradient;
 import flixel.addons.display.FlxBackdrop;
+import flixel.addons.display.FlxTiledSprite;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 
 /**
  * This code is based on the excelent HaxeRunner
@@ -28,10 +30,10 @@ class PlayState extends FlxState
 	private static var random = new FlxRandom();
 	
 	// base speed for player, stands for xVelocity
-	private static inline var BASE_SPEED:Int = 150;
+	private static inline var BASE_SPEED:Int = 200;
 	
 	// how fast the player speeds up going to the right
-	private static inline var xAcceleration:Int = 150;
+	private static inline var xAcceleration:Int = 120;
 	
 	// force that pulls sprite to the right
 	private static inline var xDrag:Int = 100;
@@ -59,7 +61,7 @@ class PlayState extends FlxState
 	private var _live2:FlxSprite;
 	private var _live3:FlxSprite;
 	private var _live4:FlxSprite;
-	
+	private var _amountOranges:Int=0;
 	
 	// used to help with tracking camera movement
 	private var _ghost:FlxSprite;
@@ -71,15 +73,16 @@ class PlayState extends FlxState
 	private var _bgImgGrp:FlxGroup;
 	private var _bgImg0:FlxSprite;
 	private var _bgImg3:FlxSprite;
+	private var _floor:FlxSprite;
 
 	// collision group for generated platforms
 	private var _collisions:FlxGroup;
+	private var _books:FlxGroup;
+	private var _oranges:FlxGroup;
+	private var _orangesHud:FlxTiledSprite;
 	
 	// track all platform objects on screen
 	private var _tiles:Array<FlxSprite>;
-	
-	// sprite pool
-	private var _pool:ObjectPool;
 	
 	// indicate whether the collision group has changed
 	private var _change:Bool;
@@ -93,10 +96,7 @@ class PlayState extends FlxState
 	private var _resetButton:FlxButton;
 	private var _scoreText:FlxText;
 	private var _helperText:FlxText;
-	
-	// used when resetting
-	private var _resetPlatforms:Bool;
-	
+		
 	override public function create():Void
 	{
 		// make sure world is wide enough, 100,000 tiles should be enough...
@@ -122,9 +122,6 @@ class PlayState extends FlxState
 		
 		// prepare platform variables
 		initPlatforms();
-		
-		// initialize scrolling background image
-		initBg();
 	}
 	
 	
@@ -177,9 +174,10 @@ class PlayState extends FlxState
 		add(_resetButton);
 		
 		// add score counter 
-		_scoreText = new FlxText(0, 0, TILE_WIDTH * 3, Std.string("0m\n\nInício: "+_startDistance+"m\n\nRecorde: "+_record+"m"));
+		_scoreText = new FlxText(0, 0, TILE_WIDTH * 3, "");
 		_scoreText.borderStyle = OUTLINE;
 		_scoreText.alignment = "right";
+		_scoreText.color = 0xFF0000; // red color
 		add(_scoreText);
 		
 		// helper text. Tells player what controls are
@@ -203,33 +201,41 @@ class PlayState extends FlxState
 		_live4 = new FlxSprite(60, 260, "assets/images/coracao.png");
 		add(_live4);
 
+		_orangesHud = new FlxTiledSprite(AssetPaths.laranja__png, 0, 33, true, false);
+		add(_orangesHud);
+		_orangesHud.width = 30;
+		_orangesHud.visible = false;
+
 		_bgImg3.y -= 94;
 	}
 	
 	private function setupPlatforms():Void
 	{
 		// pool to hold platform objects
-		_pool = new ObjectPool(TILE_WIDTH, TILE_HEIGHT, "assets/images/groundtiles.png");
-		
+		_floor = new FlxBackdrop("assets/images/groundtiles.png", 1, 0, true, false, 0, 0);
+		_floor.y = 280;
+		_floor.allowCollisions = FlxObject.ANY;
+		_floor.collisonXDrag = false;
+		_floor.immovable = true;
+		_floor.width = 1000000;
+		add(_floor);
+
 		// keep track of objects currently in use
 		_tiles = new Array<FlxSprite>();
 		
 		// holds all collision objects
 		_collisions = new FlxGroup();
+		_collisions.add(_floor);
 		
 		// add the collisions group to the screen so we can see it!
 		add(_collisions);
 		
-		// reset indicator
-		_resetPlatforms = false;
-	}
-	
-	private inline function initBg():Void
-	{
-		_bgImgGrp.update(FlxG.elapsed);
+		_books = new FlxGroup();
+		add(_books);
+
+		_oranges = new FlxGroup();
+		add(_oranges);
 		
-		_helperText.color = 0xFFFFFF;
-		_scoreText.color = 0xFFFFFF;
 	}
 	
 	private inline function initPlayer():Void
@@ -258,7 +264,7 @@ class PlayState extends FlxState
 	
 	private inline function initUI():Void
 	{
-		_resetButton.setPosition(150, 20);
+		_resetButton.setPosition(170, 0);
 		_scoreText.y = 20;
 		_helperText.y = 50;
 
@@ -290,11 +296,7 @@ class PlayState extends FlxState
 				case 4:
 					remove(_live4);
 			}
-			// move the edge we're watching, then remove blocks
-			_resetPlatforms = true;
-			removeBlocks();
-			_resetPlatforms = false;
-			
+
 			// re-initialize player physics and position
 			initPlayer();
 			
@@ -303,9 +305,6 @@ class PlayState extends FlxState
 			
 			// reset platforms and draw starting area
 			initPlatforms();
-			
-			// setup background
-			initBg();
 		}
 	}
 	
@@ -329,47 +328,65 @@ class PlayState extends FlxState
 		}
 		#end
 		
-		// player fell off the screen?
-		if(_player.y > FlxG.height) {
-			// call super.update so reset button works
-			super.update(FlxG.elapsed);
-			
-			// stop updating
-			return;
-		}
-		
 		// platform garbage handling
 		updatePlatforms();
 		
 		updatePlayer();
 		
-		updateBg();
-		
 		// collision group changed?
 		if (_change) {
 			// update collision group so it doesn't freak out
 			_collisions.update(FlxG.elapsed);
+			_oranges.update(FlxG.elapsed);
+			_books.update(FlxG.elapsed);
 			
 			// collision group is up to date
 			_change = false;
 		}
-		
-		// collision with platform?
-		if (FlxG.collide(_player, _collisions)) {
+
+		if (FlxG.collide(_player, _oranges, (_obj1, _obj2) -> _obj2.destroy() )){
 			_playJump = false;
-			
-			// player hit the wall?
-			if (_player.velocity.x == 0) {
-				// player went splat
-				_jump = -1;
-				_playJump = false;
-				sfxDie();
-			} else if(!_jumpPressed) {
+			if(_amountOranges < 5) {
+				_amountOranges += 1;
+				if(_orangesHud.visible == false) _orangesHud.visible = true; 
+				else _orangesHud.width += 30;
+
+				if(_amountOranges == 1){
+					_orangesHud.visible = true;
+				}
+			}
+		}
+
+		if(FlxG.collide(_player, _collisions)){
+			_playJump = false;
+			// player hit the floor?
+			if (_player.velocity.x > 0 && !_jumpPressed) {
 				// reset jump variable
 				_jump = 0;
-				_sfxDie = true;
+			}
+		}
+		
+		// collision with books?
+		if (FlxG.collide(_player, _books, (_obj1, _obj2) -> if (_amountOranges >= 1) _obj2.destroy() )) {
+			_playJump = false;
+			_jump = 0;
+
+			if(_amountOranges >= 1) _amountOranges = _amountOranges - 1;
+			
+			if (_orangesHud.width == 30 && _amountOranges <= 1) {
+				_orangesHud.visible = false;
 			}
 
+			if (_orangesHud.width >= 60) _orangesHud.width -= 30;
+			
+			if (_player.velocity.x <= 0) {
+				if(_amountOranges <= 0) {
+					// player went splat
+					_jump = -1;
+					_playJump = false;
+					sfxDie();
+				}
+			}
 		}
 		
 		playerAnimation();
@@ -390,7 +407,7 @@ class PlayState extends FlxState
 			_record = _score;
 		}
 		
-		_scoreText.text = Std.string(_score+"m\n\nInício: "+_startDistance+"m\n\nRecorde: "+_record+"m");
+		_scoreText.text = Std.string(_score + "m\n\nInício: " + _startDistance + "m\n\nRecorde: " + _record + "m");
 		
 		positionText();
 		
@@ -401,7 +418,7 @@ class PlayState extends FlxState
 	private inline function updatePlayer():Void
 	{
 		// make player go faster as they go farther in j curve
-		_player.maxVelocity.x = BASE_SPEED + Std.int(_player.x*.05);
+		_player.maxVelocity.x = BASE_SPEED + Std.int(_player.x*.03);
 		
 		_jumpPressed = FlxG.keys.anyPressed(["UP", "W", "SPACE"]);
 
@@ -462,15 +479,8 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private inline function updateBg():Void
-	{
-	}
-	
 	private inline function updatePlatforms():Void
-	{
-		// remove garbage before making new platforms
-		removeBlocks();
-		
+	{		
 		// check if we need to make more platforms
 		while (( _player.x + FlxG.width) * 1.3 > _edge )
 		{
@@ -478,90 +488,31 @@ class PlayState extends FlxState
 		}
 	}
 	
-	/*************************
-	 * 
-	 * GC Handling
-	 * 
-	 * If possible, design garbage collector functions to be inlined. Since
-	 * these usually run every frame, try to make them escape as soon as they
-	 * detect they don't need to go further, that way they take no more power
-	 * than absolutely necessary. Also if possible, try to modify as little as
-	 * possible since it does involve running between frames.
-	 * 
-	 *************************/
-	
-	private function removeBlocks():Void
+	private function setObjAndAdd2Group(Path:FlxGraphicAsset, width:Int, height:Int, group:FlxGroup, isSolid:Bool=true, isMovable:Bool=true, positionCollide:Int=FlxObject.ANY):Void 
 	{
-		// distance from player to inspect
-		var distance:Float = _player.x - (TILE_WIDTH * 2);
-		
-		// reset the level
-		if (_resetPlatforms) {
-			distance += _edge;
-		}
-		
-		// try to run at least once
-		var ticker:Bool = true;
-		
-		// check for old tiles that need to be removed
-		while (ticker && _tiles.length != 0)
-		{
-			// tile is past player, remove it
-			if (_tiles[0].x + 30 < distance) {
-				// temp holder for block
-				_block = _tiles.shift();
-				
-				// remove from collision group
-				_collisions.remove(_block);
-				
-				// put tile back in the pool
-				_pool.returnObj(_block);
-				
-				// check the next block to see if it needs to be removed
-				ticker = true;
-				
-				// contents of collision group have changed
-				_change = true;
-			} else {
-				ticker = false;
-			}
-		}
+		var obj = new AssetLoader(Path, width, height);
+			obj.x = (_player.x + _edge) * random.int(0, 20) + random.int(300, 3000);
+			obj.y = random.int(140, 250);
+			obj.allowCollisions = positionCollide;
+			obj.solid = isSolid;
+			obj.immovable = isMovable;
+			add(obj);
+			group.add(obj);
 	}
 	
-	private var _block:FlxSprite; 
-	
 	private function makePlatform(wide:Int=0, high:Int=0):Void
-	{
-		var top:Int = FlxG.height - TILE_HEIGHT;
-		
-		makeBlock(_edge, top, 0);
-
+	{		
 		_edge += TILE_WIDTH*2;
 
 		if (random.int(0, 2) / 2 == 0) {
-			var obj = new AssetLoader(AssetPaths.livros__png, 46, 55);
-			obj.x = (_player.x + _edge) * random.int(0, 20) + random.int(300, 3000);
-			obj.y = random.int(140, 250);
-			obj.allowCollisions = FlxObject.ANY;
-			obj.solid = true;
-			obj.immovable = true;
-			add(obj);
-			_collisions.add(obj);
+			setObjAndAdd2Group(AssetPaths.livros__png, 46, 55, _books, true, true, FlxObject.RIGHT);
 		}
-		
+
+		if (random.int(0, 4) / 4 == 0) {
+			setObjAndAdd2Group(AssetPaths.laranja__png, 30, 32, _oranges, true, false);
+		}
+
 		_change = true;
-	}
-
-	
-	private inline function makeBlock(x:Float, y:Float, tile:Int):Void
-	{
-		_block = _pool.getObj();
-		_block.setPosition(x, y);
-		_block.frame = _block.frames.frames[tile];
-
-		_tiles.push(_block);
-		
-		_collisions.add(_block);
 	}
 	
 	private inline function playerAnimation():Void
@@ -590,11 +541,12 @@ class PlayState extends FlxState
 	
 	private inline function positionText():Void
 	{
-		_helperText.x = _player.x + TILE_WIDTH * 2;
+		_helperText.x = _player.x + TILE_WIDTH * 2 + 140;
+		_helperText.y = 20;
 		_scoreText.x = _player.x + FlxG.width - (4 * TILE_WIDTH);
 		
-		_hold.x = _player.x - 40 + TILE_WIDTH * 2;
-		_hold.y = 40;
+		_hold.x = _player.x + TILE_WIDTH * 2 + 150;
+		_hold.y = 30;
 		
 		_live0.x = _player.x - 20 + TILE_WIDTH * 2;
 		_live1.x = _player.x + 5 + TILE_WIDTH * 2;
@@ -602,11 +554,14 @@ class PlayState extends FlxState
 		_live3.x = _player.x + 55 + TILE_WIDTH * 2;
 		_live4.x = _player.x + 80 + TILE_WIDTH * 2;
 		
-		_live0.y = 20;
-		_live1.y = 20;
-		_live2.y = 20;
-		_live3.y = 20;
-		_live4.y = 20;
+		_live0.y = 0;
+		_live1.y = 0;
+		_live2.y = 0;
+		_live3.y = 0;
+		_live4.y = 0;
+
+		_orangesHud.x = _player.x - 20 + TILE_WIDTH * 2;
+		_orangesHud.y = 30;
 	}
 	
 	private inline function sfxDie():Void
