@@ -201,7 +201,7 @@ class PlayState extends FlxState
 		_live4 = new FlxSprite(60, 260, "assets/images/coracao.png");
 		add(_live4);
 
-		_orangesHud = new FlxTiledSprite("assets/images/laranja.png", 0, 33, true, false);
+		_orangesHud = new FlxTiledSprite("assets/images/laranja.gif",0, 33, true, false);
 		add(_orangesHud);
 		_orangesHud.width = 30;
 		_orangesHud.visible = false;
@@ -422,13 +422,15 @@ class PlayState extends FlxState
 		
 		_jumpPressed = FlxG.keys.anyPressed(["UP", "W", "SPACE"]);
 
+		#if FLX_NO_MOUSE
 		for (touch in FlxG.touches.list) {
         	if(touch.justReleased) {
 				_jumpPressed = false;
 			} else if (touch.justPressed || touch.pressed) {
 				_jumpPressed = true;
             }
-        }
+		}
+		#end
 		
 		if (_jump != -1 && _jumpPressed)
 		{
