@@ -81,9 +81,6 @@ class PlayState extends FlxState
 	private var _oranges:FlxGroup;
 	private var _orangesHud:FlxTiledSprite;
 	
-	// track all platform objects on screen
-	private var _tiles:Array<FlxSprite>;
-	
 	// indicate whether the collision group has changed
 	private var _change:Bool;
 	
@@ -201,7 +198,7 @@ class PlayState extends FlxState
 		_live4 = new FlxSprite(60, 260, "assets/images/coracao.png");
 		add(_live4);
 
-		_orangesHud = new FlxTiledSprite("assets/images/laranja.gif",0, 33, true, false);
+		_orangesHud = new FlxTiledSprite("assets/images/laranja.gif", 30, 33, true, false);
 		add(_orangesHud);
 		_orangesHud.width = 30;
 		_orangesHud.visible = false;
@@ -219,9 +216,6 @@ class PlayState extends FlxState
 		_floor.immovable = true;
 		_floor.width = 1000000;
 		add(_floor);
-
-		// keep track of objects currently in use
-		_tiles = new Array<FlxSprite>();
 		
 		// holds all collision objects
 		_collisions = new FlxGroup();
