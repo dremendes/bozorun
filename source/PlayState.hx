@@ -422,7 +422,7 @@ class PlayState extends FlxState
 		
 		_jumpPressed = FlxG.keys.anyPressed(["UP", "W", "SPACE"]);
 
-		#if (FLX_NO_MOUSE || web)
+		#if (FLX_NO_MOUSE || web || mobile)
 		for (touch in FlxG.touches.list) {
         	if(touch.justReleased) {
 				_jumpPressed = false;
