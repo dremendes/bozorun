@@ -198,7 +198,8 @@ class PlayState extends FlxState
 		_live4 = new FlxSprite(60, 260, "assets/images/coracao.png");
 		add(_live4);
 
-		_orangesHud = new FlxTiledSprite("assets/images/laranja.gif", 30, 33, true, false);
+		_orangesHud = new FlxTiledSprite(30, 33, true, false);
+		_orangesHud.loadGraphic("assets/images/laranja.gif");
 		add(_orangesHud);
 		_orangesHud.width = 30;
 		_orangesHud.visible = false;
