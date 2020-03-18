@@ -13,7 +13,6 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxCollision;
 import flixel.util.FlxGradient;
 import flixel.addons.display.FlxBackdrop;
-import flixel.addons.display.FlxTiledSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
 /**
@@ -61,7 +60,12 @@ class PlayState extends FlxState
 	private var _live2:FlxSprite;
 	private var _live3:FlxSprite;
 	private var _live4:FlxSprite;
-	private var _amountOranges:Int=0;
+
+	private var _laranja1:FlxSprite;
+	private var _laranja2:FlxSprite;
+	private var _laranja3:FlxSprite;
+	private var _laranja4:FlxSprite;
+	private var _laranja5:FlxSprite;
 	
 	// used to help with tracking camera movement
 	private var _ghost:FlxSprite;
@@ -78,9 +82,11 @@ class PlayState extends FlxState
 	// collision group for generated platforms
 	private var _collisions:FlxGroup;
 	private var _books:FlxGroup;
-	private var _oranges:FlxGroup;
-	private var _orangesHud:FlxTiledSprite;
+
+	private var _amountOranges:Int=0;
 	
+	private var _oranges:FlxGroup;
+
 	// indicate whether the collision group has changed
 	private var _change:Bool;
 	
@@ -198,11 +204,25 @@ class PlayState extends FlxState
 		_live4 = new FlxSprite(60, 260, "assets/images/coracao.png");
 		add(_live4);
 
-		_orangesHud = new FlxTiledSprite(30, 33, true, false);
-		_orangesHud.loadGraphic("assets/images/laranja.gif");
-		add(_orangesHud);
-		_orangesHud.width = 30;
-		_orangesHud.visible = false;
+		_laranja1 = new FlxSprite(30, 33, "assets/images/laranja.png");
+		add(_laranja1);
+		_laranja1.visible = false;
+
+		_laranja2 = new FlxSprite(30, 33, "assets/images/laranja.png");
+		add(_laranja2);
+		_laranja2.visible = false;
+
+		_laranja3 = new FlxSprite(30, 33, "assets/images/laranja.png");
+		add(_laranja3);
+		_laranja3.visible = false;
+
+		_laranja4 = new FlxSprite(30, 33, "assets/images/laranja.png");
+		add(_laranja4);
+		_laranja4.visible = false;
+
+		_laranja5 = new FlxSprite(30, 33, "assets/images/laranja.png");
+		add(_laranja5);
+		_laranja5.visible = false;
 
 		_bgImg3.y -= 94;
 	}
@@ -343,11 +363,18 @@ class PlayState extends FlxState
 			_playJump = false;
 			if(_amountOranges < 5) {
 				_amountOranges += 1;
-				if(_orangesHud.visible == false) _orangesHud.visible = true; 
-				else _orangesHud.width += 30;
 
-				if(_amountOranges == 1){
-					_orangesHud.visible = true;
+				switch(_amountOranges){
+					case 1:
+						_laranja1.visible = true;
+					case 2: 
+						_laranja2.visible = true;
+					case 3:
+						_laranja3.visible = true;
+					case 4:
+						_laranja4.visible = true;
+					case 5:
+						_laranja5.visible = true;
 				}
 			}
 		}
@@ -368,11 +395,18 @@ class PlayState extends FlxState
 
 			if(_amountOranges >= 1) _amountOranges = _amountOranges - 1;
 			
-			if (_orangesHud.width == 30 && _amountOranges <= 1) {
-				_orangesHud.visible = false;
+			switch(_amountOranges){
+				case 0:
+					_laranja1.visible = false;
+				case 1: 
+					_laranja2.visible = false;
+				case 2:
+					_laranja3.visible = false;
+				case 3:
+					_laranja4.visible = false;
+				case 4:
+					_laranja5.visible = false;
 			}
-
-			if (_orangesHud.width >= 60) _orangesHud.width -= 30;
 			
 			if (_player.velocity.x <= 0) {
 				if(_amountOranges <= 0) {
@@ -557,8 +591,17 @@ class PlayState extends FlxState
 		_live3.y = 0;
 		_live4.y = 0;
 
-		_orangesHud.x = _player.x - 20 + TILE_WIDTH * 2;
-		_orangesHud.y = 30;
+		_laranja1.x = _player.x - 20 + TILE_WIDTH * 2;
+		_laranja2.x = _player.x + 13 + TILE_WIDTH * 2;
+		_laranja3.x = _player.x + 43 + TILE_WIDTH * 2;
+		_laranja4.x = _player.x + 76 + TILE_WIDTH * 2;
+		_laranja5.x = _player.x + 109 + TILE_WIDTH * 2;
+		
+		_laranja1.y = 30;
+		_laranja2.y = 30;
+		_laranja3.y = 30;
+		_laranja4.y = 30;
+		_laranja5.y = 30;
 	}
 	
 	private inline function sfxDie():Void
