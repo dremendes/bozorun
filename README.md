@@ -5,6 +5,8 @@
 
 Nesse infinite runner politicamente carregado, Bozonaro precisa evitar que obstáculos travem seu caminho.
 
+Laranjas ajudam o Bozo a passar pelos obstáculos
+
 Evite os obstáculos pulando! 
 
 Toque e pressione a tela do celular para pular mais alto.
