@@ -1,4 +1,4 @@
-# [andremendesc.github.io](http://andremendesc.github.io)
+# [bozorun.github.io](http://bozorun.github.io)
 ![Tela do site](https://raw.githubusercontent.com/andremendesc/andremendesc.github.io/master/assets/images/screen.png)
 
 # Bozorun
