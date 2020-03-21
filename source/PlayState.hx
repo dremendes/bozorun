@@ -453,6 +453,9 @@ class PlayState extends FlxState
 		
 		_jumpPressed = FlxG.keys.anyPressed(["UP", "W", "SPACE"]);
 
+		//Se Bozo parou ou mal está andando, ele pode morrer (e tocar o som de machucado)
+		if (_player.velocity.x > 10) _sfxDie = true;
+
 		#if (FLX_NO_MOUSE || web || mobile)
 		for (touch in FlxG.touches.list) {
         	if(touch.justReleased) {

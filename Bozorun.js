@@ -895,9 +895,9 @@ ApplicationMain.create = function(config) {
 	ManifestResources.init(config);
 	var _this = app.meta;
 	if(__map_reserved["build"] != null) {
-		_this.setReserved("build","85");
+		_this.setReserved("build","86");
 	} else {
-		_this.h["build"] = "85";
+		_this.h["build"] = "86";
 	}
 	var _this1 = app.meta;
 	if(__map_reserved["company"] != null) {
@@ -9465,6 +9465,9 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 			KeyArray4 = -1;
 		}
 		this._jumpPressed = _this5.checkKeyArrayState([KeyArray2,KeyArray3,KeyArray4],1);
+		if(this._player.velocity.x > 10) {
+			this._sfxDie = true;
+		}
 		var _g = 0;
 		var _g1 = flixel_FlxG.touches.list;
 		while(_g < _g1.length) {
@@ -9701,6 +9704,9 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 			KeyArray2 = -1;
 		}
 		this._jumpPressed = _this.checkKeyArrayState([KeyArray,KeyArray1,KeyArray2],1);
+		if(this._player.velocity.x > 10) {
+			this._sfxDie = true;
+		}
 		var _g = 0;
 		var _g1 = flixel_FlxG.touches.list;
 		while(_g < _g1.length) {
