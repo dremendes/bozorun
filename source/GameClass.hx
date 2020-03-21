@@ -16,6 +16,6 @@ class GameClass extends FlxGame
 		//var fps:Int = 60;
 		
 		//super(Math.ceil(stageWidth / ratio), Math.ceil(stageHeight / ratio), PlayState, ratio, fps, fps);
-		super(stageWidth, stageHeight, MainMenuState, 1, 60, 60, false, false);
+		super(stageWidth, stageHeight, MainMenuState, 1, 60, 60, true, false);
 	}
 }
