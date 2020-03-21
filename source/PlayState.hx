@@ -102,6 +102,8 @@ class PlayState extends FlxState
 		
 	override public function create():Void
 	{
+		FlxG.mouse.visible = false;
+
 		// make sure world is wide enough, 100,000 tiles should be enough...
 		FlxG.worldBounds.setSize(TILE_WIDTH * 100000, 300);
 		

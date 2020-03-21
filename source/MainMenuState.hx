@@ -23,6 +23,12 @@ class MainMenuState extends FlxState
 	override public function create():Void
 	{
 		var division:Int = Std.int(FlxG.height / 3);
+
+		#if mobile
+		FlxG.mouse.visible = false;
+		#else
+		FlxG.mouse.visible = true;
+		#end
 		
 		background = new FlxSprite();
 		background.loadGraphic("assets/images/brasilia.png", false, 300, 300);
