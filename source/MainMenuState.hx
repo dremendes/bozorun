@@ -14,8 +14,8 @@ import flixel.FlxObject;
 class MainMenuState extends FlxState
 {
 	private var background:FlxSprite;
+	private var bozo5:FlxSprite;
 	private var bozo:FlxSprite;
-	private var lula:FlxSprite;
 	private var vs:FlxSprite;
 	private var title:FlxText;
 	private var BtnRun:FlxButton;
@@ -38,8 +38,14 @@ class MainMenuState extends FlxState
 		bozo.loadGraphic("assets/images/Jair.png", true, 104, 122, true);
 		bozo.animation.add("idle", [0, 1, 2], 7, true);
 		bozo.animation.play("idle");
-		bozo.setPosition(90,90);
+		bozo.setPosition(20,100);
 		add(bozo);
+
+		bozo5 = new FlxSprite();
+		bozo5.loadGraphic("assets/images/bozo5.png", false, 150, 150);
+		add(bozo5);
+		bozo5.setPosition(120,90);
+
 
 		title = new FlxText(0, division* 1.5 - 100, FlxG.width, "BOZORUN!");
 		title.setFormat(null, 34, 0xFFFFFFFF, "center");
