@@ -22,7 +22,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
  * I've made few modifications from the original source
  * Thank you very much, William Thompson J.
  */
-class PlayState extends FlxState
+class BozoRunGameState extends FlxState
 {
 	private static inline var TILE_WIDTH:Int = 16;
 	private static inline var TILE_HEIGHT:Int = 16;

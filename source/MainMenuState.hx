@@ -14,11 +14,13 @@ import flixel.FlxObject;
 class MainMenuState extends FlxState
 {
 	private var background:FlxSprite;
-	private var bozo5:FlxSprite;
-	private var bozo:FlxSprite;
+	private var mesa:FlxSprite;
+	private var bozoEspirra:FlxSprite;
+	private var bozoRun:FlxSprite;
 	private var vs:FlxSprite;
 	private var title:FlxText;
 	private var BtnRun:FlxButton;
+	private var BtnColetiva:FlxButton;
 	
 	override public function create():Void
 	{
@@ -34,35 +36,50 @@ class MainMenuState extends FlxState
 		background.loadGraphic("assets/images/brasilia.png", false, 300, 300);
 		add(background);
 		
-		bozo = new FlxSprite();
-		bozo.loadGraphic("assets/images/Jair.png", true, 104, 122, true);
-		bozo.animation.add("idle", [0, 1, 2], 7, true);
-		bozo.animation.play("idle");
-		bozo.setPosition(20,100);
-		add(bozo);
+		bozoEspirra = new FlxSprite();
+		bozoEspirra.loadGraphic("assets/images/bozotile.png", true, 150, 150, true);
+		bozoEspirra.animation.add("idle", [14, 21, 14, 21, 15, 16, 17, 18, 19, 20, 20], 7, true);
+		bozoEspirra.animation.play("idle");
+		bozoEspirra.setPosition(-10,100);
+		add(bozoEspirra);
 
-		bozo5 = new FlxSprite();
-		bozo5.loadGraphic("assets/images/bozo5.png", false, 150, 150);
-		add(bozo5);
-		bozo5.setPosition(120,90);
+		bozoRun = new FlxSprite();
+		bozoRun.loadGraphic("assets/images/Jair.png", true, 104, 122, true);
+		bozoRun.animation.add("run", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 30, true);
+		bozoRun.animation.play("run");
+		bozoRun.setPosition(180,100);
+		add(bozoRun);
 
 
 		title = new FlxText(0, division* 1.5 - 100, FlxG.width, "BOZORUN!");
 		title.setFormat(null, 34, 0xFFFFFFFF, "center");
 		add(title);
 		
-		BtnRun = new FlxButton(10, division * 1.5 + 40, "Fugir!", startGame);
+		BtnColetiva = new FlxButton(10, division * 1.5 + 40, "Coletiva", callBozoColetivaGame);
+		BtnColetiva.label.size = 20;
+		BtnColetiva.loadGraphic("assets/images/buttons.png", false, 20, 15);
+		BtnColetiva.scale.set(.6, .9);
+		BtnColetiva.x = -30;
+		BtnColetiva.y += 25;
+		//add(BtnColetiva);
+		
+		BtnRun = new FlxButton(10, division * 1.5 + 40, "Fugir!", callBozoRunGame);
 		BtnRun.label.size = 20;
 		BtnRun.loadGraphic("assets/images/buttons.png", false, 20, 15);
 		BtnRun.scale.set(.6, .9);
-		BtnRun.x = (FlxG.width - BtnRun.width) * .5;
+		BtnRun.x = -30; //-50 + BtnColetiva.width;
 		BtnRun.y += 25;
 		add(BtnRun);
 	}
 	
-	private function startGame():Void
+	private function callBozoRunGame():Void
 	{
-		FlxG.switchState(new PlayState());
+		FlxG.switchState(new BozoRunGameState());
+	}
+
+	private function callBozoColetivaGame():Void
+	{
+		FlxG.switchState(new ColetivaGameState());
 	}
 	
 	override public function destroy():Void
