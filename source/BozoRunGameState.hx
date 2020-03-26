@@ -48,7 +48,6 @@ class BozoRunGameState extends FlxState
 	
 	// player object and related jump variable
 	private var _player:FlxSprite;
-	private var _hold:FlxSprite;
 	private var _jump:Float;
 	private var _playJump:Bool;
 	private var _jumpPressed:Bool;
@@ -97,8 +96,9 @@ class BozoRunGameState extends FlxState
 	
 	// button to reset and some text
 	private var _resetButton:FlxButton;
+
+	private var _voltarButton:FlxButton;
 	private var _scoreText:FlxText;
-	private var _helperText:FlxText;
 		
 	override public function create():Void
 	{
@@ -151,8 +151,6 @@ class BozoRunGameState extends FlxState
         _player.updateHitbox();
 		_player.setGraphicSize(104, 122);
 
-		_hold = new FlxSprite().loadGraphic("assets/images/touch_and_hold_smaller.png", true, 50, 30, true);
-		
 		_startDistance = Std.int(_player.x);
 		_record = Std.int(_player.x);
 		
@@ -164,7 +162,6 @@ class BozoRunGameState extends FlxState
 		
 		// add player to FlxState
 		add(_player);
-		add(_hold);
 		
 		// something that follows player's x movement
 		_ghost = new FlxSprite(_player.x+FlxG.width-TILE_WIDTH, FlxG.height / 2);
@@ -175,8 +172,13 @@ class BozoRunGameState extends FlxState
 	
 	private function setupUI():Void
 	{
-		_resetButton = new FlxButton(0, 0, "Reiniciar", onReset);
+		_resetButton = new FlxButton(0, 0, "", onReset);
+		_resetButton.loadGraphic("assets/images/botoes/reiniciar/reiniciar.png", true, 60, 36);
 		add(_resetButton);
+
+		_voltarButton = new FlxButton(0, 0, "", chamarMenu);
+		_voltarButton.loadGraphic("assets/images/botoes/voltar/voltar.png", true, 60, 36);
+		add(_voltarButton);
 		
 		// add score counter 
 		_scoreText = new FlxText(0, 0, TILE_WIDTH * 3, "");
@@ -185,25 +187,20 @@ class BozoRunGameState extends FlxState
 		_scoreText.color = 0xFF0000; // red color
 		add(_scoreText);
 		
-		// helper text. Tells player what controls are
-		_helperText = new FlxText(0, 0, TILE_WIDTH*5, "touch p/ pular");
-		_helperText.borderStyle = OUTLINE;
-		add(_helperText);
-
 		// add lives indicator
-		_live0 = new FlxSprite(0, 260, "assets/images/coracao.png");
+		_live0 = new FlxSprite(-15, 260, "assets/images/coracao.png");
 		add(_live0);
 
-		_live1 = new FlxSprite(15, 260, "assets/images/coracao.png");
+		_live1 = new FlxSprite(0, 260, "assets/images/coracao.png");
 		add(_live1);
 
-		_live2 = new FlxSprite(30, 260, "assets/images/coracao.png");
+		_live2 = new FlxSprite(15, 260, "assets/images/coracao.png");
 		add(_live2);
 
-		_live3 = new FlxSprite(45, 260, "assets/images/coracao.png");
+		_live3 = new FlxSprite(30, 260, "assets/images/coracao.png");
 		add(_live3);
 
-		_live4 = new FlxSprite(60, 260, "assets/images/coracao.png");
+		_live4 = new FlxSprite(45, 260, "assets/images/coracao.png");
 		add(_live4);
 
 		_laranja1 = new FlxSprite(30, 33, "assets/images/laranja.png");
@@ -281,9 +278,9 @@ class BozoRunGameState extends FlxState
 	
 	private inline function initUI():Void
 	{
-		_resetButton.setPosition(170, 0);
+		_resetButton.setPosition(140, 0);
+		_voltarButton.setPosition(195, 0);
 		_scoreText.y = 20;
-		_helperText.y = 50;
 
 		_score = _startDistance;
 		positionText();
@@ -323,6 +320,11 @@ class BozoRunGameState extends FlxState
 			// reset platforms and draw starting area
 			initPlatforms();
 		}
+	}
+
+	private function chamarMenu():Void 
+	{
+		FlxG.switchState(new MainMenuState());
 	}
 	
 	/*************************
@@ -570,25 +572,17 @@ class BozoRunGameState extends FlxState
 		_player.animation.add("jump",  [15, 14], 7, false);
 		_player.animation.add("fall", [16, 17], 7, false);
 		_player.animation.add("die", [22, 23], 15, false);
-
-		_hold.animation.add("idle", [0, 1, 2, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15], 30, true);
-		_hold.animation.play("idle");
 	}
 	
 	private inline function positionText():Void
 	{
-		_helperText.x = _player.x + TILE_WIDTH * 2 + 140;
-		_helperText.y = 20;
-		_scoreText.x = _player.x + FlxG.width - (4 * TILE_WIDTH);
+		_scoreText.x = _player.x + FlxG.width - (4 * TILE_WIDTH) + 14;
 		
-		_hold.x = _player.x + TILE_WIDTH * 2 + 150;
-		_hold.y = 30;
-		
-		_live0.x = _player.x - 20 + TILE_WIDTH * 2;
-		_live1.x = _player.x + 5 + TILE_WIDTH * 2;
-		_live2.x = _player.x + 30 + TILE_WIDTH * 2;
-		_live3.x = _player.x + 55 + TILE_WIDTH * 2;
-		_live4.x = _player.x + 80 + TILE_WIDTH * 2;
+		_live0.x = _player.x - 35 + TILE_WIDTH * 2;
+		_live1.x = _player.x - 8 + TILE_WIDTH * 2;
+		_live2.x = _player.x + 18 + TILE_WIDTH * 2;
+		_live3.x = _player.x + 43 + TILE_WIDTH * 2;
+		_live4.x = _player.x + 65 + TILE_WIDTH * 2;
 		
 		_live0.y = 0;
 		_live1.y = 0;
@@ -596,11 +590,11 @@ class BozoRunGameState extends FlxState
 		_live3.y = 0;
 		_live4.y = 0;
 
-		_laranja1.x = _player.x - 20 + TILE_WIDTH * 2;
-		_laranja2.x = _player.x + 13 + TILE_WIDTH * 2;
-		_laranja3.x = _player.x + 43 + TILE_WIDTH * 2;
-		_laranja4.x = _player.x + 76 + TILE_WIDTH * 2;
-		_laranja5.x = _player.x + 109 + TILE_WIDTH * 2;
+		_laranja1.x = _player.x - 34 + TILE_WIDTH * 2;
+		_laranja2.x = _player.x - 8 + TILE_WIDTH * 2;
+		_laranja3.x = _player.x + 18 + TILE_WIDTH * 2;
+		_laranja4.x = _player.x + 43 + TILE_WIDTH * 2;
+		_laranja5.x = _player.x + 65 + TILE_WIDTH * 2;
 		
 		_laranja1.y = 30;
 		_laranja2.y = 30;

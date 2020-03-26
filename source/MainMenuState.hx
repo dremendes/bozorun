@@ -63,11 +63,10 @@ class MainMenuState extends FlxState
 		BtnColetiva.y += 25;
 		//add(BtnColetiva);
 		
-		BtnRun = new FlxButton(10, division * 1.5 + 40, "Fugir!", callBozoRunGame);
+		BtnRun = new FlxButton(10, division * 1.5 + 40, "", callBozoRunGame);
 		BtnRun.label.size = 20;
-		BtnRun.loadGraphic("assets/images/buttons.png", false, 20, 15);
-		BtnRun.scale.set(.6, .9);
-		BtnRun.x = -30; // -50 + BtnColetiva.width;
+		BtnRun.loadGraphic("assets/images/botoes/fugir/fugir.png", true, 60, 36);
+		BtnRun.x = 35; // -50 + BtnColetiva.width;
 		BtnRun.y += 25;
 		add(BtnRun);
 	}

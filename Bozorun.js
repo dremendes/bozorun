@@ -895,9 +895,9 @@ ApplicationMain.create = function(config) {
 	ManifestResources.init(config);
 	var _this = app.meta;
 	if(__map_reserved["build"] != null) {
-		_this.setReserved("build","88");
+		_this.setReserved("build","90");
 	} else {
-		_this.h["build"] = "88";
+		_this.h["build"] = "90";
 	}
 	var _this1 = app.meta;
 	if(__map_reserved["company"] != null) {
@@ -7782,7 +7782,6 @@ BozoRunGameState.__name__ = "BozoRunGameState";
 BozoRunGameState.__super__ = flixel_FlxState;
 BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 	_player: null
-	,_hold: null
 	,_jump: null
 	,_playJump: null
 	,_jumpPressed: null
@@ -7814,8 +7813,8 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 	,_startDistance: null
 	,_record: null
 	,_resetButton: null
+	,_voltarButton: null
 	,_scoreText: null
-	,_helperText: null
 	,create: function() {
 		flixel_FlxG.mouse.set_visible(false);
 		var _this = flixel_FlxG.worldBounds;
@@ -7837,34 +7836,28 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._player.animation.add("jump",[15,14],7,false);
 		this._player.animation.add("fall",[16,17],7,false);
 		this._player.animation.add("die",[22,23],15,false);
-		this._hold.animation.add("idle",[0,1,2,3,3,3,3,4,5,6,7,8,9,10,11,15],30,true);
-		this._hold.animation.play("idle");
 		this._ghost.set_x(this._player.x - 3.2 + flixel_FlxG.width * .5);
 		this.setupUI();
-		this._resetButton.setPosition(170,0);
+		this._resetButton.setPosition(140,0);
+		this._voltarButton.setPosition(195,0);
 		this._scoreText.set_y(20);
-		this._helperText.set_y(50);
 		this._score = this._startDistance;
-		this._helperText.set_x(this._player.x + 32 + 140);
-		this._helperText.set_y(20);
-		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64);
-		this._hold.set_x(this._player.x + 32 + 150);
-		this._hold.set_y(30);
-		this._live0.set_x(this._player.x - 20 + 32);
-		this._live1.set_x(this._player.x + 5 + 32);
-		this._live2.set_x(this._player.x + 30 + 32);
-		this._live3.set_x(this._player.x + 55 + 32);
-		this._live4.set_x(this._player.x + 80 + 32);
+		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 14);
+		this._live0.set_x(this._player.x - 35 + 32);
+		this._live1.set_x(this._player.x - 8 + 32);
+		this._live2.set_x(this._player.x + 18 + 32);
+		this._live3.set_x(this._player.x + 43 + 32);
+		this._live4.set_x(this._player.x + 65 + 32);
 		this._live0.set_y(0);
 		this._live1.set_y(0);
 		this._live2.set_y(0);
 		this._live3.set_y(0);
 		this._live4.set_y(0);
-		this._laranja1.set_x(this._player.x - 20 + 32);
-		this._laranja2.set_x(this._player.x + 13 + 32);
-		this._laranja3.set_x(this._player.x + 43 + 32);
-		this._laranja4.set_x(this._player.x + 76 + 32);
-		this._laranja5.set_x(this._player.x + 109 + 32);
+		this._laranja1.set_x(this._player.x - 34 + 32);
+		this._laranja2.set_x(this._player.x - 8 + 32);
+		this._laranja3.set_x(this._player.x + 18 + 32);
+		this._laranja4.set_x(this._player.x + 43 + 32);
+		this._laranja5.set_x(this._player.x + 65 + 32);
 		this._laranja1.set_y(30);
 		this._laranja2.set_y(30);
 		this._laranja3.set_y(30);
@@ -7887,41 +7880,38 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._player.scale.set(0.4,1);
 		this._player.updateHitbox();
 		this._player.setGraphicSize(104,122);
-		this._hold = new flixel_FlxSprite().loadGraphic("assets/images/touch_and_hold_smaller.png",true,50,30,true);
 		this._startDistance = this._player.x | 0;
 		this._record = this._player.x | 0;
 		this._player.animation.add("run",[3,4,5,6,7,8,9,10,11,12,13],30,true);
 		this._player.animation.add("jump",[15,14],7,false);
 		this._player.animation.add("fall",[16,17],7,false);
 		this._player.animation.add("die",[22,23],15,false);
-		this._hold.animation.add("idle",[0,1,2,3,3,3,3,4,5,6,7,8,9,10,11,15],30,true);
-		this._hold.animation.play("idle");
 		this._player.set_facing(16);
 		this.add(this._player);
-		this.add(this._hold);
 		this._ghost = new flixel_FlxSprite(this._player.x + flixel_FlxG.width - 16,flixel_FlxG.height / 2);
 		flixel_FlxG.camera.follow(this._ghost);
 	}
 	,setupUI: function() {
-		this._resetButton = new flixel_ui_FlxButton(0,0,"Reiniciar",$bind(this,this.onReset));
+		this._resetButton = new flixel_ui_FlxButton(0,0,"",$bind(this,this.onReset));
+		this._resetButton.loadGraphic("assets/images/botoes/reiniciar/reiniciar.png",true,60,36);
 		this.add(this._resetButton);
+		this._voltarButton = new flixel_ui_FlxButton(0,0,"",$bind(this,this.chamarMenu));
+		this._voltarButton.loadGraphic("assets/images/botoes/voltar/voltar.png",true,60,36);
+		this.add(this._voltarButton);
 		this._scoreText = new flixel_text_FlxText(0,0,48,"");
 		this._scoreText.set_borderStyle(flixel_text_FlxTextBorderStyle.OUTLINE);
 		this._scoreText.set_alignment("right");
 		this._scoreText.set_color(16711680);
 		this.add(this._scoreText);
-		this._helperText = new flixel_text_FlxText(0,0,80,"touch p/ pular");
-		this._helperText.set_borderStyle(flixel_text_FlxTextBorderStyle.OUTLINE);
-		this.add(this._helperText);
-		this._live0 = new flixel_FlxSprite(0,260,"assets/images/coracao.png");
+		this._live0 = new flixel_FlxSprite(-15,260,"assets/images/coracao.png");
 		this.add(this._live0);
-		this._live1 = new flixel_FlxSprite(15,260,"assets/images/coracao.png");
+		this._live1 = new flixel_FlxSprite(0,260,"assets/images/coracao.png");
 		this.add(this._live1);
-		this._live2 = new flixel_FlxSprite(30,260,"assets/images/coracao.png");
+		this._live2 = new flixel_FlxSprite(15,260,"assets/images/coracao.png");
 		this.add(this._live2);
-		this._live3 = new flixel_FlxSprite(45,260,"assets/images/coracao.png");
+		this._live3 = new flixel_FlxSprite(30,260,"assets/images/coracao.png");
 		this.add(this._live3);
-		this._live4 = new flixel_FlxSprite(60,260,"assets/images/coracao.png");
+		this._live4 = new flixel_FlxSprite(45,260,"assets/images/coracao.png");
 		this.add(this._live4);
 		this._laranja1 = new flixel_FlxSprite(30,33,"assets/images/laranja.png");
 		this.add(this._laranja1);
@@ -7971,35 +7961,29 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._player.animation.add("jump",[15,14],7,false);
 		this._player.animation.add("fall",[16,17],7,false);
 		this._player.animation.add("die",[22,23],15,false);
-		this._hold.animation.add("idle",[0,1,2,3,3,3,3,4,5,6,7,8,9,10,11,15],30,true);
-		this._hold.animation.play("idle");
 		this._ghost.set_x(this._player.x - 3.2 + flixel_FlxG.width * .5);
 	}
 	,initUI: function() {
-		this._resetButton.setPosition(170,0);
+		this._resetButton.setPosition(140,0);
+		this._voltarButton.setPosition(195,0);
 		this._scoreText.set_y(20);
-		this._helperText.set_y(50);
 		this._score = this._startDistance;
-		this._helperText.set_x(this._player.x + 32 + 140);
-		this._helperText.set_y(20);
-		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64);
-		this._hold.set_x(this._player.x + 32 + 150);
-		this._hold.set_y(30);
-		this._live0.set_x(this._player.x - 20 + 32);
-		this._live1.set_x(this._player.x + 5 + 32);
-		this._live2.set_x(this._player.x + 30 + 32);
-		this._live3.set_x(this._player.x + 55 + 32);
-		this._live4.set_x(this._player.x + 80 + 32);
+		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 14);
+		this._live0.set_x(this._player.x - 35 + 32);
+		this._live1.set_x(this._player.x - 8 + 32);
+		this._live2.set_x(this._player.x + 18 + 32);
+		this._live3.set_x(this._player.x + 43 + 32);
+		this._live4.set_x(this._player.x + 65 + 32);
 		this._live0.set_y(0);
 		this._live1.set_y(0);
 		this._live2.set_y(0);
 		this._live3.set_y(0);
 		this._live4.set_y(0);
-		this._laranja1.set_x(this._player.x - 20 + 32);
-		this._laranja2.set_x(this._player.x + 13 + 32);
-		this._laranja3.set_x(this._player.x + 43 + 32);
-		this._laranja4.set_x(this._player.x + 76 + 32);
-		this._laranja5.set_x(this._player.x + 109 + 32);
+		this._laranja1.set_x(this._player.x - 34 + 32);
+		this._laranja2.set_x(this._player.x - 8 + 32);
+		this._laranja3.set_x(this._player.x + 18 + 32);
+		this._laranja4.set_x(this._player.x + 43 + 32);
+		this._laranja5.set_x(this._player.x + 65 + 32);
 		this._laranja1.set_y(30);
 		this._laranja2.set_y(30);
 		this._laranja3.set_y(30);
@@ -8041,33 +8025,27 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 			this._player.animation.add("jump",[15,14],7,false);
 			this._player.animation.add("fall",[16,17],7,false);
 			this._player.animation.add("die",[22,23],15,false);
-			this._hold.animation.add("idle",[0,1,2,3,3,3,3,4,5,6,7,8,9,10,11,15],30,true);
-			this._hold.animation.play("idle");
 			this._ghost.set_x(this._player.x - 3.2 + flixel_FlxG.width * .5);
-			this._resetButton.setPosition(170,0);
+			this._resetButton.setPosition(140,0);
+			this._voltarButton.setPosition(195,0);
 			this._scoreText.set_y(20);
-			this._helperText.set_y(50);
 			this._score = this._startDistance;
-			this._helperText.set_x(this._player.x + 32 + 140);
-			this._helperText.set_y(20);
-			this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64);
-			this._hold.set_x(this._player.x + 32 + 150);
-			this._hold.set_y(30);
-			this._live0.set_x(this._player.x - 20 + 32);
-			this._live1.set_x(this._player.x + 5 + 32);
-			this._live2.set_x(this._player.x + 30 + 32);
-			this._live3.set_x(this._player.x + 55 + 32);
-			this._live4.set_x(this._player.x + 80 + 32);
+			this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 14);
+			this._live0.set_x(this._player.x - 35 + 32);
+			this._live1.set_x(this._player.x - 8 + 32);
+			this._live2.set_x(this._player.x + 18 + 32);
+			this._live3.set_x(this._player.x + 43 + 32);
+			this._live4.set_x(this._player.x + 65 + 32);
 			this._live0.set_y(0);
 			this._live1.set_y(0);
 			this._live2.set_y(0);
 			this._live3.set_y(0);
 			this._live4.set_y(0);
-			this._laranja1.set_x(this._player.x - 20 + 32);
-			this._laranja2.set_x(this._player.x + 13 + 32);
-			this._laranja3.set_x(this._player.x + 43 + 32);
-			this._laranja4.set_x(this._player.x + 76 + 32);
-			this._laranja5.set_x(this._player.x + 109 + 32);
+			this._laranja1.set_x(this._player.x - 34 + 32);
+			this._laranja2.set_x(this._player.x - 8 + 32);
+			this._laranja3.set_x(this._player.x + 18 + 32);
+			this._laranja4.set_x(this._player.x + 43 + 32);
+			this._laranja5.set_x(this._player.x + 65 + 32);
 			this._laranja1.set_y(30);
 			this._laranja2.set_y(30);
 			this._laranja3.set_y(30);
@@ -8075,6 +8053,12 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 			this._laranja5.set_y(30);
 			this._change = false;
 			this._edge = (this._startDistance - 1) * 16;
+		}
+	}
+	,chamarMenu: function() {
+		var nextState = new MainMenuState();
+		if(flixel_FlxG.game._state.switchTo(nextState)) {
+			flixel_FlxG.game._requestedState = nextState;
 		}
 	}
 	,update: function(elapsed) {
@@ -8280,26 +8264,22 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 			this._record = this._score;
 		}
 		this._scoreText.set_text(Std.string(this._score + "m\n\nInício: " + this._startDistance + "m\n\nRecorde: " + this._record + "m"));
-		this._helperText.set_x(this._player.x + 32 + 140);
-		this._helperText.set_y(20);
-		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64);
-		this._hold.set_x(this._player.x + 32 + 150);
-		this._hold.set_y(30);
-		this._live0.set_x(this._player.x - 20 + 32);
-		this._live1.set_x(this._player.x + 5 + 32);
-		this._live2.set_x(this._player.x + 30 + 32);
-		this._live3.set_x(this._player.x + 55 + 32);
-		this._live4.set_x(this._player.x + 80 + 32);
+		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 14);
+		this._live0.set_x(this._player.x - 35 + 32);
+		this._live1.set_x(this._player.x - 8 + 32);
+		this._live2.set_x(this._player.x + 18 + 32);
+		this._live3.set_x(this._player.x + 43 + 32);
+		this._live4.set_x(this._player.x + 65 + 32);
 		this._live0.set_y(0);
 		this._live1.set_y(0);
 		this._live2.set_y(0);
 		this._live3.set_y(0);
 		this._live4.set_y(0);
-		this._laranja1.set_x(this._player.x - 20 + 32);
-		this._laranja2.set_x(this._player.x + 13 + 32);
-		this._laranja3.set_x(this._player.x + 43 + 32);
-		this._laranja4.set_x(this._player.x + 76 + 32);
-		this._laranja5.set_x(this._player.x + 109 + 32);
+		this._laranja1.set_x(this._player.x - 34 + 32);
+		this._laranja2.set_x(this._player.x - 8 + 32);
+		this._laranja3.set_x(this._player.x + 18 + 32);
+		this._laranja4.set_x(this._player.x + 43 + 32);
+		this._laranja5.set_x(this._player.x + 65 + 32);
 		this._laranja1.set_y(30);
 		this._laranja2.set_y(30);
 		this._laranja3.set_y(30);
@@ -8316,26 +8296,22 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 			this._record = this._score;
 		}
 		this._scoreText.set_text(Std.string(this._score + "m\n\nInício: " + this._startDistance + "m\n\nRecorde: " + this._record + "m"));
-		this._helperText.set_x(this._player.x + 32 + 140);
-		this._helperText.set_y(20);
-		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64);
-		this._hold.set_x(this._player.x + 32 + 150);
-		this._hold.set_y(30);
-		this._live0.set_x(this._player.x - 20 + 32);
-		this._live1.set_x(this._player.x + 5 + 32);
-		this._live2.set_x(this._player.x + 30 + 32);
-		this._live3.set_x(this._player.x + 55 + 32);
-		this._live4.set_x(this._player.x + 80 + 32);
+		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 14);
+		this._live0.set_x(this._player.x - 35 + 32);
+		this._live1.set_x(this._player.x - 8 + 32);
+		this._live2.set_x(this._player.x + 18 + 32);
+		this._live3.set_x(this._player.x + 43 + 32);
+		this._live4.set_x(this._player.x + 65 + 32);
 		this._live0.set_y(0);
 		this._live1.set_y(0);
 		this._live2.set_y(0);
 		this._live3.set_y(0);
 		this._live4.set_y(0);
-		this._laranja1.set_x(this._player.x - 20 + 32);
-		this._laranja2.set_x(this._player.x + 13 + 32);
-		this._laranja3.set_x(this._player.x + 43 + 32);
-		this._laranja4.set_x(this._player.x + 76 + 32);
-		this._laranja5.set_x(this._player.x + 109 + 32);
+		this._laranja1.set_x(this._player.x - 34 + 32);
+		this._laranja2.set_x(this._player.x - 8 + 32);
+		this._laranja3.set_x(this._player.x + 18 + 32);
+		this._laranja4.set_x(this._player.x + 43 + 32);
+		this._laranja5.set_x(this._player.x + 65 + 32);
 		this._laranja1.set_y(30);
 		this._laranja2.set_y(30);
 		this._laranja3.set_y(30);
@@ -8479,30 +8455,24 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._player.animation.add("jump",[15,14],7,false);
 		this._player.animation.add("fall",[16,17],7,false);
 		this._player.animation.add("die",[22,23],15,false);
-		this._hold.animation.add("idle",[0,1,2,3,3,3,3,4,5,6,7,8,9,10,11,15],30,true);
-		this._hold.animation.play("idle");
 	}
 	,positionText: function() {
-		this._helperText.set_x(this._player.x + 32 + 140);
-		this._helperText.set_y(20);
-		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64);
-		this._hold.set_x(this._player.x + 32 + 150);
-		this._hold.set_y(30);
-		this._live0.set_x(this._player.x - 20 + 32);
-		this._live1.set_x(this._player.x + 5 + 32);
-		this._live2.set_x(this._player.x + 30 + 32);
-		this._live3.set_x(this._player.x + 55 + 32);
-		this._live4.set_x(this._player.x + 80 + 32);
+		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 14);
+		this._live0.set_x(this._player.x - 35 + 32);
+		this._live1.set_x(this._player.x - 8 + 32);
+		this._live2.set_x(this._player.x + 18 + 32);
+		this._live3.set_x(this._player.x + 43 + 32);
+		this._live4.set_x(this._player.x + 65 + 32);
 		this._live0.set_y(0);
 		this._live1.set_y(0);
 		this._live2.set_y(0);
 		this._live3.set_y(0);
 		this._live4.set_y(0);
-		this._laranja1.set_x(this._player.x - 20 + 32);
-		this._laranja2.set_x(this._player.x + 13 + 32);
-		this._laranja3.set_x(this._player.x + 43 + 32);
-		this._laranja4.set_x(this._player.x + 76 + 32);
-		this._laranja5.set_x(this._player.x + 109 + 32);
+		this._laranja1.set_x(this._player.x - 34 + 32);
+		this._laranja2.set_x(this._player.x - 8 + 32);
+		this._laranja3.set_x(this._player.x + 18 + 32);
+		this._laranja4.set_x(this._player.x + 43 + 32);
+		this._laranja5.set_x(this._player.x + 65 + 32);
 		this._laranja1.set_y(30);
 		this._laranja2.set_y(30);
 		this._laranja3.set_y(30);
@@ -8531,6 +8501,11 @@ ColetivaGameState.prototype = $extend(flixel_FlxState.prototype,{
 	moro: null
 	,bozo: null
 	,gueds: null
+	,mic1: null
+	,mic2: null
+	,mic3: null
+	,copo1: null
+	,copo2: null
 	,mesaColetiva: null
 	,fundoColetiva: null
 	,vs: null
@@ -8557,6 +8532,10 @@ ColetivaGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this.add(this.moro);
 		this.moro.animation.play("idle");
 		this.moro.setPosition(-20,90);
+		this.mesaColetiva = new flixel_FlxSprite();
+		this.mesaColetiva.loadGraphic("assets/images/foregroundbozo.png",false,350,350);
+		this.add(this.mesaColetiva);
+		this.mesaColetiva.setPosition(-30,-20);
 		this.bozo = new flixel_FlxSprite();
 		this.bozo.loadGraphic("assets/images/bozotile.png",true,150,150);
 		this.bozo.animation.add("idle",[0,1],4,true);
@@ -8565,10 +8544,18 @@ ColetivaGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this.bozo.animation.play("idle");
 		this.add(this.bozo);
 		this.bozo.setPosition(70,90);
-		this.mesaColetiva = new flixel_FlxSprite();
-		this.mesaColetiva.loadGraphic("assets/images/foregroundbozo.png",false,350,350);
-		this.add(this.mesaColetiva);
-		this.mesaColetiva.setPosition(-30,-20);
+		this.mic1 = new flixel_FlxSprite();
+		this.mic1.loadGraphic("assets/images/microfone.png",false,23,58);
+		this.add(this.mic1);
+		this.mic1.setPosition(-30,170);
+		this.mic2 = new flixel_FlxSprite();
+		this.mic2.loadGraphic("assets/images/microfone.png",false,23,58);
+		this.add(this.mic2);
+		this.mic2.setPosition(30,170);
+		this.mic3 = new flixel_FlxSprite();
+		this.mic3.loadGraphic("assets/images/microfone.png",false,23,58);
+		this.add(this.mic3);
+		this.mic3.setPosition(130,170);
 		this.BtnRun = new flixel_ui_FlxButton(10,division * 1.5 + 40,"Fugir!",$bind(this,this.startGame));
 		this.BtnRun.label.set_size(20);
 		this.BtnRun.loadGraphic("assets/images/buttons.png",false,20,15);
@@ -9250,11 +9237,10 @@ MainMenuState.prototype = $extend(flixel_FlxState.prototype,{
 		this.BtnColetiva.set_x(-30);
 		var _g = this.BtnColetiva;
 		_g.set_y(_g.y + 25);
-		this.BtnRun = new flixel_ui_FlxButton(10,division * 1.5 + 40,"Fugir!",$bind(this,this.callBozoRunGame));
+		this.BtnRun = new flixel_ui_FlxButton(10,division * 1.5 + 40,"",$bind(this,this.callBozoRunGame));
 		this.BtnRun.label.set_size(20);
-		this.BtnRun.loadGraphic("assets/images/buttons.png",false,20,15);
-		this.BtnRun.scale.set(.6,.9);
-		this.BtnRun.set_x(-30);
+		this.BtnRun.loadGraphic("assets/images/botoes/fugir/fugir.png",true,60,36);
+		this.BtnRun.set_x(35);
 		var _g1 = this.BtnRun;
 		_g1.set_y(_g1.y + 25);
 		this.add(this.BtnRun);
@@ -9301,7 +9287,7 @@ ManifestResources.init = function(config) {
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$flixel_$fonts_$nokiafc22_$ttf);
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$flixel_$fonts_$monsterrat_$ttf);
 	var bundle;
-	var data = "{\"name\":null,\"assets\":\"aoy4:pathy36:assets%2Fimages%2Ftouch_and_hold.pngy4:sizei38709y4:typey5:IMAGEy2:idR1y7:preloadtgoR0y41:assets%2Fimages%2FThumbs.db%3AencryptableR2zR3y4:TEXTR5R7R6tgoR0y30:assets%2Fimages%2Fcoracao2.pngR2i634R3R4R5R9R6tgoR0y31:assets%2Fimages%2Fbrasilia2.pngR2i40745R3R4R5R10R6tgoR0y26:assets%2Fimages%2FLula.pngR2i3556R3R4R5R11R6tgoR0y25:assets%2Fimages%2Fsky.pngR2i6498R3R4R5R12R6tgoR0y32:assets%2Fimages%2Fbackground.pngR2i483724R3R4R5R13R6tgoR0y28:assets%2Fimages%2Flivros.pngR2i2443R3R4R5R14R6tgoR0y29:assets%2Fimages%2Flaranja.gifR2i196R3R4R5R15R6tgoR0y30:assets%2Fimages%2Fbrasilia.jpgR2i31711R3R4R5R16R6tgoR0y28:assets%2Fimages%2Foutput.jpgR2i115316R3R4R5R17R6tgoR0y28:assets%2Fimages%2Fscreen.pngR2i112563R3R4R5R18R6tgoR0y39:assets%2Fimages%2Fforeground-double.pngR2i12541R3R4R5R19R6tgoR0y36:assets%2Fimages%2Fforegroundbozo.pngR2i1735R3R4R5R20R6tgoR0y37:assets%2Fimages%2Ffar-buildings-3.pngR2i222975R3R4R5R21R6tgoR0y26:assets%2Fimages%2FJair.pngR2i21611R3R4R5R22R6tgoR0y36:assets%2Fimages%2Fback-buildings.pngR2i7014R3R4R5R23R6tgoR0y28:assets%2Fimages%2Foutput.pngR2i711461R3R4R5R24R6tgoR0y27:assets%2Fimages%2Ftiles.pngR2i24745R3R4R5R25R6tgoR0y63:assets%2Fimages%2FScreenshot%20from%202019-11-26%2019-20-03.pngR2i378241R3R4R5R26R6tgoR0y36:assets%2Fimages%2Fforeground_old.pngR2i7649R3R4R5R27R6tgoR0y36:assets%2Fimages%2Fbackgroundbozo.pngR2i79628R3R4R5R28R6tgoR0y30:assets%2Fimages%2Fbozotile.pngR2i11632R3R4R5R29R6tgoR0y31:assets%2Fimages%2Fforegrund.pngR2i9264R3R4R5R30R6tgoR0y29:assets%2Fimages%2Fbuttons.pngR2i3282R3R4R5R31R6tgoR0y35:assets%2Fimages%2Ffar-buildings.pngR2i88426R3R4R5R32R6tgoR0y46:assets%2Fimages%2Fgroundtiles%20%28copy%29.pngR2i1029R3R4R5R33R6tgoR0y35:assets%2Fimages%2Foldfarbuildin.pngR2i6763R3R4R5R34R6tgoR0y29:assets%2Fimages%2Fmascara.pngR2i465R3R4R5R35R6tgoR0y30:assets%2Fimages%2Fmorotile.pngR2i3383R3R4R5R36R6tgoR0y36:assets%2Fimages%2Ffar-buildings_.pngR2i6763R3R4R5R37R6tgoR0y44:assets%2Fimages%2Ftouch_and_hold_smaller.pngR2i8454R3R4R5R38R6tgoR0y30:assets%2Fimages%2Fbrasilia.pngR2i95911R3R4R5R39R6tgoR0y31:assets%2Fimages%2Fguedstile.pngR2i3062R3R4R5R40R6tgoR0y31:assets%2Fimages%2Fmamadeira.pngR2i7072R3R4R5R41R6tgoR0y24:assets%2Fimages%2Fvs.pngR2i648R3R4R5R42R6tgoR0y32:assets%2Fimages%2Fsky-double.pngR2i5227R3R4R5R43R6tgoR0y33:assets%2Fimages%2Fgroundtiles.pngR2i276R3R4R5R44R6tgoR0y32:assets%2Fimages%2Fforeground.pngR2i48274R3R4R5R45R6tgoR0y36:assets%2Fimages%2Ffar-buildings2.pngR2i127061R3R4R5R46R6tgoR0y44:assets%2Fimages%2Ffar-buildings-3-double.pngR2i235312R3R4R5R47R6tgoR0y29:assets%2Fimages%2Flaranja.pngR2i222R3R4R5R48R6tgoR0y29:assets%2Fimages%2Fcoracao.pngR2i571R3R4R5R49R6tgoR0y38:assets%2Fimages%2Ftouch_and_segura.pngR2i710780R3R4R5R50R6tgoR0y29:assets%2Fdata%2FLula.asepriteR2i4388R3y6:BINARYR5R51R6tgoR0y27:assets%2Fdata%2Fbozorun.oepR2i2979R3R8R5R53R6tgoR0y28:assets%2Fdata%2Fbrasilia.xcfR2i184957R3R52R5R54R6tgoR0y29:assets%2Fdata%2FJair.asepriteR2i33676R3R52R5R55R6tgoR0y27:assets%2Fdata%2Fbozorun.oelR2i35904R3R8R5R56R6tgoR2i671818R3y5:SOUNDR5y40:assets%2Fmusic%2FChip%20Bit%20Danger.oggy9:pathGroupaR58y40:assets%2Fmusic%2FChip%20Bit%20Danger.mp3hR6tgoR2i1700303R3y5:MUSICR5y46:assets%2Fmusic%2FWe%27re%20the%20Resistors.mp3R59aR62y46:assets%2Fmusic%2FWe%27re%20the%20Resistors.ogghR6tgoR0y36:assets%2Fmusic%2Fmusic-goes-here.txtR2zR3R8R5R64R6tgoR2i2364809R3R61R5R60R59aR58R60hgoR2i957857R3R57R5R63R59aR62R63hgoR2i6619R3R57R5y30:assets%2Fsounds%2Fgoblin-1.oggR59aR65y30:assets%2Fsounds%2Fgoblin-1.mp3hR6tgoR2i9144R3R57R5y30:assets%2Fsounds%2Fgoblin-9.oggR59aR67y30:assets%2Fsounds%2Fgoblin-9.mp3hR6tgoR2i4224R3R61R5R66R59aR65R66hgoR0y36:assets%2Fsounds%2Fsounds-go-here.txtR2zR3R8R5R69R6tgoR2i7296R3R61R5R68R59aR67R68hgoR2i39706R3R61R5y28:flixel%2Fsounds%2Fflixel.mp3R59aR70y28:flixel%2Fsounds%2Fflixel.ogghR6tgoR2i2114R3R61R5y26:flixel%2Fsounds%2Fbeep.mp3R59aR72y26:flixel%2Fsounds%2Fbeep.ogghR6tgoR2i33629R3R57R5R71R59aR70R71hgoR2i5794R3R57R5R73R59aR72R73hgoR2i15744R3y4:FONTy9:classNamey35:__ASSET__flixel_fonts_nokiafc22_ttfR5y30:flixel%2Ffonts%2Fnokiafc22.ttfR6tgoR2i29724R3R74R75y36:__ASSET__flixel_fonts_monsterrat_ttfR5y31:flixel%2Ffonts%2Fmonsterrat.ttfR6tgoR0y33:flixel%2Fimages%2Fui%2Fbutton.pngR2i519R3R4R5R80R6tgoR0y36:flixel%2Fimages%2Flogo%2Fdefault.pngR2i3280R3R4R5R81R6tgh\",\"rootPath\":null,\"version\":2,\"libraryArgs\":[],\"libraryType\":null}";
+	var data = "{\"name\":null,\"assets\":\"aoy4:pathy41:assets%2Fimages%2FThumbs.db%3Aencryptabley4:sizezy4:typey4:TEXTy2:idR1y7:preloadtgoR0y30:assets%2Fimages%2Fcoracao2.pngR2i634R3y5:IMAGER5R7R6tgoR0y31:assets%2Fimages%2Fbrasilia2.pngR2i40745R3R8R5R9R6tgoR0y30:assets%2Fimages%2Ffont%2F3.pngR2i186R3R8R5R10R6tgoR0y30:assets%2Fimages%2Ffont%2F9.pngR2i197R3R8R5R11R6tgoR0y30:assets%2Fimages%2Ffont%2Fa.pngR2i170R3R8R5R12R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%BA.pngR2i207R3R8R5R13R6tgoR0y30:assets%2Fimages%2Ffont%2F0.pngR2i169R3R8R5R14R6tgoR0y32:assets%2Fimages%2Ffont%2F%2B.pngR2i153R3R8R5R15R6tgoR0y30:assets%2Fimages%2Ffont%2Fd.pngR2i162R3R8R5R16R6tgoR0y40:assets%2Fimages%2Ffont%2Fporcentagem.pngR2i193R3R8R5R17R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%BC.pngR2i186R3R8R5R18R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%A9.pngR2i190R3R8R5R19R6tgoR0y30:assets%2Fimages%2Ffont%2F4.pngR2i156R3R8R5R20R6tgoR0y30:assets%2Fimages%2Ffont%2Fz.pngR2i159R3R8R5R21R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%B5.pngR2i182R3R8R5R22R6tgoR0y41:assets%2Fimages%2Ffont%2Finterrogacao.pngR2i175R3R8R5R23R6tgoR0y30:assets%2Fimages%2Ffont%2Fp.pngR2i178R3R8R5R24R6tgoR0y30:assets%2Fimages%2Ffont%2Fx.pngR2i205R3R8R5R25R6tgoR0y30:assets%2Fimages%2Ffont%2Fy.pngR2i192R3R8R5R26R6tgoR0y30:assets%2Fimages%2Ffont%2F8.pngR2i204R3R8R5R27R6tgoR0y30:assets%2Fimages%2Ffont%2Fc.pngR2i149R3R8R5R28R6tgoR0y34:assets%2Fimages%2Ffont%2Fbarra.pngR2i176R3R8R5R29R6tgoR0y30:assets%2Fimages%2Ffont%2Fe.pngR2i152R3R8R5R30R6tgoR0y32:assets%2Fimages%2Ffont%2F%21.pngR2i126R3R8R5R31R6tgoR0y30:assets%2Fimages%2Ffont%2Fj.pngR2i157R3R8R5R32R6tgoR0y30:assets%2Fimages%2Ffont%2F6.pngR2i177R3R8R5R33R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%A7.pngR2i166R3R8R5R34R6tgoR0y30:assets%2Fimages%2Ffont%2F2.pngR2i170R3R8R5R35R6tgoR0y30:assets%2Fimages%2Ffont%2Fo.pngR2i172R3R8R5R36R6tgoR0y30:assets%2Fimages%2Ffont%2Fn.pngR2i218R3R8R5R37R6tgoR0y30:assets%2Fimages%2Ffont%2Fr.pngR2i181R3R8R5R38R6tgoR0y30:assets%2Fimages%2Ffont%2Fq.pngR2i180R3R8R5R39R6tgoR0y32:assets%2Fimages%2Ffont%2F%7E.pngR2i98R3R8R5R40R6tgoR0y30:assets%2Fimages%2Ffont%2F-.pngR2i112R3R8R5R41R6tgoR0y30:assets%2Fimages%2Ffont%2F5.pngR2i187R3R8R5R42R6tgoR0y38:assets%2Fimages%2Ffont%2Fasterisco.pngR2i152R3R8R5R43R6tgoR0y30:assets%2Fimages%2Ffont%2Fi.pngR2i119R3R8R5R44R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%B3.pngR2i208R3R8R5R45R6tgoR0y30:assets%2Fimages%2Ffont%2Fl.pngR2i144R3R8R5R46R6tgoR0y30:assets%2Fimages%2Ffont%2Ft.pngR2i153R3R8R5R47R6tgoR0y34:assets%2Fimages%2Ffont%2Ftrema.pngR2i107R3R8R5R48R6tgoR0y30:assets%2Fimages%2Ffont%2Fb.pngR2i187R3R8R5R49R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%A4.pngR2i191R3R8R5R50R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%AF.pngR2i142R3R8R5R51R6tgoR0y30:assets%2Fimages%2Ffont%2F1.pngR2i131R3R8R5R52R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%AD.pngR2i151R3R8R5R53R6tgoR0y30:assets%2Fimages%2Ffont%2Fh.pngR2i165R3R8R5R54R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%A2.pngR2i202R3R8R5R55R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%AA.pngR2i191R3R8R5R56R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%B6.pngR2i191R3R8R5R57R6tgoR0y30:assets%2Fimages%2Ffont%2Fg.pngR2i176R3R8R5R58R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%AB.pngR2i183R3R8R5R59R6tgoR0y42:assets%2Fimages%2Ffont%2Fdois%20pontos.pngR2i100R3R8R5R60R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%A3.pngR2i186R3R8R5R61R6tgoR0y32:assets%2Fimages%2Ffont%2F%2C.pngR2i110R3R8R5R62R6tgoR0y30:assets%2Fimages%2Ffont%2Fu.pngR2i167R3R8R5R63R6tgoR0y30:assets%2Fimages%2Ffont%2Fw.pngR2i206R3R8R5R64R6tgoR0y30:assets%2Fimages%2Ffont%2Fv.pngR2i175R3R8R5R65R6tgoR0y35:assets%2Fimages%2Ffont%2F%C3%A1.pngR2i196R3R8R5R66R6tgoR0y30:assets%2Fimages%2Ffont%2F7.pngR2i167R3R8R5R67R6tgoR0y30:assets%2Fimages%2Ffont%2Ff.pngR2i149R3R8R5R68R6tgoR0y35:assets%2Fimages%2Ffont%2F%C2%B4.pngR2i128R3R8R5R69R6tgoR0y30:assets%2Fimages%2Ffont%2Fk.pngR2i201R3R8R5R70R6tgoR0y30:assets%2Fimages%2Ffont%2Fs.pngR2i189R3R8R5R71R6tgoR0y30:assets%2Fimages%2Ffont%2Fm.pngR2i221R3R8R5R72R6tgoR0y26:assets%2Fimages%2FLula.pngR2i3556R3R8R5R73R6tgoR0y25:assets%2Fimages%2Fsky.pngR2i6498R3R8R5R74R6tgoR0y48:assets%2Fimages%2Fbotoes%2Fmascara%2Fbotoes4.pngR2i340R3R8R5R75R6tgoR0y48:assets%2Fimages%2Fbotoes%2Fmascara%2Fbotoes3.pngR2i951R3R8R5R76R6tgoR0y53:assets%2Fimages%2Fbotoes%2Fmascara%2FmascaraBotao.pngR2i1305R3R8R5R77R6tgoR0y50:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fcoletiva.pngR2i1288R3R8R5R78R6tgoR0y49:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fbotoes9.pngR2i919R3R8R5R79R6tgoR0y50:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fbotoes10.pngR2i308R3R8R5R80R6tgoR0y47:assets%2Fimages%2Fbotoes%2Fvoltar%2Fbotoes1.pngR2i865R3R8R5R81R6tgoR0y46:assets%2Fimages%2Fbotoes%2Fvoltar%2Fvoltar.pngR2i1817R3R8R5R82R6tgoR0y47:assets%2Fimages%2Fbotoes%2Fvoltar%2Fbotoes2.pngR2i751R3R8R5R83R6tgoR0y50:assets%2Fimages%2Fbotoes%2Freiniciar%2Fbotoes8.pngR2i958R3R8R5R84R6tgoR0y50:assets%2Fimages%2Fbotoes%2Freiniciar%2Fbotoes7.pngR2i319R3R8R5R85R6tgoR0y52:assets%2Fimages%2Fbotoes%2Freiniciar%2Freiniciar.pngR2i1298R3R8R5R86R6tgoR0y46:assets%2Fimages%2Fbotoes%2Ffugir%2Fbotoes6.pngR2i289R3R8R5R87R6tgoR0y44:assets%2Fimages%2Fbotoes%2Ffugir%2Ffugir.pngR2i1252R3R8R5R88R6tgoR0y46:assets%2Fimages%2Fbotoes%2Ffugir%2Fbotoes5.pngR2i825R3R8R5R89R6tgoR0y32:assets%2Fimages%2Fbackground.pngR2i483724R3R8R5R90R6tgoR0y28:assets%2Fimages%2Flivros.pngR2i2443R3R8R5R91R6tgoR0y29:assets%2Fimages%2Flaranja.gifR2i196R3R8R5R92R6tgoR0y30:assets%2Fimages%2Fbrasilia.jpgR2i31711R3R8R5R93R6tgoR0y28:assets%2Fimages%2Foutput.jpgR2i115316R3R8R5R94R6tgoR0y28:assets%2Fimages%2Fscreen.pngR2i112563R3R8R5R95R6tgoR0y39:assets%2Fimages%2Fforeground-double.pngR2i12541R3R8R5R96R6tgoR0y36:assets%2Fimages%2Fforegroundbozo.pngR2i879R3R8R5R97R6tgoR0y37:assets%2Fimages%2Ffar-buildings-3.pngR2i222975R3R8R5R98R6tgoR0y26:assets%2Fimages%2FJair.pngR2i21611R3R8R5R99R6tgoR0y36:assets%2Fimages%2Fback-buildings.pngR2i7014R3R8R5R100R6tgoR0y28:assets%2Fimages%2Foutput.pngR2i711461R3R8R5R101R6tgoR0y27:assets%2Fimages%2Ftiles.pngR2i24745R3R8R5R102R6tgoR0y63:assets%2Fimages%2FScreenshot%20from%202019-11-26%2019-20-03.pngR2i378241R3R8R5R103R6tgoR0y36:assets%2Fimages%2Fforeground_old.pngR2i7649R3R8R5R104R6tgoR0y36:assets%2Fimages%2Fbackgroundbozo.pngR2i79628R3R8R5R105R6tgoR0y30:assets%2Fimages%2Fbozotile.pngR2i11632R3R8R5R106R6tgoR0y31:assets%2Fimages%2Fforegrund.pngR2i9264R3R8R5R107R6tgoR0y29:assets%2Fimages%2Fbuttons.pngR2i3282R3R8R5R108R6tgoR0y35:assets%2Fimages%2Ffar-buildings.pngR2i88426R3R8R5R109R6tgoR0y46:assets%2Fimages%2Fgroundtiles%20%28copy%29.pngR2i1029R3R8R5R110R6tgoR0y35:assets%2Fimages%2Foldfarbuildin.pngR2i6763R3R8R5R111R6tgoR0y29:assets%2Fimages%2Fmascara.pngR2i465R3R8R5R112R6tgoR0y30:assets%2Fimages%2Fmorotile.pngR2i3383R3R8R5R113R6tgoR0y31:assets%2Fimages%2Fmicrofone.pngR2i221R3R8R5R114R6tgoR0y36:assets%2Fimages%2Ffar-buildings_.pngR2i6763R3R8R5R115R6tgoR0y30:assets%2Fimages%2Fbrasilia.pngR2i95911R3R8R5R116R6tgoR0y31:assets%2Fimages%2Fguedstile.pngR2i3062R3R8R5R117R6tgoR0y31:assets%2Fimages%2Fmamadeira.pngR2i7072R3R8R5R118R6tgoR0y26:assets%2Fimages%2Ftaca.pngR2i277R3R8R5R119R6tgoR0y24:assets%2Fimages%2Fvs.pngR2i648R3R8R5R120R6tgoR0y32:assets%2Fimages%2Fsky-double.pngR2i5227R3R8R5R121R6tgoR0y33:assets%2Fimages%2Fgroundtiles.pngR2i276R3R8R5R122R6tgoR0y32:assets%2Fimages%2Fforeground.pngR2i48274R3R8R5R123R6tgoR0y36:assets%2Fimages%2Ffar-buildings2.pngR2i127061R3R8R5R124R6tgoR0y44:assets%2Fimages%2Ffar-buildings-3-double.pngR2i235312R3R8R5R125R6tgoR0y29:assets%2Fimages%2Flaranja.pngR2i222R3R8R5R126R6tgoR0y29:assets%2Fimages%2Fcoracao.pngR2i571R3R8R5R127R6tgoR0y29:assets%2Fdata%2FLula.asepriteR2i4388R3y6:BINARYR5R128R6tgoR0y27:assets%2Fdata%2Fbozorun.oepR2i2979R3R4R5R130R6tgoR0y28:assets%2Fdata%2Fbrasilia.xcfR2i184957R3R129R5R131R6tgoR0y29:assets%2Fdata%2FJair.asepriteR2i33676R3R129R5R132R6tgoR0y27:assets%2Fdata%2Fbozorun.oelR2i35904R3R4R5R133R6tgoR2i671818R3y5:SOUNDR5y40:assets%2Fmusic%2FChip%20Bit%20Danger.oggy9:pathGroupaR135y40:assets%2Fmusic%2FChip%20Bit%20Danger.mp3hR6tgoR2i1700303R3y5:MUSICR5y46:assets%2Fmusic%2FWe%27re%20the%20Resistors.mp3R136aR139y46:assets%2Fmusic%2FWe%27re%20the%20Resistors.ogghR6tgoR0y36:assets%2Fmusic%2Fmusic-goes-here.txtR2zR3R4R5R141R6tgoR2i2364809R3R138R5R137R136aR135R137hgoR2i957857R3R134R5R140R136aR139R140hgoR2i6619R3R134R5y30:assets%2Fsounds%2Fgoblin-1.oggR136aR142y30:assets%2Fsounds%2Fgoblin-1.mp3hR6tgoR2i9144R3R134R5y30:assets%2Fsounds%2Fgoblin-9.oggR136aR144y30:assets%2Fsounds%2Fgoblin-9.mp3hR6tgoR2i4224R3R138R5R143R136aR142R143hgoR0y36:assets%2Fsounds%2Fsounds-go-here.txtR2zR3R4R5R146R6tgoR2i7296R3R138R5R145R136aR144R145hgoR2i39706R3R138R5y28:flixel%2Fsounds%2Fflixel.mp3R136aR147y28:flixel%2Fsounds%2Fflixel.ogghR6tgoR2i2114R3R138R5y26:flixel%2Fsounds%2Fbeep.mp3R136aR149y26:flixel%2Fsounds%2Fbeep.ogghR6tgoR2i33629R3R134R5R148R136aR147R148hgoR2i5794R3R134R5R150R136aR149R150hgoR2i15744R3y4:FONTy9:classNamey35:__ASSET__flixel_fonts_nokiafc22_ttfR5y30:flixel%2Ffonts%2Fnokiafc22.ttfR6tgoR2i29724R3R151R152y36:__ASSET__flixel_fonts_monsterrat_ttfR5y31:flixel%2Ffonts%2Fmonsterrat.ttfR6tgoR0y33:flixel%2Fimages%2Fui%2Fbutton.pngR2i519R3R8R5R157R6tgoR0y36:flixel%2Fimages%2Flogo%2Fdefault.pngR2i3280R3R8R5R158R6tgh\",\"rootPath\":null,\"version\":2,\"libraryArgs\":[],\"libraryType\":null}";
 	var manifest = lime_utils_AssetManifest.parse(data,ManifestResources.rootPath);
 	var library = lime_utils_AssetLibrary.fromManifest(manifest);
 	lime_utils_Assets.registerLibrary("default",library);
@@ -71741,7 +71727,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 507810;
+	this.version = 395224;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
@@ -117823,11 +117809,57 @@ flixel_FlxObject._secondSeparateFlxRect = (function($this) {
 	$r = rect;
 	return $r;
 }(this));
-AssetPaths.touch_and_hold__png = "assets/images/touch_and_hold.png";
 AssetPaths.coracao2__png = "assets/images/coracao2.png";
 AssetPaths.brasilia2__png = "assets/images/brasilia2.png";
+AssetPaths.a__png = "assets/images/font/a.png";
+AssetPaths.d__png = "assets/images/font/d.png";
+AssetPaths.porcentagem__png = "assets/images/font/porcentagem.png";
+AssetPaths.z__png = "assets/images/font/z.png";
+AssetPaths.interrogacao__png = "assets/images/font/interrogacao.png";
+AssetPaths.p__png = "assets/images/font/p.png";
+AssetPaths.x__png = "assets/images/font/x.png";
+AssetPaths.y__png = "assets/images/font/y.png";
+AssetPaths.c__png = "assets/images/font/c.png";
+AssetPaths.barra__png = "assets/images/font/barra.png";
+AssetPaths.e__png = "assets/images/font/e.png";
+AssetPaths.j__png = "assets/images/font/j.png";
+AssetPaths.o__png = "assets/images/font/o.png";
+AssetPaths.n__png = "assets/images/font/n.png";
+AssetPaths.r__png = "assets/images/font/r.png";
+AssetPaths.q__png = "assets/images/font/q.png";
+AssetPaths.___png = "assets/images/font/-.png";
+AssetPaths.asterisco__png = "assets/images/font/asterisco.png";
+AssetPaths.i__png = "assets/images/font/i.png";
+AssetPaths.l__png = "assets/images/font/l.png";
+AssetPaths.t__png = "assets/images/font/t.png";
+AssetPaths.trema__png = "assets/images/font/trema.png";
+AssetPaths.b__png = "assets/images/font/b.png";
+AssetPaths.h__png = "assets/images/font/h.png";
+AssetPaths.g__png = "assets/images/font/g.png";
+AssetPaths.u__png = "assets/images/font/u.png";
+AssetPaths.w__png = "assets/images/font/w.png";
+AssetPaths.v__png = "assets/images/font/v.png";
+AssetPaths.f__png = "assets/images/font/f.png";
+AssetPaths.k__png = "assets/images/font/k.png";
+AssetPaths.s__png = "assets/images/font/s.png";
+AssetPaths.m__png = "assets/images/font/m.png";
 AssetPaths.Lula__png = "assets/images/Lula.png";
 AssetPaths.sky__png = "assets/images/sky.png";
+AssetPaths.botoes4__png = "assets/images/botoes/mascara/botoes4.png";
+AssetPaths.botoes3__png = "assets/images/botoes/mascara/botoes3.png";
+AssetPaths.mascaraBotao__png = "assets/images/botoes/mascara/mascaraBotao.png";
+AssetPaths.coletiva__png = "assets/images/botoes/coletiva/coletiva.png";
+AssetPaths.botoes9__png = "assets/images/botoes/coletiva/botoes9.png";
+AssetPaths.botoes10__png = "assets/images/botoes/coletiva/botoes10.png";
+AssetPaths.botoes1__png = "assets/images/botoes/voltar/botoes1.png";
+AssetPaths.voltar__png = "assets/images/botoes/voltar/voltar.png";
+AssetPaths.botoes2__png = "assets/images/botoes/voltar/botoes2.png";
+AssetPaths.botoes8__png = "assets/images/botoes/reiniciar/botoes8.png";
+AssetPaths.botoes7__png = "assets/images/botoes/reiniciar/botoes7.png";
+AssetPaths.reiniciar__png = "assets/images/botoes/reiniciar/reiniciar.png";
+AssetPaths.botoes6__png = "assets/images/botoes/fugir/botoes6.png";
+AssetPaths.fugir__png = "assets/images/botoes/fugir/fugir.png";
+AssetPaths.botoes5__png = "assets/images/botoes/fugir/botoes5.png";
 AssetPaths.background__png = "assets/images/background.png";
 AssetPaths.livros__png = "assets/images/livros.png";
 AssetPaths.laranja__gif = "assets/images/laranja.gif";
@@ -117850,11 +117882,12 @@ AssetPaths.far_buildings__png = "assets/images/far-buildings.png";
 AssetPaths.oldfarbuildin__png = "assets/images/oldfarbuildin.png";
 AssetPaths.mascara__png = "assets/images/mascara.png";
 AssetPaths.morotile__png = "assets/images/morotile.png";
+AssetPaths.microfone__png = "assets/images/microfone.png";
 AssetPaths.far_buildings___png = "assets/images/far-buildings_.png";
-AssetPaths.touch_and_hold_smaller__png = "assets/images/touch_and_hold_smaller.png";
 AssetPaths.brasilia__png = "assets/images/brasilia.png";
 AssetPaths.guedstile__png = "assets/images/guedstile.png";
 AssetPaths.mamadeira__png = "assets/images/mamadeira.png";
+AssetPaths.taca__png = "assets/images/taca.png";
 AssetPaths.vs__png = "assets/images/vs.png";
 AssetPaths.sky_double__png = "assets/images/sky-double.png";
 AssetPaths.groundtiles__png = "assets/images/groundtiles.png";
@@ -117863,7 +117896,6 @@ AssetPaths.far_buildings2__png = "assets/images/far-buildings2.png";
 AssetPaths.far_buildings_3_double__png = "assets/images/far-buildings-3-double.png";
 AssetPaths.laranja__png = "assets/images/laranja.png";
 AssetPaths.coracao__png = "assets/images/coracao.png";
-AssetPaths.touch_and_segura__png = "assets/images/touch_and_segura.png";
 AssetPaths.Lula__aseprite = "assets/data/Lula.aseprite";
 AssetPaths.bozorun__oep = "assets/data/bozorun.oep";
 AssetPaths.brasilia__xcf = "assets/data/brasilia.xcf";
