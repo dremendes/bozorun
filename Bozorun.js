@@ -895,9 +895,9 @@ ApplicationMain.create = function(config) {
 	ManifestResources.init(config);
 	var _this = app.meta;
 	if(__map_reserved["build"] != null) {
-		_this.setReserved("build","90");
+		_this.setReserved("build","91");
 	} else {
-		_this.h["build"] = "90";
+		_this.h["build"] = "91";
 	}
 	var _this1 = app.meta;
 	if(__map_reserved["company"] != null) {
@@ -7847,7 +7847,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._live1.set_x(this._player.x - 8 + 32);
 		this._live2.set_x(this._player.x + 18 + 32);
 		this._live3.set_x(this._player.x + 43 + 32);
-		this._live4.set_x(this._player.x + 65 + 32);
+		this._live4.set_x(this._player.x + 68 + 32);
 		this._live0.set_y(0);
 		this._live1.set_y(0);
 		this._live2.set_y(0);
@@ -7973,7 +7973,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._live1.set_x(this._player.x - 8 + 32);
 		this._live2.set_x(this._player.x + 18 + 32);
 		this._live3.set_x(this._player.x + 43 + 32);
-		this._live4.set_x(this._player.x + 65 + 32);
+		this._live4.set_x(this._player.x + 68 + 32);
 		this._live0.set_y(0);
 		this._live1.set_y(0);
 		this._live2.set_y(0);
@@ -8035,7 +8035,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 			this._live1.set_x(this._player.x - 8 + 32);
 			this._live2.set_x(this._player.x + 18 + 32);
 			this._live3.set_x(this._player.x + 43 + 32);
-			this._live4.set_x(this._player.x + 65 + 32);
+			this._live4.set_x(this._player.x + 68 + 32);
 			this._live0.set_y(0);
 			this._live1.set_y(0);
 			this._live2.set_y(0);
@@ -8269,7 +8269,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._live1.set_x(this._player.x - 8 + 32);
 		this._live2.set_x(this._player.x + 18 + 32);
 		this._live3.set_x(this._player.x + 43 + 32);
-		this._live4.set_x(this._player.x + 65 + 32);
+		this._live4.set_x(this._player.x + 68 + 32);
 		this._live0.set_y(0);
 		this._live1.set_y(0);
 		this._live2.set_y(0);
@@ -8301,7 +8301,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._live1.set_x(this._player.x - 8 + 32);
 		this._live2.set_x(this._player.x + 18 + 32);
 		this._live3.set_x(this._player.x + 43 + 32);
-		this._live4.set_x(this._player.x + 65 + 32);
+		this._live4.set_x(this._player.x + 68 + 32);
 		this._live0.set_y(0);
 		this._live1.set_y(0);
 		this._live2.set_y(0);
@@ -8462,7 +8462,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._live1.set_x(this._player.x - 8 + 32);
 		this._live2.set_x(this._player.x + 18 + 32);
 		this._live3.set_x(this._player.x + 43 + 32);
-		this._live4.set_x(this._player.x + 65 + 32);
+		this._live4.set_x(this._player.x + 68 + 32);
 		this._live0.set_y(0);
 		this._live1.set_y(0);
 		this._live2.set_y(0);
@@ -71727,7 +71727,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 395224;
+	this.version = 419456;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";

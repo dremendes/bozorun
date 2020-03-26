@@ -582,7 +582,7 @@ class BozoRunGameState extends FlxState
 		_live1.x = _player.x - 8 + TILE_WIDTH * 2;
 		_live2.x = _player.x + 18 + TILE_WIDTH * 2;
 		_live3.x = _player.x + 43 + TILE_WIDTH * 2;
-		_live4.x = _player.x + 65 + TILE_WIDTH * 2;
+		_live4.x = _player.x + 68 + TILE_WIDTH * 2;
 		
 		_live0.y = 0;
 		_live1.y = 0;
