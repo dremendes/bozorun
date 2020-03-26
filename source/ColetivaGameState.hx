@@ -12,6 +12,11 @@ class ColetivaGameState extends FlxState
 	private var moro:FlxSprite;
 	private var bozo:FlxSprite;
 	private var gueds:FlxSprite;
+	private var mic1:FlxSprite;
+	private var mic2:FlxSprite;
+	private var mic3:FlxSprite;
+	private var copo1:FlxSprite;
+	private var copo2:FlxSprite;
 	private var mesaColetiva:FlxSprite;
 	private var fundoColetiva:FlxSprite;
 	private var vs:FlxSprite;
@@ -49,6 +54,11 @@ class ColetivaGameState extends FlxState
         moro.animation.play("idle");
 		moro.setPosition(-20,90);
 		
+		mesaColetiva = new FlxSprite();
+		mesaColetiva.loadGraphic("assets/images/foregroundbozo.png", false, 350, 350);
+		add(mesaColetiva);
+		mesaColetiva.setPosition(-30,-20);
+		
 		bozo = new FlxSprite();
         bozo.loadGraphic("assets/images/bozotile.png", true, 150, 150);
         bozo.animation.add("idle", [0, 1], 4, true);
@@ -57,11 +67,21 @@ class ColetivaGameState extends FlxState
         bozo.animation.play("idle");
 		add(bozo);
 		bozo.setPosition(70,90);
-		
-		mesaColetiva = new FlxSprite();
-		mesaColetiva.loadGraphic("assets/images/foregroundbozo.png", false, 350, 350);
-		add(mesaColetiva);
-		mesaColetiva.setPosition(-30,-20);
+
+		mic1 = new FlxSprite();
+		mic1.loadGraphic("assets/images/microfone.png", false, 23, 58);
+		add(mic1);
+		mic1.setPosition(-30,170);
+
+		mic2 = new FlxSprite();
+		mic2.loadGraphic("assets/images/microfone.png", false, 23, 58);
+		add(mic2);
+		mic2.setPosition(30,170);
+
+		mic3 = new FlxSprite();
+		mic3.loadGraphic("assets/images/microfone.png", false, 23, 58);
+		add(mic3);
+		mic3.setPosition(130,170);
 		
 		BtnRun = new FlxButton(10, division * 1.5 + 40, "Fugir!", startGame);
 		BtnRun.label.size = 20;

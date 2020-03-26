@@ -67,7 +67,7 @@ class MainMenuState extends FlxState
 		BtnRun.label.size = 20;
 		BtnRun.loadGraphic("assets/images/buttons.png", false, 20, 15);
 		BtnRun.scale.set(.6, .9);
-		BtnRun.x = -30; //-50 + BtnColetiva.width;
+		BtnRun.x = -30; // -50 + BtnColetiva.width;
 		BtnRun.y += 25;
 		add(BtnRun);
 	}
