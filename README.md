@@ -1,5 +1,5 @@
 # [bozorun.github.io](http://bozorun.github.io)
-![Tela do site](https://raw.githubusercontent.com/fullynotanalien/bozorun.github.io/master/assets/images/screen.png)
+![Tela do site](https://raw.githubusercontent.com/fullynotanalien/bozorun/master/assets/images/screen.png)
 
 # Bozorun
 
