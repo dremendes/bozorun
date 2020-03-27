@@ -33,18 +33,18 @@ class MainMenuState extends FlxState
 		#end
 		
 		background = new FlxSprite();
-		background.loadGraphic("assets/images/brasilia.png", false, 300, 300);
+		background.loadGraphic(AssetPaths.brasilia__png, false, 300, 300);
 		add(background);
 		
 		bozoEspirra = new FlxSprite();
-		bozoEspirra.loadGraphic("assets/images/bozotile.png", true, 150, 150, true);
+		bozoEspirra.loadGraphic(AssetPaths.bozotile__png, true, 150, 150, true);
 		bozoEspirra.animation.add("idle", [14, 21, 14, 21, 15, 16, 17, 18, 19, 20, 20], 7, true);
 		bozoEspirra.animation.play("idle");
 		bozoEspirra.setPosition(-10,100);
 		add(bozoEspirra);
 
 		bozoRun = new FlxSprite();
-		bozoRun.loadGraphic("assets/images/Jair.png", true, 104, 122, true);
+		bozoRun.loadGraphic(AssetPaths.Jair__png, true, 104, 122, true);
 		bozoRun.animation.add("run", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 30, true);
 		bozoRun.animation.play("run");
 		bozoRun.setPosition(180,100);
@@ -55,18 +55,20 @@ class MainMenuState extends FlxState
 		title.setFormat(null, 34, 0xFFFFFFFF, "center");
 		add(title);
 		
-		BtnColetiva = new FlxButton(10, division * 1.5 + 40, "Coletiva", callBozoColetivaGame);
+		BtnColetiva = new FlxButton(10, division * 1.5 + 40, "", callBozoColetivaGame);
 		BtnColetiva.label.size = 20;
-		BtnColetiva.loadGraphic("assets/images/buttons.png", false, 20, 15);
-		BtnColetiva.scale.set(.6, .9);
-		BtnColetiva.x = -30;
+		BtnColetiva.loadGraphic(AssetPaths.coletiva__png , true, 60, 36);
+		BtnColetiva.scale.set(1.6, .9);
+		BtnColetiva.x = 35;
 		BtnColetiva.y += 25;
 		//add(BtnColetiva);
 		
 		BtnRun = new FlxButton(10, division * 1.5 + 40, "", callBozoRunGame);
 		BtnRun.label.size = 20;
-		BtnRun.loadGraphic("assets/images/botoes/fugir/fugir.png", true, 60, 36);
-		BtnRun.x = 35; // -50 + BtnColetiva.width;
+		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 36);
+		
+		//BtnRun.x = 200;
+		BtnRun.x = 35;
 		BtnRun.y += 25;
 		add(BtnRun);
 	}

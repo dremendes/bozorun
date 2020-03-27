@@ -35,11 +35,11 @@ class ColetivaGameState extends FlxState
 		#end
 		
 		fundoColetiva = new FlxSprite();
-		fundoColetiva.loadGraphic("assets/images/backgroundbozo.png", false, 350, 300);
+		fundoColetiva.loadGraphic(AssetPaths.backgroundbozo__png, false, 350, 300);
 		add(fundoColetiva);
 		
 		gueds = new FlxSprite();
-        gueds.loadGraphic("assets/images/guedstile.png", true, 118, 117);
+        gueds.loadGraphic(AssetPaths.guedstile__png, true, 118, 117);
         gueds.animation.add("idle", [0,1], 4, true);
         gueds.animation.add("idle_mascara", [6, 7], 4, true);
 		add(gueds);
@@ -47,7 +47,7 @@ class ColetivaGameState extends FlxState
 		gueds.setPosition(180,90);
 		
 		moro = new FlxSprite();
-		moro.loadGraphic("assets/images/morotile.png", true, 120, 120);
+		moro.loadGraphic(AssetPaths.morotile__png, true, 120, 120);
         moro.animation.add("idle", [2,3], 4, true);
         moro.animation.add("idle_mascara", [6, 7], 4, true);
 		add(moro);
@@ -55,12 +55,12 @@ class ColetivaGameState extends FlxState
 		moro.setPosition(-20,90);
 		
 		mesaColetiva = new FlxSprite();
-		mesaColetiva.loadGraphic("assets/images/foregroundbozo.png", false, 350, 350);
+		mesaColetiva.loadGraphic(AssetPaths.foregroundbozo__png, false, 350, 350);
 		add(mesaColetiva);
 		mesaColetiva.setPosition(-30,-20);
 		
 		bozo = new FlxSprite();
-        bozo.loadGraphic("assets/images/bozotile.png", true, 150, 150);
+        bozo.loadGraphic(AssetPaths.bozotile__png, true, 150, 150);
         bozo.animation.add("idle", [0, 1], 4, true);
         bozo.animation.add("idle_mascara", [10, 11], 4, true);
         bozo.animation.add("idle_mascara_centro", [12, 13], 4, true);
@@ -69,33 +69,33 @@ class ColetivaGameState extends FlxState
 		bozo.setPosition(70,90);
 
 		mic1 = new FlxSprite();
-		mic1.loadGraphic("assets/images/microfone.png", false, 23, 58);
+		mic1.loadGraphic(AssetPaths.microfone__png, false, 23, 58);
 		add(mic1);
 		mic1.setPosition(-30,170);
 
 		mic2 = new FlxSprite();
-		mic2.loadGraphic("assets/images/microfone.png", false, 23, 58);
+		mic2.loadGraphic(AssetPaths.microfone__png, false, 23, 58);
 		add(mic2);
 		mic2.setPosition(30,170);
 
 		mic3 = new FlxSprite();
-		mic3.loadGraphic("assets/images/microfone.png", false, 23, 58);
+		mic3.loadGraphic(AssetPaths.microfone__png, false, 23, 58);
 		add(mic3);
 		mic3.setPosition(130,170);
 		
-		BtnRun = new FlxButton(10, division * 1.5 + 40, "Fugir!", startGame);
+		BtnRun = new FlxButton(10, division * 1.5 + 40, "", startGame);
 		BtnRun.label.size = 20;
-		BtnRun.loadGraphic("assets/images/buttons.png", false, 20, 15);
-		BtnRun.scale.set(.6, .9);
-		BtnRun.x = 140;
+		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 36);
+		BtnRun.scale.set(1.6, 1.1);
+		BtnRun.x = 200;
 		BtnRun.y += 25;
         add(BtnRun);
         
-        BtnMascara = new FlxButton(10, division * 1.5 + 40, "Colocar Máscara", toogleMascara);
+        BtnMascara = new FlxButton(10, division * 1.5 + 40, "", toogleMascara);
 		BtnMascara.label.size = 15;
-		BtnMascara.loadGraphic("assets/images/buttons.png", false, 20, 15);
-		BtnMascara.scale.set(1.1, .7);
-		BtnMascara.x = -10;
+		BtnMascara.loadGraphic(AssetPaths.mascaraBotao__png, true, 60, 36);
+		BtnMascara.scale.set(1.9, 1.1);
+		BtnMascara.x = 35;
 		BtnMascara.y += 25;
         add(BtnMascara);
     }

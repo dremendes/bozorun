@@ -7,83 +7,96 @@ class InaraChar extends FlxSprite
     private var _char:String;
     private var _width:Float;
     private var _height:Float;
+    private var _posX:Float;
+    private var _posY:Float;
+    public var _changed:Bool=true;
 
-    private function setCharWidthHeight(c: String, w:Float, h:Float):Void
+    private function setCharWidthHeightPosition(c: String, w:Float, h:Float, x:Float, y:Float):Void
     {
         _char = c;
         _width = w;
         _height = h;
+        _posX = x;
+        _posY = y;
     }
-    public function new(?X:Float=0, ?Y:Float=0, Char:String)
+    public function new(X:Float=0, Y:Float=0, Char:String, posX:Float=0, posY:Float=0)
     {
         super(X, Y);
 
         switch(Char){
-            case "*" : setCharWidthHeight(AssetPaths.asterisco__png, 15, 25);
-            case "/" : setCharWidthHeight(AssetPaths.barra__png, 29, 25);
-            case ":" : setCharWidthHeight(AssetPaths.dois_pontos__png, 7, 15);
-            case "?" : setCharWidthHeight(AssetPaths.interrogacao__png, 23, 25);
-            case "%" : setCharWidthHeight(AssetPaths.porcentagem__png, 26, 25);
-            case "¨" : setCharWidthHeight(AssetPaths.trema__png, 15, 7);
-            case "-" : setCharWidthHeight(AssetPaths.___png, 18, 25);
-            case "~" : setCharWidthHeight(AssetPaths.til__png, 15, 6);
-            case "´" : setCharWidthHeight(AssetPaths.agudo__png, 11, 10);
-            case "," : setCharWidthHeight(AssetPaths.virgula__png, 8, 25);
-            case "!" : setCharWidthHeight(AssetPaths.exclamacao__png, 11, 25);
-            case "+" : setCharWidthHeight(AssetPaths.mais__png, 18, 25);
-            case "0" : setCharWidthHeight(AssetPaths.num_0__png, 22, 25);
-            case "1" : setCharWidthHeight(AssetPaths.num_1__png, 12, 25);
-            case "2" : setCharWidthHeight(AssetPaths.num_2__png, 23, 25);
-            case "3" : setCharWidthHeight(AssetPaths.num_3__png, 24, 25);
-            case "4" : setCharWidthHeight(AssetPaths.num_4__png, 20, 25);
-            case "5" : setCharWidthHeight(AssetPaths.num_5__png, 23, 25);
-            case "6" : setCharWidthHeight(AssetPaths.num_6__png, 23, 25);
-            case "7" : setCharWidthHeight(AssetPaths.num_7__png, 25, 25);
-            case "8" : setCharWidthHeight(AssetPaths.num_8__png, 27, 25);
-            case "9" : setCharWidthHeight(AssetPaths.num_9__png, 25, 25);
-            case "a" : setCharWidthHeight(AssetPaths.a__png, 25, 25);
-            case "á" : setCharWidthHeight(AssetPaths.a_agudo__png, 25, 27);
-            case "ã" : setCharWidthHeight(AssetPaths.a_til__png, 25, 25);
-            case "â" : setCharWidthHeight(AssetPaths.a_circunflexo__png, 25, 30);
-            case "ä" : setCharWidthHeight(AssetPaths.a_trema__png, 25, 25);
-            case "b" : setCharWidthHeight(AssetPaths.b__png, 20, 25);
-            case "c" : setCharWidthHeight(AssetPaths.c__png, 22, 25);
-            case "ç" : setCharWidthHeight(AssetPaths.c_cedilha__png, 22, 26);
-            case "d" : setCharWidthHeight(AssetPaths.d__png, 23, 25);
-            case "e" : setCharWidthHeight(AssetPaths.e__png, 22, 25);
-            case "é" : setCharWidthHeight(AssetPaths.e_agudo__png, 22, 27);
-            case "ê" : setCharWidthHeight(AssetPaths.e_circunflexo__png, 22, 27);
-            case "ë" : setCharWidthHeight(AssetPaths.e_trema__png, 22, 27);
-            case "f" : setCharWidthHeight(AssetPaths.f__png, 22, 26);
-            case "g" : setCharWidthHeight(AssetPaths.g__png, 22, 25);
-            case "h" : setCharWidthHeight(AssetPaths.h__png, 25, 25);
-            case "i" : setCharWidthHeight(AssetPaths.i__png, 15, 25);
-            case "í" : setCharWidthHeight(AssetPaths.i_agudo__png, 15, 25);
-            case "ï" : setCharWidthHeight(AssetPaths.i_trema__png, 15, 25);
-            case "j" : setCharWidthHeight(AssetPaths.j__png, 18, 25);
-            case "k" : setCharWidthHeight(AssetPaths.k__png, 20, 25);
-            case "l" : setCharWidthHeight(AssetPaths.l__png, 22, 25);
-            case "m" : setCharWidthHeight(AssetPaths.m__png, 37, 25);
-            case "n" : setCharWidthHeight(AssetPaths.n__png, 32, 25);
-            case "o" : setCharWidthHeight(AssetPaths.o__png, 22, 28);
-            case "õ" : setCharWidthHeight(AssetPaths.o_til__png, 22, 28);
-            case "ö" : setCharWidthHeight(AssetPaths.o_trema__png, 22, 28);
-            case "ô" : setCharWidthHeight(AssetPaths.o_circunflexo__png, 22, 28);
-            case "p" : setCharWidthHeight(AssetPaths.p__png, 24, 25);
-            case "q" : setCharWidthHeight(AssetPaths.q__png, 24, 26);
-            case "r" : setCharWidthHeight(AssetPaths.r__png, 24, 25);
-            case "s" : setCharWidthHeight(AssetPaths.s__png, 22, 25);
-            case "t" : setCharWidthHeight(AssetPaths.t__png, 24, 25);
-            case "u" : setCharWidthHeight(AssetPaths.u__png, 22, 27);
-            case "ú" : setCharWidthHeight(AssetPaths.u_agudo__png, 22, 27);
-            case "ü" : setCharWidthHeight(AssetPaths.u_trema__png, 22, 27);
-            case "v" : setCharWidthHeight(AssetPaths.v__png, 27, 25);
-            case "w" : setCharWidthHeight(AssetPaths.w__png, 41, 25);
-            case "x" : setCharWidthHeight(AssetPaths.x__png, 26, 26);
-            case "y" : setCharWidthHeight(AssetPaths.y__png, 25, 25);
-            case "z" : setCharWidthHeight(AssetPaths.z__png, 27, 25);     
+            case "*" : setCharWidthHeightPosition(AssetPaths.asterisco__png, 15, 25, posX, posY);
+            case "/" : setCharWidthHeightPosition(AssetPaths.barra__png, 29, 25, posX, posY);
+            case ":" : setCharWidthHeightPosition(AssetPaths.dois_pontos__png, 7, 15, posX, posY);
+            case "?" : setCharWidthHeightPosition(AssetPaths.interrogacao__png, 23, 25, posX, posY);
+            case "%" : setCharWidthHeightPosition(AssetPaths.porcentagem__png, 26, 25, posX, posY);
+            case "¨" : setCharWidthHeightPosition(AssetPaths.trema__png, 15, 7, posX, posY);
+            case "-" : setCharWidthHeightPosition(AssetPaths.___png, 18, 25, posX, posY);
+            case "~" : setCharWidthHeightPosition(AssetPaths.til__png, 15, 6, posX, posY);
+            case "´" : setCharWidthHeightPosition(AssetPaths.agudo__png, 11, 10, posX, posY);
+            case "," : setCharWidthHeightPosition(AssetPaths.virgula__png, 8, 25, posX, posY);
+            case "!" : setCharWidthHeightPosition(AssetPaths.exclamacao__png, 11, 25, posX, posY);
+            case "+" : setCharWidthHeightPosition(AssetPaths.mais__png, 18, 25, posX, posY);
+            case "0" : setCharWidthHeightPosition(AssetPaths.num_0__png, 22, 25, posX, posY);
+            case "1" : setCharWidthHeightPosition(AssetPaths.num_1__png, 12, 25, posX, posY);
+            case "2" : setCharWidthHeightPosition(AssetPaths.num_2__png, 23, 25, posX, posY);
+            case "3" : setCharWidthHeightPosition(AssetPaths.num_3__png, 24, 25, posX, posY);
+            case "4" : setCharWidthHeightPosition(AssetPaths.num_4__png, 20, 25, posX, posY);
+            case "5" : setCharWidthHeightPosition(AssetPaths.num_5__png, 23, 25, posX, posY);
+            case "6" : setCharWidthHeightPosition(AssetPaths.num_6__png, 23, 25, posX, posY);
+            case "7" : setCharWidthHeightPosition(AssetPaths.num_7__png, 25, 25, posX, posY);
+            case "8" : setCharWidthHeightPosition(AssetPaths.num_8__png, 27, 25, posX, posY);
+            case "9" : setCharWidthHeightPosition(AssetPaths.num_9__png, 25, 25, posX, posY);
+            case "a" : setCharWidthHeightPosition(AssetPaths.a__png, 25, 25, posX, posY);
+            case "á" : setCharWidthHeightPosition(AssetPaths.a_agudo__png, 25, 27, posX, posY);
+            case "ã" : setCharWidthHeightPosition(AssetPaths.a_til__png, 25, 25, posX, posY);
+            case "â" : setCharWidthHeightPosition(AssetPaths.a_circunflexo__png, 25, 30, posX, posY);
+            case "ä" : setCharWidthHeightPosition(AssetPaths.a_trema__png, 25, 25, posX, posY);
+            case "b" : setCharWidthHeightPosition(AssetPaths.b__png, 20, 25, posX, posY);
+            case "c" : setCharWidthHeightPosition(AssetPaths.c__png, 22, 25, posX, posY);
+            case "ç" : setCharWidthHeightPosition(AssetPaths.c_cedilha__png, 22, 26, posX, posY);
+            case "d" : setCharWidthHeightPosition(AssetPaths.d__png, 23, 25, posX, posY);
+            case "e" : setCharWidthHeightPosition(AssetPaths.e__png, 22, 25, posX, posY);
+            case "é" : setCharWidthHeightPosition(AssetPaths.e_agudo__png, 22, 27, posX, posY);
+            case "ê" : setCharWidthHeightPosition(AssetPaths.e_circunflexo__png, 22, 27, posX, posY);
+            case "ë" : setCharWidthHeightPosition(AssetPaths.e_trema__png, 22, 27, posX, posY);
+            case "f" : setCharWidthHeightPosition(AssetPaths.f__png, 22, 26, posX, posY);
+            case "g" : setCharWidthHeightPosition(AssetPaths.g__png, 22, 25, posX, posY);
+            case "h" : setCharWidthHeightPosition(AssetPaths.h__png, 25, 25, posX, posY);
+            case "i" : setCharWidthHeightPosition(AssetPaths.i__png, 15, 25, posX, posY);
+            case "í" : setCharWidthHeightPosition(AssetPaths.i_agudo__png, 15, 25, posX, posY);
+            case "ï" : setCharWidthHeightPosition(AssetPaths.i_trema__png, 15, 25, posX, posY);
+            case "j" : setCharWidthHeightPosition(AssetPaths.j__png, 18, 25, posX, posY);
+            case "k" : setCharWidthHeightPosition(AssetPaths.k__png, 20, 25, posX, posY);
+            case "l" : setCharWidthHeightPosition(AssetPaths.l__png, 22, 25, posX, posY);
+            case "m" : setCharWidthHeightPosition(AssetPaths.m__png, 37, 25, posX, posY);
+            case "n" : setCharWidthHeightPosition(AssetPaths.n__png, 32, 25, posX, posY);
+            case "o" : setCharWidthHeightPosition(AssetPaths.o__png, 22, 28, posX, posY);
+            case "õ" : setCharWidthHeightPosition(AssetPaths.o_til__png, 22, 28, posX, posY);
+            case "ö" : setCharWidthHeightPosition(AssetPaths.o_trema__png, 22, 28, posX, posY);
+            case "ô" : setCharWidthHeightPosition(AssetPaths.o_circunflexo__png, 22, 28, posX, posY);
+            case "p" : setCharWidthHeightPosition(AssetPaths.p__png, 24, 25, posX, posY);
+            case "q" : setCharWidthHeightPosition(AssetPaths.q__png, 24, 26, posX, posY);
+            case "r" : setCharWidthHeightPosition(AssetPaths.r__png, 24, 25, posX, posY);
+            case "s" : setCharWidthHeightPosition(AssetPaths.s__png, 22, 25, posX, posY);
+            case "t" : setCharWidthHeightPosition(AssetPaths.t__png, 24, 25, posX, posY);
+            case "u" : setCharWidthHeightPosition(AssetPaths.u__png, 22, 27, posX, posY);
+            case "ú" : setCharWidthHeightPosition(AssetPaths.u_agudo__png, 22, 27, posX, posY);
+            case "ü" : setCharWidthHeightPosition(AssetPaths.u_trema__png, 22, 27, posX, posY);
+            case "v" : setCharWidthHeightPosition(AssetPaths.v__png, 27, 25, posX, posY);
+            case "w" : setCharWidthHeightPosition(AssetPaths.w__png, 41, 25, posX, posY);
+            case "x" : setCharWidthHeightPosition(AssetPaths.x__png, 26, 26, posX, posY);
+            case "y" : setCharWidthHeightPosition(AssetPaths.y__png, 25, 25, posX, posY);
+            case "z" : setCharWidthHeightPosition(AssetPaths.z__png, 27, 25, posX, posY);
         }
 
         loadGraphic(_char, false, _width, _height, false);
+    }
+
+    override public function update(elapsed: Float)
+    {
+        if(_changed){
+            setPosition(_posX, posY);
+            _changed = false;
+        }
     }
 }

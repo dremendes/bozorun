@@ -132,8 +132,8 @@ class BozoRunGameState extends FlxState
 	
 	private function setupBg():Void
 	{
-		_bgImg0 = new FlxBackdrop("assets/images/sky.png", 0.1, 0, true, false, 0, 0);
-		_bgImg3 = new FlxBackdrop("assets/images/foreground.png", 0.4, 0, true, false, 0, 0);
+		_bgImg0 = new FlxBackdrop(AssetPaths.sky__png, 0.1, 0, true, false, 0, 0);
+		_bgImg3 = new FlxBackdrop(AssetPaths.foreground__png, 0.4, 0, true, false, 0, 0);
 		_bgImgGrp = new FlxGroup();
 
 		_bgImgGrp.add(_bgImg0);
@@ -145,7 +145,7 @@ class BozoRunGameState extends FlxState
 	private function setupPlayer():Void
 	{
 		// make a player sprite
-		_player = new FlxSprite().loadGraphic("assets/images/Jair.png", true, 104, 122);
+		_player = new FlxSprite().loadGraphic(AssetPaths.Jair__png, true, 104, 122);
 		_player.scale.set(0.4, 1);
 
         _player.updateHitbox();
@@ -173,11 +173,11 @@ class BozoRunGameState extends FlxState
 	private function setupUI():Void
 	{
 		_resetButton = new FlxButton(0, 0, "", onReset);
-		_resetButton.loadGraphic("assets/images/botoes/reiniciar/reiniciar.png", true, 60, 36);
+		_resetButton.loadGraphic(AssetPaths.reiniciar__png, true, 60, 36);
 		add(_resetButton);
 
 		_voltarButton = new FlxButton(0, 0, "", chamarMenu);
-		_voltarButton.loadGraphic("assets/images/botoes/voltar/voltar.png", true, 60, 36);
+		_voltarButton.loadGraphic(AssetPaths.voltar__png, true, 60, 36);
 		add(_voltarButton);
 		
 		// add score counter 
@@ -188,38 +188,38 @@ class BozoRunGameState extends FlxState
 		add(_scoreText);
 		
 		// add lives indicator
-		_live0 = new FlxSprite(-15, 260, "assets/images/coracao.png");
+		_live0 = new FlxSprite(-15, 260, AssetPaths.coracao__png);
 		add(_live0);
 
-		_live1 = new FlxSprite(0, 260, "assets/images/coracao.png");
+		_live1 = new FlxSprite(0, 260, AssetPaths.coracao__png);
 		add(_live1);
 
-		_live2 = new FlxSprite(15, 260, "assets/images/coracao.png");
+		_live2 = new FlxSprite(15, 260, AssetPaths.coracao__png);
 		add(_live2);
 
-		_live3 = new FlxSprite(30, 260, "assets/images/coracao.png");
+		_live3 = new FlxSprite(30, 260, AssetPaths.coracao__png);
 		add(_live3);
 
-		_live4 = new FlxSprite(45, 260, "assets/images/coracao.png");
+		_live4 = new FlxSprite(45, 260, AssetPaths.coracao__png);
 		add(_live4);
 
-		_laranja1 = new FlxSprite(30, 33, "assets/images/laranja.png");
+		_laranja1 = new FlxSprite(30, 33, AssetPaths.laranja__png);
 		add(_laranja1);
 		_laranja1.visible = false;
 
-		_laranja2 = new FlxSprite(30, 33, "assets/images/laranja.png");
+		_laranja2 = new FlxSprite(30, 33, AssetPaths.laranja__png);
 		add(_laranja2);
 		_laranja2.visible = false;
 
-		_laranja3 = new FlxSprite(30, 33, "assets/images/laranja.png");
+		_laranja3 = new FlxSprite(30, 33, AssetPaths.laranja__png);
 		add(_laranja3);
 		_laranja3.visible = false;
 
-		_laranja4 = new FlxSprite(30, 33, "assets/images/laranja.png");
+		_laranja4 = new FlxSprite(30, 33, AssetPaths.laranja__png);
 		add(_laranja4);
 		_laranja4.visible = false;
 
-		_laranja5 = new FlxSprite(30, 33, "assets/images/laranja.png");
+		_laranja5 = new FlxSprite(30, 33, AssetPaths.laranja__png);
 		add(_laranja5);
 		_laranja5.visible = false;
 
@@ -229,7 +229,7 @@ class BozoRunGameState extends FlxState
 	private function setupPlatforms():Void
 	{
 		// pool to hold platform objects
-		_floor = new FlxBackdrop("assets/images/groundtiles.png", 1, 0, true, false, 0, 0);
+		_floor = new FlxBackdrop(AssetPaths.groundtiles__png, 1, 0, true, false, 0, 0);
 		_floor.y = 280;
 		_floor.allowCollisions = FlxObject.ANY;
 		_floor.collisonXDrag = false;
