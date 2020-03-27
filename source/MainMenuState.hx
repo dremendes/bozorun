@@ -22,6 +22,9 @@ class MainMenuState extends FlxState
 	private var title:FlxText;
 	private var BtnRun:FlxButton;
 	private var BtnColetiva:FlxButton;
+	private var ceu:FlxSprite;
+	private var pato:FlxSprite;
+	private var aviao:FlxSprite;
 	
 	override public function create():Void
 	{
@@ -32,6 +35,15 @@ class MainMenuState extends FlxState
 		#else
 		FlxG.mouse.visible = true;
 		#end
+
+		ceu = new FlxSprite().loadGraphic(AssetPaths.ceu__png, false, 300, 300);
+		add(ceu);
+
+		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 86, 17);
+		aviao.animation.add("voando", [0,1], 10, true);
+		aviao.animation.play("voando");
+		aviao.setPosition(-10, 20);
+		add(aviao);
 		
 		background = new FlxSprite();
 		background.loadGraphic(AssetPaths.senado_bg__png, true, 300, 300);
@@ -48,7 +60,7 @@ class MainMenuState extends FlxState
 
 		bozoRun = new FlxSprite();
 		bozoRun.loadGraphic(AssetPaths.Jair__png, true, 104, 122, true);
-		bozoRun.animation.add("arminha_com_a_mao", [20, 19], 7, true);
+		bozoRun.animation.add("arminha_com_a_mao", [20, 19], 4, true);
 		bozoRun.animation.play("arminha_com_a_mao");
 		bozoRun.setPosition(180,160);
 		add(bozoRun);
@@ -84,6 +96,17 @@ class MainMenuState extends FlxState
 	private function callBozoColetivaGame():Void
 	{
 		FlxG.switchState(new ColetivaGameState());
+	}
+
+	override public function update(elapsed:Float):Void
+	{
+		aviao.x += 0.8;
+		aviao.height += 0.08;
+		aviao.width += 0.04;
+
+		if(aviao.x >= 350) aviao.x = -40;
+
+		super.update(FlxG.elapsed);
 	}
 	
 	override public function destroy():Void

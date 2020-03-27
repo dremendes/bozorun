@@ -91,11 +91,9 @@ class BozoRunGameState extends FlxState
 	
 	// score counter and timer
 	private var _score:Int;
-	private var _startDistance:Int;
 	private var _record:Int;
 	
-	// button to reset and some text
-	private var _resetButton:FlxButton;
+	private var _reiniciarButton:FlxButton;
 
 	private var _voltarButton:FlxButton;
 	private var _scoreText:FlxText;
@@ -105,6 +103,7 @@ class BozoRunGameState extends FlxState
 											  AssetPaths.livros4__png,
 											  AssetPaths.livros5__png,
 											  AssetPaths.livros6__png];
+	private var _blink:Bool = true;
 		
 	override public function create():Void
 	{
@@ -157,7 +156,7 @@ class BozoRunGameState extends FlxState
         _player.updateHitbox();
 		_player.setGraphicSize(104, 122);
 
-		_startDistance = Std.int(_player.x);
+		_record = Std.int(_player.x);
 		_record = Std.int(_player.x);
 		
 		// set animations to use this run
@@ -178,9 +177,9 @@ class BozoRunGameState extends FlxState
 	
 	private function setupUI():Void
 	{
-		_resetButton = new FlxButton(0, 0, "", onReset);
-		_resetButton.loadGraphic(AssetPaths.reiniciar__png, true, 60, 36);
-		add(_resetButton);
+		_reiniciarButton = new FlxButton(0, 0, "", onReset);
+		_reiniciarButton.loadGraphic(AssetPaths.reiniciar__png, true, 60, 36);
+		add(_reiniciarButton);
 
 		_voltarButton = new FlxButton(0, 0, "", chamarMenu);
 		_voltarButton.loadGraphic(AssetPaths.voltar__png, true, 60, 36);
@@ -267,7 +266,7 @@ class BozoRunGameState extends FlxState
 		_sfxDie = true;
 		
 		// setup player position
-		_player.setPosition(_startDistance*TILE_WIDTH, 0);
+		_player.setPosition(_record*TILE_WIDTH, 0);
 		
 		// Basic player physics
 		_player.drag.x = xDrag;
@@ -280,15 +279,19 @@ class BozoRunGameState extends FlxState
 		
 		// move camera to match player
 		_ghost.x = _player.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
+
+		_blink = true;
+		var timer = new haxe.Timer(3000);
+		timer.run = function() { _blink = false; _player.visible = true;}
 	}
 	
 	private inline function initUI():Void
 	{
-		_resetButton.setPosition(140, 0);
-		_voltarButton.setPosition(195, 0);
-		_scoreText.y = 20;
+		_reiniciarButton.setPosition(134, 0);
+		_voltarButton.setPosition(189, 0);
+		_scoreText.y = 2;
 
-		_score = _startDistance;
+		_score = _record;
 		positionText();
 	}
 	
@@ -298,7 +301,7 @@ class BozoRunGameState extends FlxState
 		_change = false;
 		
 		// reset edge screen where we generate new platforms
-		_edge = (_startDistance-1)*TILE_WIDTH;
+		_edge = (_record-1)*TILE_WIDTH;
 	}
 	
 	private function onReset():Void
@@ -308,7 +311,7 @@ class BozoRunGameState extends FlxState
 			switch (_livesTotal) {
 				case 1:
 					_live1.visible = false;
-					remove(_resetButton);
+					remove(_reiniciarButton);
 				case 2:
 					remove(_live2);
 				case 3:
@@ -369,7 +372,7 @@ class BozoRunGameState extends FlxState
 			_change = false;
 		}
 
-		if (FlxG.collide(_player, _oranges, (_obj1, _obj2) -> _obj2.destroy() )){
+		if (FlxG.collide(_player, _oranges, (_bozo, _laranja) -> _laranja.destroy() )){
 			_playJump = false;
 			if(_amountOranges < 5) {
 				_amountOranges += 1;
@@ -399,7 +402,7 @@ class BozoRunGameState extends FlxState
 		}
 		
 		// collision with books?
-		if (FlxG.collide(_player, _books, (_obj1, _obj2) -> if (_amountOranges >= 1) _obj2.destroy() )) {
+		if (!_blink && FlxG.collide(_player, _books, (_obj1, _obj2) -> if (_amountOranges >= 1) _obj2.destroy() )) {
 			_playJump = false;
 			_jump = 0;
 
@@ -426,6 +429,8 @@ class BozoRunGameState extends FlxState
 					sfxDie();
 				}
 			}
+		} else if(_blink) {
+			_player.visible = !_player.visible;
 		}
 		
 		playerAnimation();
@@ -438,15 +443,11 @@ class BozoRunGameState extends FlxState
 	{
 		_score = Std.int(_player.x / (TILE_WIDTH));
 		
-		if (_score*.5 > _startDistance) {
-			_startDistance = Std.int(_score * .5);
-		}
-		
 		if (_player.x > (_record * TILE_WIDTH)) {
 			_record = _score;
 		}
 		
-		_scoreText.text = Std.string(_score + "m\n\nInício: " + _startDistance + "m\n\nRecorde: " + _record + "m");
+		_scoreText.text = Std.string("Recorde: " + _record + "m");
 		
 		positionText();
 		
@@ -582,7 +583,7 @@ class BozoRunGameState extends FlxState
 	
 	private inline function positionText():Void
 	{
-		_scoreText.x = _player.x + FlxG.width - (4 * TILE_WIDTH) + 14;
+		_scoreText.x = _player.x + FlxG.width - (4 * TILE_WIDTH) + 12;
 		
 		_live0.x = _player.x - 35 + TILE_WIDTH * 2;
 		_live1.x = _player.x - 8 + TILE_WIDTH * 2;

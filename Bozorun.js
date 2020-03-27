@@ -895,9 +895,9 @@ ApplicationMain.create = function(config) {
 	ManifestResources.init(config);
 	var _this = app.meta;
 	if(__map_reserved["build"] != null) {
-		_this.setReserved("build","99");
+		_this.setReserved("build","100");
 	} else {
-		_this.h["build"] = "99";
+		_this.h["build"] = "100";
 	}
 	var _this1 = app.meta;
 	if(__map_reserved["company"] != null) {
@@ -8087,6 +8087,7 @@ flixel_math_FlxRandom.prototype = {
 };
 Math.__name__ = "Math";
 var BozoRunGameState = function(MaxSize) {
+	this._blink = true;
 	this._arrayLivros = ["assets/images/obstaculos/livros1.png","assets/images/obstaculos/livros2.png","assets/images/obstaculos/livros3.png","assets/images/obstaculos/livros4.png","assets/images/obstaculos/livros5.png","assets/images/obstaculos/livros6.png"];
 	this._amountOranges = 0;
 	this._livesTotal = 5;
@@ -8126,12 +8127,12 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 	,_oranges: null
 	,_change: null
 	,_score: null
-	,_startDistance: null
 	,_record: null
-	,_resetButton: null
+	,_reiniciarButton: null
 	,_voltarButton: null
 	,_scoreText: null
 	,_arrayLivros: null
+	,_blink: null
 	,create: function() {
 		flixel_FlxG.mouse.set_visible(false);
 		var _this = flixel_FlxG.worldBounds;
@@ -8140,11 +8141,12 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		flixel_FlxG.sound.playMusic("assets/music/We're the Resistors.mp3");
 		this.setupBg();
 		this.setupPlayer();
+		var _gthis = this;
 		this._jump = -1;
 		this._playJump = true;
 		this._jumpPressed = false;
 		this._sfxDie = true;
-		this._player.setPosition(this._startDistance * 16,0);
+		this._player.setPosition(this._record * 16,0);
 		this._player.drag.set_x(100);
 		this._player.velocity.set(0,0);
 		this._player.maxVelocity.set(200,1400);
@@ -8154,12 +8156,18 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._player.animation.add("fall",[16,17],7,false);
 		this._player.animation.add("die",[22,23],15,false);
 		this._ghost.set_x(this._player.x - 3.2 + flixel_FlxG.width * .5);
+		this._blink = true;
+		var timer = new haxe_Timer(3000);
+		timer.run = function() {
+			_gthis._blink = false;
+			_gthis._player.set_visible(true);
+		};
 		this.setupUI();
-		this._resetButton.setPosition(140,0);
-		this._voltarButton.setPosition(195,0);
-		this._scoreText.set_y(20);
-		this._score = this._startDistance;
-		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 14);
+		this._reiniciarButton.setPosition(134,0);
+		this._voltarButton.setPosition(189,0);
+		this._scoreText.set_y(2);
+		this._score = this._record;
+		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 12);
 		this._live0.set_x(this._player.x - 35 + 32);
 		this._live1.set_x(this._player.x - 8 + 32);
 		this._live2.set_x(this._player.x + 18 + 32);
@@ -8182,7 +8190,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._laranja5.set_y(30);
 		this.setupPlatforms();
 		this._change = false;
-		this._edge = (this._startDistance - 1) * 16;
+		this._edge = (this._record - 1) * 16;
 	}
 	,setupBg: function() {
 		this._bgImg0 = new flixel_addons_display_FlxBackdrop("assets/images/sky.png",0.1,0,true,false,0,0);
@@ -8197,7 +8205,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._player.scale.set(0.4,1);
 		this._player.updateHitbox();
 		this._player.setGraphicSize(104,122);
-		this._startDistance = this._player.x | 0;
+		this._record = this._player.x | 0;
 		this._record = this._player.x | 0;
 		this._player.animation.add("run",[3,4,5,6,7,8,9,10,11,12,13],30,true);
 		this._player.animation.add("jump",[15,14],7,false);
@@ -8209,9 +8217,9 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		flixel_FlxG.camera.follow(this._ghost);
 	}
 	,setupUI: function() {
-		this._resetButton = new flixel_ui_FlxButton(0,0,"",$bind(this,this.onReset));
-		this._resetButton.loadGraphic("assets/images/botoes/reiniciar/reiniciar.png",true,60,36);
-		this.add(this._resetButton);
+		this._reiniciarButton = new flixel_ui_FlxButton(0,0,"",$bind(this,this.onReset));
+		this._reiniciarButton.loadGraphic("assets/images/botoes/reiniciar/reiniciar.png",true,60,36);
+		this.add(this._reiniciarButton);
 		this._voltarButton = new flixel_ui_FlxButton(0,0,"",$bind(this,this.chamarMenu));
 		this._voltarButton.loadGraphic("assets/images/botoes/voltar/voltar.png",true,60,36);
 		this.add(this._voltarButton);
@@ -8265,11 +8273,12 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this.add(this._oranges);
 	}
 	,initPlayer: function() {
+		var _gthis = this;
 		this._jump = -1;
 		this._playJump = true;
 		this._jumpPressed = false;
 		this._sfxDie = true;
-		this._player.setPosition(this._startDistance * 16,0);
+		this._player.setPosition(this._record * 16,0);
 		this._player.drag.set_x(100);
 		this._player.velocity.set(0,0);
 		this._player.maxVelocity.set(200,1400);
@@ -8279,13 +8288,19 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._player.animation.add("fall",[16,17],7,false);
 		this._player.animation.add("die",[22,23],15,false);
 		this._ghost.set_x(this._player.x - 3.2 + flixel_FlxG.width * .5);
+		this._blink = true;
+		var timer = new haxe_Timer(3000);
+		timer.run = function() {
+			_gthis._blink = false;
+			_gthis._player.set_visible(true);
+		};
 	}
 	,initUI: function() {
-		this._resetButton.setPosition(140,0);
-		this._voltarButton.setPosition(195,0);
-		this._scoreText.set_y(20);
-		this._score = this._startDistance;
-		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 14);
+		this._reiniciarButton.setPosition(134,0);
+		this._voltarButton.setPosition(189,0);
+		this._scoreText.set_y(2);
+		this._score = this._record;
+		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 12);
 		this._live0.set_x(this._player.x - 35 + 32);
 		this._live1.set_x(this._player.x - 8 + 32);
 		this._live2.set_x(this._player.x + 18 + 32);
@@ -8309,7 +8324,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 	}
 	,initPlatforms: function() {
 		this._change = false;
-		this._edge = (this._startDistance - 1) * 16;
+		this._edge = (this._record - 1) * 16;
 	}
 	,onReset: function() {
 		this._livesTotal--;
@@ -8317,7 +8332,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 			switch(this._livesTotal) {
 			case 1:
 				this._live1.set_visible(false);
-				this.remove(this._resetButton);
+				this.remove(this._reiniciarButton);
 				break;
 			case 2:
 				this.remove(this._live2);
@@ -8329,11 +8344,12 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 				this.remove(this._live4);
 				break;
 			}
+			var _gthis = this;
 			this._jump = -1;
 			this._playJump = true;
 			this._jumpPressed = false;
 			this._sfxDie = true;
-			this._player.setPosition(this._startDistance * 16,0);
+			this._player.setPosition(this._record * 16,0);
 			this._player.drag.set_x(100);
 			this._player.velocity.set(0,0);
 			this._player.maxVelocity.set(200,1400);
@@ -8343,11 +8359,17 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 			this._player.animation.add("fall",[16,17],7,false);
 			this._player.animation.add("die",[22,23],15,false);
 			this._ghost.set_x(this._player.x - 3.2 + flixel_FlxG.width * .5);
-			this._resetButton.setPosition(140,0);
-			this._voltarButton.setPosition(195,0);
-			this._scoreText.set_y(20);
-			this._score = this._startDistance;
-			this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 14);
+			this._blink = true;
+			var timer = new haxe_Timer(3000);
+			timer.run = function() {
+				_gthis._blink = false;
+				_gthis._player.set_visible(true);
+			};
+			this._reiniciarButton.setPosition(134,0);
+			this._voltarButton.setPosition(189,0);
+			this._scoreText.set_y(2);
+			this._score = this._record;
+			this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 12);
 			this._live0.set_x(this._player.x - 35 + 32);
 			this._live1.set_x(this._player.x - 8 + 32);
 			this._live2.set_x(this._player.x + 18 + 32);
@@ -8369,7 +8391,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 			this._laranja4.set_y(30);
 			this._laranja5.set_y(30);
 			this._change = false;
-			this._edge = (this._startDistance - 1) * 16;
+			this._edge = (this._record - 1) * 16;
 		}
 	}
 	,chamarMenu: function() {
@@ -8492,8 +8514,8 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 			this._books.update(flixel_FlxG.elapsed);
 			this._change = false;
 		}
-		if(flixel_FlxG.overlap(this._player,this._oranges,function(_obj1,_obj2) {
-			_obj2.destroy();
+		if(flixel_FlxG.overlap(this._player,this._oranges,function(_bozo,_laranja) {
+			_laranja.destroy();
 			return;
 		},flixel_FlxObject.separate)) {
 			this._playJump = false;
@@ -8524,9 +8546,9 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 				this._jump = 0;
 			}
 		}
-		if(flixel_FlxG.overlap(this._player,this._books,function(_obj11,_obj21) {
+		if(!this._blink && flixel_FlxG.overlap(this._player,this._books,function(_obj1,_obj2) {
 			if(_gthis._amountOranges >= 1) {
-				_obj21.destroy();
+				_obj2.destroy();
 			}
 			return;
 		},flixel_FlxObject.separate)) {
@@ -8562,6 +8584,8 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 					}
 				}
 			}
+		} else if(this._blink) {
+			this._player.set_visible(!this._player.visible);
 		}
 		if(this._player.velocity.x == 0) {
 			this._player.animation.play("die");
@@ -8574,14 +8598,11 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		}
 		flixel_FlxState.prototype.update.call(this,flixel_FlxG.elapsed);
 		this._score = this._player.x / 16 | 0;
-		if(this._score * .5 > this._startDistance) {
-			this._startDistance = this._score * .5 | 0;
-		}
 		if(this._player.x > this._record * 16) {
 			this._record = this._score;
 		}
-		this._scoreText.set_text(Std.string(this._score + "m\n\nInício: " + this._startDistance + "m\n\nRecorde: " + this._record + "m"));
-		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 14);
+		this._scoreText.set_text(Std.string("Recorde: " + this._record + "m"));
+		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 12);
 		this._live0.set_x(this._player.x - 35 + 32);
 		this._live1.set_x(this._player.x - 8 + 32);
 		this._live2.set_x(this._player.x + 18 + 32);
@@ -8606,14 +8627,11 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 	}
 	,updateUI: function() {
 		this._score = this._player.x / 16 | 0;
-		if(this._score * .5 > this._startDistance) {
-			this._startDistance = this._score * .5 | 0;
-		}
 		if(this._player.x > this._record * 16) {
 			this._record = this._score;
 		}
-		this._scoreText.set_text(Std.string(this._score + "m\n\nInício: " + this._startDistance + "m\n\nRecorde: " + this._record + "m"));
-		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 14);
+		this._scoreText.set_text(Std.string("Recorde: " + this._record + "m"));
+		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 12);
 		this._live0.set_x(this._player.x - 35 + 32);
 		this._live1.set_x(this._player.x - 8 + 32);
 		this._live2.set_x(this._player.x + 18 + 32);
@@ -8774,7 +8792,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._player.animation.add("die",[22,23],15,false);
 	}
 	,positionText: function() {
-		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 14);
+		this._scoreText.set_x(this._player.x + flixel_FlxG.width - 64 + 12);
 		this._live0.set_x(this._player.x - 35 + 32);
 		this._live1.set_x(this._player.x - 8 + 32);
 		this._live2.set_x(this._player.x + 18 + 32);
@@ -9526,9 +9544,19 @@ MainMenuState.prototype = $extend(flixel_FlxState.prototype,{
 	,title: null
 	,BtnRun: null
 	,BtnColetiva: null
+	,ceu: null
+	,pato: null
+	,aviao: null
 	,create: function() {
 		var division = flixel_FlxG.height / 3 | 0;
 		flixel_FlxG.mouse.set_visible(true);
+		this.ceu = new flixel_FlxSprite().loadGraphic("assets/images/backgrounds/ceu.png",false,300,300);
+		this.add(this.ceu);
+		this.aviao = new flixel_FlxSprite().loadGraphic("assets/images/backgrounds/aviao.png",true,86,17);
+		this.aviao.animation.add("voando",[0,1],10,true);
+		this.aviao.animation.play("voando");
+		this.aviao.setPosition(-10,20);
+		this.add(this.aviao);
 		this.background = new flixel_FlxSprite();
 		this.background.loadGraphic("assets/images/backgrounds/senado_bg.png",true,300,300);
 		this.background.animation.add("idle",[0,1,2],3,true);
@@ -9542,7 +9570,7 @@ MainMenuState.prototype = $extend(flixel_FlxState.prototype,{
 		this.add(this.bozoEspirra);
 		this.bozoRun = new flixel_FlxSprite();
 		this.bozoRun.loadGraphic("assets/images/Jair.png",true,104,122,true);
-		this.bozoRun.animation.add("arminha_com_a_mao",[20,19],7,true);
+		this.bozoRun.animation.add("arminha_com_a_mao",[20,19],4,true);
 		this.bozoRun.animation.play("arminha_com_a_mao");
 		this.bozoRun.setPosition(180,160);
 		this.add(this.bozoRun);
@@ -9601,6 +9629,18 @@ MainMenuState.prototype = $extend(flixel_FlxState.prototype,{
 			flixel_FlxG.game._requestedState = nextState;
 		}
 	}
+	,update: function(elapsed) {
+		var _g = this.aviao;
+		_g.set_x(_g.x + 0.8);
+		var _g1 = this.aviao;
+		_g1.set_height(_g1.get_height() + 0.08);
+		var _g2 = this.aviao;
+		_g2.set_width(_g2.get_width() + 0.04);
+		if(this.aviao.x >= 350) {
+			this.aviao.set_x(-40);
+		}
+		flixel_FlxState.prototype.update.call(this,flixel_FlxG.elapsed);
+	}
 	,destroy: function() {
 		this.background.destroy();
 		this.title.destroy();
@@ -9631,7 +9671,7 @@ ManifestResources.init = function(config) {
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$flixel_$fonts_$nokiafc22_$ttf);
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$flixel_$fonts_$monsterrat_$ttf);
 	var bundle;
-	var data = "{\"name\":null,\"assets\":\"aoy4:pathy32:assets%2Fimages%2Ffont%2Ftil.pngy4:sizei98y4:typey5:IMAGEy2:idR1y7:preloadtgoR0y34:assets%2Fimages%2Ffont%2Fnum_8.pngR2i204R3R4R5R7R6tgoR0y30:assets%2Fimages%2Ffont%2Fa.pngR2i170R3R4R5R8R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_4.pngR2i156R3R4R5R9R6tgoR0y36:assets%2Fimages%2Ffont%2Fu_trema.pngR2i186R3R4R5R10R6tgoR0y30:assets%2Fimages%2Ffont%2Fd.pngR2i162R3R4R5R11R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_1.pngR2i131R3R4R5R12R6tgoR0y40:assets%2Fimages%2Ffont%2Fporcentagem.pngR2i193R3R4R5R13R6tgoR0y36:assets%2Fimages%2Ffont%2Fa_agudo.pngR2i196R3R4R5R14R6tgoR0y30:assets%2Fimages%2Ffont%2Fz.pngR2i159R3R4R5R15R6tgoR0y41:assets%2Fimages%2Ffont%2Finterrogacao.pngR2i175R3R4R5R16R6tgoR0y30:assets%2Fimages%2Ffont%2Fp.pngR2i178R3R4R5R17R6tgoR0y36:assets%2Fimages%2Ffont%2Fu_agudo.pngR2i207R3R4R5R18R6tgoR0y30:assets%2Fimages%2Ffont%2Fx.pngR2i205R3R4R5R19R6tgoR0y30:assets%2Fimages%2Ffont%2Fy.pngR2i192R3R4R5R20R6tgoR0y30:assets%2Fimages%2Ffont%2Fc.pngR2i149R3R4R5R21R6tgoR0y36:assets%2Fimages%2Ffont%2Fi_agudo.pngR2i151R3R4R5R22R6tgoR0y34:assets%2Fimages%2Ffont%2Fbarra.pngR2i176R3R4R5R23R6tgoR0y30:assets%2Fimages%2Ffont%2Fe.pngR2i152R3R4R5R24R6tgoR0y36:assets%2Fimages%2Ffont%2Fo_agudo.pngR2i208R3R4R5R25R6tgoR0y34:assets%2Fimages%2Ffont%2Fo_til.pngR2i182R3R4R5R26R6tgoR0y34:assets%2Fimages%2Ffont%2Fagudo.pngR2i128R3R4R5R27R6tgoR0y30:assets%2Fimages%2Ffont%2Fj.pngR2i157R3R4R5R28R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_6.pngR2i177R3R4R5R29R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_7.pngR2i167R3R4R5R30R6tgoR0y38:assets%2Fimages%2Ffont%2Fc_cedilha.pngR2i166R3R4R5R31R6tgoR0y36:assets%2Fimages%2Ffont%2Fe_agudo.pngR2i190R3R4R5R32R6tgoR0y36:assets%2Fimages%2Ffont%2Fo_trema.pngR2i191R3R4R5R33R6tgoR0y42:assets%2Fimages%2Ffont%2Fa_circunflexo.pngR2i202R3R4R5R34R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_0.pngR2i169R3R4R5R35R6tgoR0y36:assets%2Fimages%2Ffont%2Fe_trema.pngR2i183R3R4R5R36R6tgoR0y36:assets%2Fimages%2Ffont%2Fvirgula.pngR2i110R3R4R5R37R6tgoR0y30:assets%2Fimages%2Ffont%2Fo.pngR2i172R3R4R5R38R6tgoR0y30:assets%2Fimages%2Ffont%2Fn.pngR2i218R3R4R5R39R6tgoR0y36:assets%2Fimages%2Ffont%2Fi_trema.pngR2i142R3R4R5R40R6tgoR0y30:assets%2Fimages%2Ffont%2Fr.pngR2i181R3R4R5R41R6tgoR0y40:assets%2Fimages%2Ffont%2Fdois_pontos.pngR2i100R3R4R5R42R6tgoR0y30:assets%2Fimages%2Ffont%2Fq.pngR2i180R3R4R5R43R6tgoR0y30:assets%2Fimages%2Ffont%2F-.pngR2i112R3R4R5R44R6tgoR0y42:assets%2Fimages%2Ffont%2Fe_circunflexo.pngR2i191R3R4R5R45R6tgoR0y38:assets%2Fimages%2Ffont%2Fasterisco.pngR2i152R3R4R5R46R6tgoR0y30:assets%2Fimages%2Ffont%2Fi.pngR2i119R3R4R5R47R6tgoR0y30:assets%2Fimages%2Ffont%2Fl.pngR2i144R3R4R5R48R6tgoR0y30:assets%2Fimages%2Ffont%2Ft.pngR2i153R3R4R5R49R6tgoR0y34:assets%2Fimages%2Ffont%2Ftrema.pngR2i107R3R4R5R50R6tgoR0y30:assets%2Fimages%2Ffont%2Fb.pngR2i187R3R4R5R51R6tgoR0y30:assets%2Fimages%2Ffont%2Fh.pngR2i165R3R4R5R52R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_3.pngR2i186R3R4R5R53R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_5.pngR2i187R3R4R5R54R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_9.pngR2i197R3R4R5R55R6tgoR0y33:assets%2Fimages%2Ffont%2Fmais.pngR2i153R3R4R5R56R6tgoR0y34:assets%2Fimages%2Ffont%2Fa_til.pngR2i186R3R4R5R57R6tgoR0y30:assets%2Fimages%2Ffont%2Fg.pngR2i176R3R4R5R58R6tgoR0y36:assets%2Fimages%2Ffont%2Fa_trema.pngR2i191R3R4R5R59R6tgoR0y39:assets%2Fimages%2Ffont%2Fexclamacao.pngR2i126R3R4R5R60R6tgoR0y30:assets%2Fimages%2Ffont%2Fu.pngR2i167R3R4R5R61R6tgoR0y30:assets%2Fimages%2Ffont%2Fw.pngR2i206R3R4R5R62R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_2.pngR2i170R3R4R5R63R6tgoR0y30:assets%2Fimages%2Ffont%2Fv.pngR2i175R3R4R5R64R6tgoR0y42:assets%2Fimages%2Ffont%2Fo_circunflexo.pngR2i203R3R4R5R65R6tgoR0y30:assets%2Fimages%2Ffont%2Ff.pngR2i149R3R4R5R66R6tgoR0y30:assets%2Fimages%2Ffont%2Fk.pngR2i201R3R4R5R67R6tgoR0y30:assets%2Fimages%2Ffont%2Fs.pngR2i189R3R4R5R68R6tgoR0y30:assets%2Fimages%2Ffont%2Fm.pngR2i221R3R4R5R69R6tgoR0y26:assets%2Fimages%2FLula.pngR2i3556R3R4R5R70R6tgoR0y25:assets%2Fimages%2Fsky.pngR2i6498R3R4R5R71R6tgoR0y48:assets%2Fimages%2Fbotoes%2Fmascara%2Fbotoes4.pngR2i340R3R4R5R72R6tgoR0y48:assets%2Fimages%2Fbotoes%2Fmascara%2Fbotoes3.pngR2i951R3R4R5R73R6tgoR0y53:assets%2Fimages%2Fbotoes%2Fmascara%2FmascaraBotao.pngR2i1305R3R4R5R74R6tgoR0y50:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fcoletiva.pngR2i1288R3R4R5R75R6tgoR0y49:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fbotoes9.pngR2i919R3R4R5R76R6tgoR0y50:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fbotoes10.pngR2i308R3R4R5R77R6tgoR0y47:assets%2Fimages%2Fbotoes%2Fvoltar%2Fbotoes1.pngR2i865R3R4R5R78R6tgoR0y46:assets%2Fimages%2Fbotoes%2Fvoltar%2Fvoltar.pngR2i1817R3R4R5R79R6tgoR0y47:assets%2Fimages%2Fbotoes%2Fvoltar%2Fbotoes2.pngR2i751R3R4R5R80R6tgoR0y50:assets%2Fimages%2Fbotoes%2Freiniciar%2Fbotoes8.pngR2i958R3R4R5R81R6tgoR0y50:assets%2Fimages%2Fbotoes%2Freiniciar%2Fbotoes7.pngR2i319R3R4R5R82R6tgoR0y52:assets%2Fimages%2Fbotoes%2Freiniciar%2Freiniciar.pngR2i1298R3R4R5R83R6tgoR0y46:assets%2Fimages%2Fbotoes%2Ffugir%2Fbotoes6.pngR2i289R3R4R5R84R6tgoR0y44:assets%2Fimages%2Fbotoes%2Ffugir%2Ffugir.pngR2i1252R3R4R5R85R6tgoR0y46:assets%2Fimages%2Fbotoes%2Ffugir%2Fbotoes5.pngR2i825R3R4R5R86R6tgoR0y29:assets%2Fimages%2Flaranja.gifR2i196R3R4R5R87R6tgoR0y45:assets%2Fimages%2Fbackgrounds%2Fsenado_bg.pngR2i23606R3R4R5R88R6tgoR0y47:assets%2Fimages%2Fbackgrounds%2Fsenado_bg_3.pngR2i11624R3R4R5R89R6tgoR0y47:assets%2Fimages%2Fbackgrounds%2Fsenado_bg_2.pngR2i10785R3R4R5R90R6tgoR0y44:assets%2Fimages%2Fbackgrounds%2Fbrasilia.pngR2i95911R3R4R5R91R6tgoR0y47:assets%2Fimages%2Fbackgrounds%2Fsenado_bg_1.pngR2i13996R3R4R5R92R6tgoR0y46:assets%2Fimages%2Fbackgrounds%2Fforeground.pngR2i48274R3R4R5R93R6tgoR0y28:assets%2Fimages%2Fscreen.pngR2i112563R3R4R5R94R6tgoR0y26:assets%2Fimages%2FJair.pngR2i21611R3R4R5R95R6tgoR0y47:assets%2Fimages%2Fcoletiva%2Fforegroundbozo.pngR2i879R3R4R5R96R6tgoR0y47:assets%2Fimages%2Fcoletiva%2Fbackgroundbozo.pngR2i79628R3R4R5R97R6tgoR0y41:assets%2Fimages%2Fcoletiva%2Fbozotile.pngR2i11632R3R4R5R98R6tgoR0y40:assets%2Fimages%2Fcoletiva%2Fmascara.pngR2i465R3R4R5R99R6tgoR0y41:assets%2Fimages%2Fcoletiva%2Fmorotile.pngR2i3383R3R4R5R100R6tgoR0y42:assets%2Fimages%2Fcoletiva%2Fmicrofone.pngR2i221R3R4R5R101R6tgoR0y42:assets%2Fimages%2Fcoletiva%2Fguedstile.pngR2i3062R3R4R5R102R6tgoR0y37:assets%2Fimages%2Fcoletiva%2Ftaca.pngR2i277R3R4R5R103R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros1.pngR2i841R3R4R5R104R6tgoR0y41:assets%2Fimages%2Fobstaculos%2Flivros.pngR2i2443R3R4R5R105R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros6.pngR2i836R3R4R5R106R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros4.pngR2i764R3R4R5R107R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros2.pngR2i769R3R4R5R108R6tgoR0y44:assets%2Fimages%2Fobstaculos%2Fcensurado.pngR2i677R3R4R5R109R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros3.pngR2i838R3R4R5R110R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros5.pngR2i846R3R4R5R111R6tgoR0y37:assets%2Fimages%2Fdialogo%2Ftweet.pngR2i171R3R4R5R112R6tgoR0y37:assets%2Fimages%2Fdialogo%2Ftuite.pngR2i325R3R4R5R113R6tgoR0y24:assets%2Fimages%2Fvs.pngR2i648R3R4R5R114R6tgoR0y33:assets%2Fimages%2Fgroundtiles.pngR2i276R3R4R5R115R6tgoR0y29:assets%2Fimages%2Flaranja.pngR2i222R3R4R5R116R6tgoR0y29:assets%2Fimages%2Fcoracao.pngR2i571R3R4R5R117R6tgoR0y29:assets%2Fdata%2FLula.asepriteR2i4388R3y6:BINARYR5R118R6tgoR0y27:assets%2Fdata%2Fbozorun.oepR2i2979R3y4:TEXTR5R120R6tgoR0y28:assets%2Fdata%2Fbrasilia.xcfR2i184957R3R119R5R122R6tgoR0y29:assets%2Fdata%2FJair.asepriteR2i33676R3R119R5R123R6tgoR0y27:assets%2Fdata%2Fbozorun.oelR2i35904R3R121R5R124R6tgoR2i1700303R3y5:MUSICR5y46:assets%2Fmusic%2FWe%27re%20the%20Resistors.mp3y9:pathGroupaR126y46:assets%2Fmusic%2FWe%27re%20the%20Resistors.ogghR6tgoR2i957857R3y5:SOUNDR5R128R127aR126R128hgoR2i6619R3R129R5y30:assets%2Fsounds%2Fgoblin-1.oggR127aR130y30:assets%2Fsounds%2Fgoblin-1.mp3hR6tgoR2i9144R3R129R5y30:assets%2Fsounds%2Fgoblin-9.oggR127aR132y30:assets%2Fsounds%2Fgoblin-9.mp3hR6tgoR2i4224R3R125R5R131R127aR130R131hgoR2i7296R3R125R5R133R127aR132R133hgoR2i39706R3R125R5y28:flixel%2Fsounds%2Fflixel.mp3R127aR134y28:flixel%2Fsounds%2Fflixel.ogghR6tgoR2i2114R3R125R5y26:flixel%2Fsounds%2Fbeep.mp3R127aR136y26:flixel%2Fsounds%2Fbeep.ogghR6tgoR2i33629R3R129R5R135R127aR134R135hgoR2i5794R3R129R5R137R127aR136R137hgoR2i15744R3y4:FONTy9:classNamey35:__ASSET__flixel_fonts_nokiafc22_ttfR5y30:flixel%2Ffonts%2Fnokiafc22.ttfR6tgoR2i29724R3R138R139y36:__ASSET__flixel_fonts_monsterrat_ttfR5y31:flixel%2Ffonts%2Fmonsterrat.ttfR6tgoR0y33:flixel%2Fimages%2Fui%2Fbutton.pngR2i519R3R4R5R144R6tgoR0y36:flixel%2Fimages%2Flogo%2Fdefault.pngR2i3280R3R4R5R145R6tgh\",\"rootPath\":null,\"version\":2,\"libraryArgs\":[],\"libraryType\":null}";
+	var data = "{\"name\":null,\"assets\":\"aoy4:pathy32:assets%2Fimages%2Ffont%2Ftil.pngy4:sizei98y4:typey5:IMAGEy2:idR1y7:preloadtgoR0y34:assets%2Fimages%2Ffont%2Fnum_8.pngR2i204R3R4R5R7R6tgoR0y30:assets%2Fimages%2Ffont%2Fa.pngR2i170R3R4R5R8R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_4.pngR2i156R3R4R5R9R6tgoR0y36:assets%2Fimages%2Ffont%2Fu_trema.pngR2i186R3R4R5R10R6tgoR0y30:assets%2Fimages%2Ffont%2Fd.pngR2i162R3R4R5R11R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_1.pngR2i131R3R4R5R12R6tgoR0y40:assets%2Fimages%2Ffont%2Fporcentagem.pngR2i193R3R4R5R13R6tgoR0y36:assets%2Fimages%2Ffont%2Fa_agudo.pngR2i196R3R4R5R14R6tgoR0y30:assets%2Fimages%2Ffont%2Fz.pngR2i159R3R4R5R15R6tgoR0y41:assets%2Fimages%2Ffont%2Finterrogacao.pngR2i175R3R4R5R16R6tgoR0y30:assets%2Fimages%2Ffont%2Fp.pngR2i178R3R4R5R17R6tgoR0y36:assets%2Fimages%2Ffont%2Fu_agudo.pngR2i207R3R4R5R18R6tgoR0y30:assets%2Fimages%2Ffont%2Fx.pngR2i205R3R4R5R19R6tgoR0y30:assets%2Fimages%2Ffont%2Fy.pngR2i192R3R4R5R20R6tgoR0y30:assets%2Fimages%2Ffont%2Fc.pngR2i149R3R4R5R21R6tgoR0y36:assets%2Fimages%2Ffont%2Fi_agudo.pngR2i151R3R4R5R22R6tgoR0y34:assets%2Fimages%2Ffont%2Fbarra.pngR2i176R3R4R5R23R6tgoR0y30:assets%2Fimages%2Ffont%2Fe.pngR2i152R3R4R5R24R6tgoR0y36:assets%2Fimages%2Ffont%2Fo_agudo.pngR2i208R3R4R5R25R6tgoR0y34:assets%2Fimages%2Ffont%2Fo_til.pngR2i182R3R4R5R26R6tgoR0y34:assets%2Fimages%2Ffont%2Fagudo.pngR2i128R3R4R5R27R6tgoR0y30:assets%2Fimages%2Ffont%2Fj.pngR2i157R3R4R5R28R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_6.pngR2i177R3R4R5R29R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_7.pngR2i167R3R4R5R30R6tgoR0y38:assets%2Fimages%2Ffont%2Fc_cedilha.pngR2i166R3R4R5R31R6tgoR0y36:assets%2Fimages%2Ffont%2Fe_agudo.pngR2i190R3R4R5R32R6tgoR0y36:assets%2Fimages%2Ffont%2Fo_trema.pngR2i191R3R4R5R33R6tgoR0y42:assets%2Fimages%2Ffont%2Fa_circunflexo.pngR2i202R3R4R5R34R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_0.pngR2i169R3R4R5R35R6tgoR0y36:assets%2Fimages%2Ffont%2Fe_trema.pngR2i183R3R4R5R36R6tgoR0y36:assets%2Fimages%2Ffont%2Fvirgula.pngR2i110R3R4R5R37R6tgoR0y30:assets%2Fimages%2Ffont%2Fo.pngR2i172R3R4R5R38R6tgoR0y30:assets%2Fimages%2Ffont%2Fn.pngR2i218R3R4R5R39R6tgoR0y36:assets%2Fimages%2Ffont%2Fi_trema.pngR2i142R3R4R5R40R6tgoR0y30:assets%2Fimages%2Ffont%2Fr.pngR2i181R3R4R5R41R6tgoR0y40:assets%2Fimages%2Ffont%2Fdois_pontos.pngR2i100R3R4R5R42R6tgoR0y30:assets%2Fimages%2Ffont%2Fq.pngR2i180R3R4R5R43R6tgoR0y30:assets%2Fimages%2Ffont%2F-.pngR2i112R3R4R5R44R6tgoR0y42:assets%2Fimages%2Ffont%2Fe_circunflexo.pngR2i191R3R4R5R45R6tgoR0y38:assets%2Fimages%2Ffont%2Fasterisco.pngR2i152R3R4R5R46R6tgoR0y30:assets%2Fimages%2Ffont%2Fi.pngR2i119R3R4R5R47R6tgoR0y30:assets%2Fimages%2Ffont%2Fl.pngR2i144R3R4R5R48R6tgoR0y30:assets%2Fimages%2Ffont%2Ft.pngR2i153R3R4R5R49R6tgoR0y34:assets%2Fimages%2Ffont%2Ftrema.pngR2i107R3R4R5R50R6tgoR0y30:assets%2Fimages%2Ffont%2Fb.pngR2i187R3R4R5R51R6tgoR0y30:assets%2Fimages%2Ffont%2Fh.pngR2i165R3R4R5R52R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_3.pngR2i186R3R4R5R53R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_5.pngR2i187R3R4R5R54R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_9.pngR2i197R3R4R5R55R6tgoR0y33:assets%2Fimages%2Ffont%2Fmais.pngR2i153R3R4R5R56R6tgoR0y34:assets%2Fimages%2Ffont%2Fa_til.pngR2i186R3R4R5R57R6tgoR0y30:assets%2Fimages%2Ffont%2Fg.pngR2i176R3R4R5R58R6tgoR0y36:assets%2Fimages%2Ffont%2Fa_trema.pngR2i191R3R4R5R59R6tgoR0y39:assets%2Fimages%2Ffont%2Fexclamacao.pngR2i126R3R4R5R60R6tgoR0y30:assets%2Fimages%2Ffont%2Fu.pngR2i167R3R4R5R61R6tgoR0y30:assets%2Fimages%2Ffont%2Fw.pngR2i206R3R4R5R62R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_2.pngR2i170R3R4R5R63R6tgoR0y30:assets%2Fimages%2Ffont%2Fv.pngR2i175R3R4R5R64R6tgoR0y42:assets%2Fimages%2Ffont%2Fo_circunflexo.pngR2i203R3R4R5R65R6tgoR0y30:assets%2Fimages%2Ffont%2Ff.pngR2i149R3R4R5R66R6tgoR0y30:assets%2Fimages%2Ffont%2Fk.pngR2i201R3R4R5R67R6tgoR0y30:assets%2Fimages%2Ffont%2Fs.pngR2i189R3R4R5R68R6tgoR0y30:assets%2Fimages%2Ffont%2Fm.pngR2i221R3R4R5R69R6tgoR0y26:assets%2Fimages%2FLula.pngR2i3556R3R4R5R70R6tgoR0y25:assets%2Fimages%2Fsky.pngR2i6498R3R4R5R71R6tgoR0y48:assets%2Fimages%2Fbotoes%2Fmascara%2Fbotoes4.pngR2i340R3R4R5R72R6tgoR0y48:assets%2Fimages%2Fbotoes%2Fmascara%2Fbotoes3.pngR2i951R3R4R5R73R6tgoR0y53:assets%2Fimages%2Fbotoes%2Fmascara%2FmascaraBotao.pngR2i1305R3R4R5R74R6tgoR0y50:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fcoletiva.pngR2i1288R3R4R5R75R6tgoR0y49:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fbotoes9.pngR2i919R3R4R5R76R6tgoR0y50:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fbotoes10.pngR2i308R3R4R5R77R6tgoR0y47:assets%2Fimages%2Fbotoes%2Fvoltar%2Fbotoes1.pngR2i865R3R4R5R78R6tgoR0y46:assets%2Fimages%2Fbotoes%2Fvoltar%2Fvoltar.pngR2i1817R3R4R5R79R6tgoR0y47:assets%2Fimages%2Fbotoes%2Fvoltar%2Fbotoes2.pngR2i751R3R4R5R80R6tgoR0y50:assets%2Fimages%2Fbotoes%2Freiniciar%2Fbotoes8.pngR2i958R3R4R5R81R6tgoR0y50:assets%2Fimages%2Fbotoes%2Freiniciar%2Fbotoes7.pngR2i319R3R4R5R82R6tgoR0y52:assets%2Fimages%2Fbotoes%2Freiniciar%2Freiniciar.pngR2i1298R3R4R5R83R6tgoR0y46:assets%2Fimages%2Fbotoes%2Ffugir%2Fbotoes6.pngR2i289R3R4R5R84R6tgoR0y44:assets%2Fimages%2Fbotoes%2Ffugir%2Ffugir.pngR2i1252R3R4R5R85R6tgoR0y46:assets%2Fimages%2Fbotoes%2Ffugir%2Fbotoes5.pngR2i825R3R4R5R86R6tgoR0y29:assets%2Fimages%2Flaranja.gifR2i196R3R4R5R87R6tgoR0y45:assets%2Fimages%2Fbackgrounds%2Fsenado_bg.pngR2i25985R3R4R5R88R6tgoR0y39:assets%2Fimages%2Fbackgrounds%2Fceu.pngR2i2739R3R4R5R89R6tgoR0y47:assets%2Fimages%2Fbackgrounds%2Fsenado_bg_3.pngR2i12407R3R4R5R90R6tgoR0y43:assets%2Fimages%2Fbackgrounds%2Faviao_1.pngR2i609R3R4R5R91R6tgoR0y43:assets%2Fimages%2Fbackgrounds%2Faviao_2.pngR2i592R3R4R5R92R6tgoR0y47:assets%2Fimages%2Fbackgrounds%2Fsenado_bg_2.pngR2i11505R3R4R5R93R6tgoR0y41:assets%2Fimages%2Fbackgrounds%2Faviao.pngR2i632R3R4R5R94R6tgoR0y44:assets%2Fimages%2Fbackgrounds%2Fbrasilia.pngR2i95911R3R4R5R95R6tgoR0y47:assets%2Fimages%2Fbackgrounds%2Fsenado_bg_1.pngR2i15076R3R4R5R96R6tgoR0y46:assets%2Fimages%2Fbackgrounds%2Fforeground.pngR2i48274R3R4R5R97R6tgoR0y28:assets%2Fimages%2Fscreen.pngR2i112563R3R4R5R98R6tgoR0y26:assets%2Fimages%2FJair.pngR2i21611R3R4R5R99R6tgoR0y47:assets%2Fimages%2Fcoletiva%2Fforegroundbozo.pngR2i879R3R4R5R100R6tgoR0y47:assets%2Fimages%2Fcoletiva%2Fbackgroundbozo.pngR2i79628R3R4R5R101R6tgoR0y41:assets%2Fimages%2Fcoletiva%2Fbozotile.pngR2i11632R3R4R5R102R6tgoR0y40:assets%2Fimages%2Fcoletiva%2Fmascara.pngR2i465R3R4R5R103R6tgoR0y41:assets%2Fimages%2Fcoletiva%2Fmorotile.pngR2i3383R3R4R5R104R6tgoR0y42:assets%2Fimages%2Fcoletiva%2Fmicrofone.pngR2i221R3R4R5R105R6tgoR0y42:assets%2Fimages%2Fcoletiva%2Fguedstile.pngR2i3062R3R4R5R106R6tgoR0y37:assets%2Fimages%2Fcoletiva%2Ftaca.pngR2i277R3R4R5R107R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros1.pngR2i841R3R4R5R108R6tgoR0y41:assets%2Fimages%2Fobstaculos%2Flivros.pngR2i2443R3R4R5R109R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros6.pngR2i836R3R4R5R110R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros4.pngR2i764R3R4R5R111R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros2.pngR2i769R3R4R5R112R6tgoR0y44:assets%2Fimages%2Fobstaculos%2Fcensurado.pngR2i677R3R4R5R113R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros3.pngR2i838R3R4R5R114R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros5.pngR2i846R3R4R5R115R6tgoR0y37:assets%2Fimages%2Fdialogo%2Ftweet.pngR2i171R3R4R5R116R6tgoR0y37:assets%2Fimages%2Fdialogo%2Ftuite.pngR2i325R3R4R5R117R6tgoR0y24:assets%2Fimages%2Fvs.pngR2i648R3R4R5R118R6tgoR0y33:assets%2Fimages%2Fgroundtiles.pngR2i276R3R4R5R119R6tgoR0y29:assets%2Fimages%2Flaranja.pngR2i222R3R4R5R120R6tgoR0y29:assets%2Fimages%2Fcoracao.pngR2i571R3R4R5R121R6tgoR0y29:assets%2Fdata%2FLula.asepriteR2i4388R3y6:BINARYR5R122R6tgoR0y27:assets%2Fdata%2Fbozorun.oepR2i2979R3y4:TEXTR5R124R6tgoR0y28:assets%2Fdata%2Fbrasilia.xcfR2i184957R3R123R5R126R6tgoR0y29:assets%2Fdata%2FJair.asepriteR2i33676R3R123R5R127R6tgoR0y27:assets%2Fdata%2Fbozorun.oelR2i35904R3R125R5R128R6tgoR2i1700303R3y5:MUSICR5y46:assets%2Fmusic%2FWe%27re%20the%20Resistors.mp3y9:pathGroupaR130y46:assets%2Fmusic%2FWe%27re%20the%20Resistors.ogghR6tgoR2i957857R3y5:SOUNDR5R132R131aR130R132hgoR2i6619R3R133R5y30:assets%2Fsounds%2Fgoblin-1.oggR131aR134y30:assets%2Fsounds%2Fgoblin-1.mp3hR6tgoR2i9144R3R133R5y30:assets%2Fsounds%2Fgoblin-9.oggR131aR136y30:assets%2Fsounds%2Fgoblin-9.mp3hR6tgoR2i4224R3R129R5R135R131aR134R135hgoR2i7296R3R129R5R137R131aR136R137hgoR2i39706R3R129R5y28:flixel%2Fsounds%2Fflixel.mp3R131aR138y28:flixel%2Fsounds%2Fflixel.ogghR6tgoR2i2114R3R129R5y26:flixel%2Fsounds%2Fbeep.mp3R131aR140y26:flixel%2Fsounds%2Fbeep.ogghR6tgoR2i33629R3R133R5R139R131aR138R139hgoR2i5794R3R133R5R141R131aR140R141hgoR2i15744R3y4:FONTy9:classNamey35:__ASSET__flixel_fonts_nokiafc22_ttfR5y30:flixel%2Ffonts%2Fnokiafc22.ttfR6tgoR2i29724R3R142R143y36:__ASSET__flixel_fonts_monsterrat_ttfR5y31:flixel%2Ffonts%2Fmonsterrat.ttfR6tgoR0y33:flixel%2Fimages%2Fui%2Fbutton.pngR2i519R3R4R5R148R6tgoR0y36:flixel%2Fimages%2Flogo%2Fdefault.pngR2i3280R3R4R5R149R6tgh\",\"rootPath\":null,\"version\":2,\"libraryArgs\":[],\"libraryType\":null}";
 	var manifest = lime_utils_AssetManifest.parse(data,ManifestResources.rootPath);
 	var library = lime_utils_AssetLibrary.fromManifest(manifest);
 	lime_utils_Assets.registerLibrary("default",library);
@@ -72187,7 +72227,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 735166;
+	this.version = 338602;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
@@ -117923,8 +117963,12 @@ AssetPaths.fugir__png = "assets/images/botoes/fugir/fugir.png";
 AssetPaths.botoes5__png = "assets/images/botoes/fugir/botoes5.png";
 AssetPaths.laranja__gif = "assets/images/laranja.gif";
 AssetPaths.senado_bg__png = "assets/images/backgrounds/senado_bg.png";
+AssetPaths.ceu__png = "assets/images/backgrounds/ceu.png";
 AssetPaths.senado_bg_3__png = "assets/images/backgrounds/senado_bg_3.png";
+AssetPaths.aviao_1__png = "assets/images/backgrounds/aviao_1.png";
+AssetPaths.aviao_2__png = "assets/images/backgrounds/aviao_2.png";
 AssetPaths.senado_bg_2__png = "assets/images/backgrounds/senado_bg_2.png";
+AssetPaths.aviao__png = "assets/images/backgrounds/aviao.png";
 AssetPaths.brasilia__png = "assets/images/backgrounds/brasilia.png";
 AssetPaths.senado_bg_1__png = "assets/images/backgrounds/senado_bg_1.png";
 AssetPaths.foreground__png = "assets/images/backgrounds/foreground.png";
