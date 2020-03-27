@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.FlxObject;
+import flixel.util.FlxColor;
 
 /**
  * Based on work from
@@ -33,26 +34,28 @@ class MainMenuState extends FlxState
 		#end
 		
 		background = new FlxSprite();
-		background.loadGraphic(AssetPaths.brasilia__png, false, 300, 300);
+		background.loadGraphic(AssetPaths.senado_bg__png, true, 300, 300);
+		background.animation.add("idle", [0, 1, 2], 3, true);
+		background.animation.play("idle");
 		add(background);
 		
 		bozoEspirra = new FlxSprite();
 		bozoEspirra.loadGraphic(AssetPaths.bozotile__png, true, 150, 150, true);
-		bozoEspirra.animation.add("idle", [14, 21, 14, 21, 15, 16, 17, 18, 19, 20, 20], 7, true);
+		bozoEspirra.animation.add("idle", [12, 13], 4, true);
 		bozoEspirra.animation.play("idle");
-		bozoEspirra.setPosition(-10,100);
+		bozoEspirra.setPosition(-10,150);
 		add(bozoEspirra);
 
 		bozoRun = new FlxSprite();
 		bozoRun.loadGraphic(AssetPaths.Jair__png, true, 104, 122, true);
-		bozoRun.animation.add("run", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 30, true);
-		bozoRun.animation.play("run");
-		bozoRun.setPosition(180,100);
+		bozoRun.animation.add("arminha_com_a_mao", [20, 19], 7, true);
+		bozoRun.animation.play("arminha_com_a_mao");
+		bozoRun.setPosition(180,160);
 		add(bozoRun);
 
-
 		title = new FlxText(0, division* 1.5 - 100, FlxG.width, "BOZORUN!");
-		title.setFormat(null, 34, 0xFFFFFFFF, "center");
+		title.setFormat(null, 34, FlxColor.YELLOW, "center");
+		title.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.fromRGB(100,0,0), 3);
 		add(title);
 		
 		BtnColetiva = new FlxButton(10, division * 1.5 + 40, "", callBozoColetivaGame);
@@ -63,13 +66,13 @@ class MainMenuState extends FlxState
 		BtnColetiva.y += 25;
 		//add(BtnColetiva);
 		
-		BtnRun = new FlxButton(10, division * 1.5 + 40, "", callBozoRunGame);
+		BtnRun = new FlxButton(0, 0, "", callBozoRunGame);
 		BtnRun.label.size = 20;
 		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 36);
 		
 		//BtnRun.x = 200;
-		BtnRun.x = 35;
-		BtnRun.y += 25;
+		BtnRun.x = 200;
+		BtnRun.y = 122;
 		add(BtnRun);
 	}
 	
