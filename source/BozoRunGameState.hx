@@ -99,6 +99,12 @@ class BozoRunGameState extends FlxState
 
 	private var _voltarButton:FlxButton;
 	private var _scoreText:FlxText;
+	private var _arrayLivros:Array<String> = [AssetPaths.livros1__png,
+											  AssetPaths.livros2__png,
+											  AssetPaths.livros3__png,
+											  AssetPaths.livros4__png,
+											  AssetPaths.livros5__png,
+											  AssetPaths.livros6__png];
 		
 	override public function create():Void
 	{
@@ -543,7 +549,7 @@ class BozoRunGameState extends FlxState
 		_edge += TILE_WIDTH*2;
 
 		if (random.int(0, 2) / 2 == 0) {
-			setObjAndAdd2Group(AssetPaths.livros__png, 46, 55, _books, true, true, FlxObject.RIGHT);
+			setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true, FlxObject.RIGHT);
 		}
 
 		if (random.int(0, 4) / 4 == 0) {
@@ -606,13 +612,13 @@ class BozoRunGameState extends FlxState
 	private inline function sfxDie():Void
 	{
 		if (_sfxDie) {
-			FlxG.sound.play("assets/sounds/goblin-9.ogg");
+			FlxG.sound.play(AssetPaths.goblin_9__ogg);
 			_sfxDie = false;
 		}
 	}
 	
 	private inline function sfxJump():Void
 	{
-		FlxG.sound.play("assets/sounds/goblin-1.ogg");
+		FlxG.sound.play(AssetPaths.goblin_1__ogg);
 	}
 }

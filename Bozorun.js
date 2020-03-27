@@ -895,9 +895,9 @@ ApplicationMain.create = function(config) {
 	ManifestResources.init(config);
 	var _this = app.meta;
 	if(__map_reserved["build"] != null) {
-		_this.setReserved("build","93");
+		_this.setReserved("build","94");
 	} else {
-		_this.h["build"] = "93";
+		_this.h["build"] = "94";
 	}
 	var _this1 = app.meta;
 	if(__map_reserved["company"] != null) {
@@ -7772,6 +7772,7 @@ flixel_math_FlxRandom.prototype = {
 };
 Math.__name__ = "Math";
 var BozoRunGameState = function(MaxSize) {
+	this._arrayLivros = ["assets/images/obstaculos/livros1.png","assets/images/obstaculos/livros2.png","assets/images/obstaculos/livros3.png","assets/images/obstaculos/livros4.png","assets/images/obstaculos/livros5.png","assets/images/obstaculos/livros6.png"];
 	this._amountOranges = 0;
 	this._livesTotal = 5;
 	this._auxX = 0.0;
@@ -7815,6 +7816,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 	,_resetButton: null
 	,_voltarButton: null
 	,_scoreText: null
+	,_arrayLivros: null
 	,create: function() {
 		flixel_FlxG.mouse.set_visible(false);
 		var _this = flixel_FlxG.worldBounds;
@@ -8432,7 +8434,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		}
 		this._edge += 32;
 		if(BozoRunGameState.random.int(0,2) / 2 == 0) {
-			this.setObjAndAdd2Group("assets/images/obstaculos/livros.png",46,55,this._books,true,true,16);
+			this.setObjAndAdd2Group(this._arrayLivros[BozoRunGameState.random.int(0,5)],45,55,this._books,true,true,16);
 		}
 		if(BozoRunGameState.random.int(0,4) / 4 == 0) {
 			this.setObjAndAdd2Group("assets/images/laranja.png",30,32,this._oranges,true,false);
@@ -71727,7 +71729,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 501165;
+	this.version = 773247;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
