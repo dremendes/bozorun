@@ -25,6 +25,8 @@ class MainMenuState extends FlxState
 	private var ceu:FlxSprite;
 	private var pato:FlxSprite;
 	private var aviao:FlxSprite;
+	private var pedestal:FlxSprite;
+	private var multiplier:Float=1.0;
 	
 	override public function create():Void
 	{
@@ -36,7 +38,8 @@ class MainMenuState extends FlxState
 		FlxG.mouse.visible = true;
 		#end
 
-		ceu = new FlxSprite().loadGraphic(AssetPaths.ceu__png, false, 300, 300);
+		ceu = new FlxSprite().loadGraphic(AssetPaths.sky__png, false, 310, 300);
+		ceu.y -= 70;
 		add(ceu);
 
 		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 86, 17);
@@ -50,6 +53,13 @@ class MainMenuState extends FlxState
 		background.animation.add("idle", [0, 1, 2], 3, true);
 		background.animation.play("idle");
 		add(background);
+
+		pato = new FlxSprite().loadGraphic(AssetPaths.patin__png, false, 30, 29);
+		pato.setPosition(180,160);
+		pato.setFacingFlip(FlxObject.RIGHT, false, false);
+		pato.setFacingFlip(FlxObject.LEFT, true, false);
+		pato.facing = FlxObject.LEFT;
+		add(pato);
 		
 		bozoEspirra = new FlxSprite();
 		bozoEspirra.loadGraphic(AssetPaths.bozotile__png, true, 150, 150, true);
@@ -64,6 +74,10 @@ class MainMenuState extends FlxState
 		bozoRun.animation.play("arminha_com_a_mao");
 		bozoRun.setPosition(180,160);
 		add(bozoRun);
+
+		pedestal = new FlxSprite().loadGraphic(AssetPaths.pedestal__png, false, 12, 102);
+		pedestal.setPosition(255, 180);
+		add(pedestal);
 
 		title = new FlxText(0, division* 1.5 - 100, FlxG.width, "BOZORUN!");
 		title.setFormat(null, 34, FlxColor.YELLOW, "center");
@@ -105,6 +119,18 @@ class MainMenuState extends FlxState
 		aviao.width += 0.04;
 
 		if(aviao.x >= 350) aviao.x = -40;
+
+		pato.x += 0.4 * multiplier;
+
+		if(pato.x >= 270) {
+			multiplier = multiplier*-1;
+			pato.facing = FlxObject.RIGHT;
+		}
+
+		if(pato.x <= 180) {
+			pato.facing = FlxObject.LEFT;
+			multiplier = multiplier*-1;
+		}
 
 		super.update(FlxG.elapsed);
 	}

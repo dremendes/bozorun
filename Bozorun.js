@@ -895,9 +895,9 @@ ApplicationMain.create = function(config) {
 	ManifestResources.init(config);
 	var _this = app.meta;
 	if(__map_reserved["build"] != null) {
-		_this.setReserved("build","100");
+		_this.setReserved("build","101");
 	} else {
-		_this.h["build"] = "100";
+		_this.h["build"] = "101";
 	}
 	var _this1 = app.meta;
 	if(__map_reserved["company"] != null) {
@@ -9530,6 +9530,7 @@ Lambda.array = function(it) {
 	return a;
 };
 var MainMenuState = function(MaxSize) {
+	this.multiplier = 1.0;
 	flixel_FlxState.call(this,MaxSize);
 };
 $hxClasses["MainMenuState"] = MainMenuState;
@@ -9547,10 +9548,14 @@ MainMenuState.prototype = $extend(flixel_FlxState.prototype,{
 	,ceu: null
 	,pato: null
 	,aviao: null
+	,pedestal: null
+	,multiplier: null
 	,create: function() {
 		var division = flixel_FlxG.height / 3 | 0;
 		flixel_FlxG.mouse.set_visible(true);
-		this.ceu = new flixel_FlxSprite().loadGraphic("assets/images/backgrounds/ceu.png",false,300,300);
+		this.ceu = new flixel_FlxSprite().loadGraphic("assets/images/sky.png",false,310,300);
+		var _g = this.ceu;
+		_g.set_y(_g.y - 70);
 		this.add(this.ceu);
 		this.aviao = new flixel_FlxSprite().loadGraphic("assets/images/backgrounds/aviao.png",true,86,17);
 		this.aviao.animation.add("voando",[0,1],10,true);
@@ -9562,6 +9567,12 @@ MainMenuState.prototype = $extend(flixel_FlxState.prototype,{
 		this.background.animation.add("idle",[0,1,2],3,true);
 		this.background.animation.play("idle");
 		this.add(this.background);
+		this.pato = new flixel_FlxSprite().loadGraphic("assets/images/backgrounds/patin.png",false,30,29);
+		this.pato.setPosition(180,160);
+		this.pato._facingFlip.h[16] = { x : false, y : false};
+		this.pato._facingFlip.h[1] = { x : true, y : false};
+		this.pato.set_facing(1);
+		this.add(this.pato);
 		this.bozoEspirra = new flixel_FlxSprite();
 		this.bozoEspirra.loadGraphic("assets/images/coletiva/bozotile.png",true,150,150,true);
 		this.bozoEspirra.animation.add("idle",[12,13],4,true);
@@ -9574,6 +9585,9 @@ MainMenuState.prototype = $extend(flixel_FlxState.prototype,{
 		this.bozoRun.animation.play("arminha_com_a_mao");
 		this.bozoRun.setPosition(180,160);
 		this.add(this.bozoRun);
+		this.pedestal = new flixel_FlxSprite().loadGraphic("assets/images/backgrounds/pedestal.png",false,12,102);
+		this.pedestal.setPosition(255,180);
+		this.add(this.pedestal);
 		this.title = new flixel_text_FlxText(0,division * 1.5 - 100,flixel_FlxG.width,"BOZORUN!");
 		this.title.setFormat(null,34,-256,"center");
 		var _this = this.title;
@@ -9608,8 +9622,8 @@ MainMenuState.prototype = $extend(flixel_FlxState.prototype,{
 		this.BtnColetiva.loadGraphic("assets/images/botoes/coletiva/coletiva.png",true,60,36);
 		this.BtnColetiva.scale.set(1.6,.9);
 		this.BtnColetiva.set_x(35);
-		var _g = this.BtnColetiva;
-		_g.set_y(_g.y + 25);
+		var _g1 = this.BtnColetiva;
+		_g1.set_y(_g1.y + 25);
 		this.BtnRun = new flixel_ui_FlxButton(0,0,"",$bind(this,this.callBozoRunGame));
 		this.BtnRun.label.set_size(20);
 		this.BtnRun.loadGraphic("assets/images/botoes/fugir/fugir.png",true,60,36);
@@ -9638,6 +9652,16 @@ MainMenuState.prototype = $extend(flixel_FlxState.prototype,{
 		_g2.set_width(_g2.get_width() + 0.04);
 		if(this.aviao.x >= 350) {
 			this.aviao.set_x(-40);
+		}
+		var _g3 = this.pato;
+		_g3.set_x(_g3.x + 0.4 * this.multiplier);
+		if(this.pato.x >= 270) {
+			this.multiplier *= -1;
+			this.pato.set_facing(16);
+		}
+		if(this.pato.x <= 180) {
+			this.pato.set_facing(1);
+			this.multiplier *= -1;
 		}
 		flixel_FlxState.prototype.update.call(this,flixel_FlxG.elapsed);
 	}
@@ -9671,7 +9695,7 @@ ManifestResources.init = function(config) {
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$flixel_$fonts_$nokiafc22_$ttf);
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$flixel_$fonts_$monsterrat_$ttf);
 	var bundle;
-	var data = "{\"name\":null,\"assets\":\"aoy4:pathy32:assets%2Fimages%2Ffont%2Ftil.pngy4:sizei98y4:typey5:IMAGEy2:idR1y7:preloadtgoR0y34:assets%2Fimages%2Ffont%2Fnum_8.pngR2i204R3R4R5R7R6tgoR0y30:assets%2Fimages%2Ffont%2Fa.pngR2i170R3R4R5R8R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_4.pngR2i156R3R4R5R9R6tgoR0y36:assets%2Fimages%2Ffont%2Fu_trema.pngR2i186R3R4R5R10R6tgoR0y30:assets%2Fimages%2Ffont%2Fd.pngR2i162R3R4R5R11R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_1.pngR2i131R3R4R5R12R6tgoR0y40:assets%2Fimages%2Ffont%2Fporcentagem.pngR2i193R3R4R5R13R6tgoR0y36:assets%2Fimages%2Ffont%2Fa_agudo.pngR2i196R3R4R5R14R6tgoR0y30:assets%2Fimages%2Ffont%2Fz.pngR2i159R3R4R5R15R6tgoR0y41:assets%2Fimages%2Ffont%2Finterrogacao.pngR2i175R3R4R5R16R6tgoR0y30:assets%2Fimages%2Ffont%2Fp.pngR2i178R3R4R5R17R6tgoR0y36:assets%2Fimages%2Ffont%2Fu_agudo.pngR2i207R3R4R5R18R6tgoR0y30:assets%2Fimages%2Ffont%2Fx.pngR2i205R3R4R5R19R6tgoR0y30:assets%2Fimages%2Ffont%2Fy.pngR2i192R3R4R5R20R6tgoR0y30:assets%2Fimages%2Ffont%2Fc.pngR2i149R3R4R5R21R6tgoR0y36:assets%2Fimages%2Ffont%2Fi_agudo.pngR2i151R3R4R5R22R6tgoR0y34:assets%2Fimages%2Ffont%2Fbarra.pngR2i176R3R4R5R23R6tgoR0y30:assets%2Fimages%2Ffont%2Fe.pngR2i152R3R4R5R24R6tgoR0y36:assets%2Fimages%2Ffont%2Fo_agudo.pngR2i208R3R4R5R25R6tgoR0y34:assets%2Fimages%2Ffont%2Fo_til.pngR2i182R3R4R5R26R6tgoR0y34:assets%2Fimages%2Ffont%2Fagudo.pngR2i128R3R4R5R27R6tgoR0y30:assets%2Fimages%2Ffont%2Fj.pngR2i157R3R4R5R28R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_6.pngR2i177R3R4R5R29R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_7.pngR2i167R3R4R5R30R6tgoR0y38:assets%2Fimages%2Ffont%2Fc_cedilha.pngR2i166R3R4R5R31R6tgoR0y36:assets%2Fimages%2Ffont%2Fe_agudo.pngR2i190R3R4R5R32R6tgoR0y36:assets%2Fimages%2Ffont%2Fo_trema.pngR2i191R3R4R5R33R6tgoR0y42:assets%2Fimages%2Ffont%2Fa_circunflexo.pngR2i202R3R4R5R34R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_0.pngR2i169R3R4R5R35R6tgoR0y36:assets%2Fimages%2Ffont%2Fe_trema.pngR2i183R3R4R5R36R6tgoR0y36:assets%2Fimages%2Ffont%2Fvirgula.pngR2i110R3R4R5R37R6tgoR0y30:assets%2Fimages%2Ffont%2Fo.pngR2i172R3R4R5R38R6tgoR0y30:assets%2Fimages%2Ffont%2Fn.pngR2i218R3R4R5R39R6tgoR0y36:assets%2Fimages%2Ffont%2Fi_trema.pngR2i142R3R4R5R40R6tgoR0y30:assets%2Fimages%2Ffont%2Fr.pngR2i181R3R4R5R41R6tgoR0y40:assets%2Fimages%2Ffont%2Fdois_pontos.pngR2i100R3R4R5R42R6tgoR0y30:assets%2Fimages%2Ffont%2Fq.pngR2i180R3R4R5R43R6tgoR0y30:assets%2Fimages%2Ffont%2F-.pngR2i112R3R4R5R44R6tgoR0y42:assets%2Fimages%2Ffont%2Fe_circunflexo.pngR2i191R3R4R5R45R6tgoR0y38:assets%2Fimages%2Ffont%2Fasterisco.pngR2i152R3R4R5R46R6tgoR0y30:assets%2Fimages%2Ffont%2Fi.pngR2i119R3R4R5R47R6tgoR0y30:assets%2Fimages%2Ffont%2Fl.pngR2i144R3R4R5R48R6tgoR0y30:assets%2Fimages%2Ffont%2Ft.pngR2i153R3R4R5R49R6tgoR0y34:assets%2Fimages%2Ffont%2Ftrema.pngR2i107R3R4R5R50R6tgoR0y30:assets%2Fimages%2Ffont%2Fb.pngR2i187R3R4R5R51R6tgoR0y30:assets%2Fimages%2Ffont%2Fh.pngR2i165R3R4R5R52R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_3.pngR2i186R3R4R5R53R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_5.pngR2i187R3R4R5R54R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_9.pngR2i197R3R4R5R55R6tgoR0y33:assets%2Fimages%2Ffont%2Fmais.pngR2i153R3R4R5R56R6tgoR0y34:assets%2Fimages%2Ffont%2Fa_til.pngR2i186R3R4R5R57R6tgoR0y30:assets%2Fimages%2Ffont%2Fg.pngR2i176R3R4R5R58R6tgoR0y36:assets%2Fimages%2Ffont%2Fa_trema.pngR2i191R3R4R5R59R6tgoR0y39:assets%2Fimages%2Ffont%2Fexclamacao.pngR2i126R3R4R5R60R6tgoR0y30:assets%2Fimages%2Ffont%2Fu.pngR2i167R3R4R5R61R6tgoR0y30:assets%2Fimages%2Ffont%2Fw.pngR2i206R3R4R5R62R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_2.pngR2i170R3R4R5R63R6tgoR0y30:assets%2Fimages%2Ffont%2Fv.pngR2i175R3R4R5R64R6tgoR0y42:assets%2Fimages%2Ffont%2Fo_circunflexo.pngR2i203R3R4R5R65R6tgoR0y30:assets%2Fimages%2Ffont%2Ff.pngR2i149R3R4R5R66R6tgoR0y30:assets%2Fimages%2Ffont%2Fk.pngR2i201R3R4R5R67R6tgoR0y30:assets%2Fimages%2Ffont%2Fs.pngR2i189R3R4R5R68R6tgoR0y30:assets%2Fimages%2Ffont%2Fm.pngR2i221R3R4R5R69R6tgoR0y26:assets%2Fimages%2FLula.pngR2i3556R3R4R5R70R6tgoR0y25:assets%2Fimages%2Fsky.pngR2i6498R3R4R5R71R6tgoR0y48:assets%2Fimages%2Fbotoes%2Fmascara%2Fbotoes4.pngR2i340R3R4R5R72R6tgoR0y48:assets%2Fimages%2Fbotoes%2Fmascara%2Fbotoes3.pngR2i951R3R4R5R73R6tgoR0y53:assets%2Fimages%2Fbotoes%2Fmascara%2FmascaraBotao.pngR2i1305R3R4R5R74R6tgoR0y50:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fcoletiva.pngR2i1288R3R4R5R75R6tgoR0y49:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fbotoes9.pngR2i919R3R4R5R76R6tgoR0y50:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fbotoes10.pngR2i308R3R4R5R77R6tgoR0y47:assets%2Fimages%2Fbotoes%2Fvoltar%2Fbotoes1.pngR2i865R3R4R5R78R6tgoR0y46:assets%2Fimages%2Fbotoes%2Fvoltar%2Fvoltar.pngR2i1817R3R4R5R79R6tgoR0y47:assets%2Fimages%2Fbotoes%2Fvoltar%2Fbotoes2.pngR2i751R3R4R5R80R6tgoR0y50:assets%2Fimages%2Fbotoes%2Freiniciar%2Fbotoes8.pngR2i958R3R4R5R81R6tgoR0y50:assets%2Fimages%2Fbotoes%2Freiniciar%2Fbotoes7.pngR2i319R3R4R5R82R6tgoR0y52:assets%2Fimages%2Fbotoes%2Freiniciar%2Freiniciar.pngR2i1298R3R4R5R83R6tgoR0y46:assets%2Fimages%2Fbotoes%2Ffugir%2Fbotoes6.pngR2i289R3R4R5R84R6tgoR0y44:assets%2Fimages%2Fbotoes%2Ffugir%2Ffugir.pngR2i1252R3R4R5R85R6tgoR0y46:assets%2Fimages%2Fbotoes%2Ffugir%2Fbotoes5.pngR2i825R3R4R5R86R6tgoR0y29:assets%2Fimages%2Flaranja.gifR2i196R3R4R5R87R6tgoR0y45:assets%2Fimages%2Fbackgrounds%2Fsenado_bg.pngR2i25985R3R4R5R88R6tgoR0y39:assets%2Fimages%2Fbackgrounds%2Fceu.pngR2i2739R3R4R5R89R6tgoR0y47:assets%2Fimages%2Fbackgrounds%2Fsenado_bg_3.pngR2i12407R3R4R5R90R6tgoR0y43:assets%2Fimages%2Fbackgrounds%2Faviao_1.pngR2i609R3R4R5R91R6tgoR0y43:assets%2Fimages%2Fbackgrounds%2Faviao_2.pngR2i592R3R4R5R92R6tgoR0y47:assets%2Fimages%2Fbackgrounds%2Fsenado_bg_2.pngR2i11505R3R4R5R93R6tgoR0y41:assets%2Fimages%2Fbackgrounds%2Faviao.pngR2i632R3R4R5R94R6tgoR0y44:assets%2Fimages%2Fbackgrounds%2Fbrasilia.pngR2i95911R3R4R5R95R6tgoR0y47:assets%2Fimages%2Fbackgrounds%2Fsenado_bg_1.pngR2i15076R3R4R5R96R6tgoR0y46:assets%2Fimages%2Fbackgrounds%2Fforeground.pngR2i48274R3R4R5R97R6tgoR0y28:assets%2Fimages%2Fscreen.pngR2i112563R3R4R5R98R6tgoR0y26:assets%2Fimages%2FJair.pngR2i21611R3R4R5R99R6tgoR0y47:assets%2Fimages%2Fcoletiva%2Fforegroundbozo.pngR2i879R3R4R5R100R6tgoR0y47:assets%2Fimages%2Fcoletiva%2Fbackgroundbozo.pngR2i79628R3R4R5R101R6tgoR0y41:assets%2Fimages%2Fcoletiva%2Fbozotile.pngR2i11632R3R4R5R102R6tgoR0y40:assets%2Fimages%2Fcoletiva%2Fmascara.pngR2i465R3R4R5R103R6tgoR0y41:assets%2Fimages%2Fcoletiva%2Fmorotile.pngR2i3383R3R4R5R104R6tgoR0y42:assets%2Fimages%2Fcoletiva%2Fmicrofone.pngR2i221R3R4R5R105R6tgoR0y42:assets%2Fimages%2Fcoletiva%2Fguedstile.pngR2i3062R3R4R5R106R6tgoR0y37:assets%2Fimages%2Fcoletiva%2Ftaca.pngR2i277R3R4R5R107R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros1.pngR2i841R3R4R5R108R6tgoR0y41:assets%2Fimages%2Fobstaculos%2Flivros.pngR2i2443R3R4R5R109R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros6.pngR2i836R3R4R5R110R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros4.pngR2i764R3R4R5R111R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros2.pngR2i769R3R4R5R112R6tgoR0y44:assets%2Fimages%2Fobstaculos%2Fcensurado.pngR2i677R3R4R5R113R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros3.pngR2i838R3R4R5R114R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros5.pngR2i846R3R4R5R115R6tgoR0y37:assets%2Fimages%2Fdialogo%2Ftweet.pngR2i171R3R4R5R116R6tgoR0y37:assets%2Fimages%2Fdialogo%2Ftuite.pngR2i325R3R4R5R117R6tgoR0y24:assets%2Fimages%2Fvs.pngR2i648R3R4R5R118R6tgoR0y33:assets%2Fimages%2Fgroundtiles.pngR2i276R3R4R5R119R6tgoR0y29:assets%2Fimages%2Flaranja.pngR2i222R3R4R5R120R6tgoR0y29:assets%2Fimages%2Fcoracao.pngR2i571R3R4R5R121R6tgoR0y29:assets%2Fdata%2FLula.asepriteR2i4388R3y6:BINARYR5R122R6tgoR0y27:assets%2Fdata%2Fbozorun.oepR2i2979R3y4:TEXTR5R124R6tgoR0y28:assets%2Fdata%2Fbrasilia.xcfR2i184957R3R123R5R126R6tgoR0y29:assets%2Fdata%2FJair.asepriteR2i33676R3R123R5R127R6tgoR0y27:assets%2Fdata%2Fbozorun.oelR2i35904R3R125R5R128R6tgoR2i1700303R3y5:MUSICR5y46:assets%2Fmusic%2FWe%27re%20the%20Resistors.mp3y9:pathGroupaR130y46:assets%2Fmusic%2FWe%27re%20the%20Resistors.ogghR6tgoR2i957857R3y5:SOUNDR5R132R131aR130R132hgoR2i6619R3R133R5y30:assets%2Fsounds%2Fgoblin-1.oggR131aR134y30:assets%2Fsounds%2Fgoblin-1.mp3hR6tgoR2i9144R3R133R5y30:assets%2Fsounds%2Fgoblin-9.oggR131aR136y30:assets%2Fsounds%2Fgoblin-9.mp3hR6tgoR2i4224R3R129R5R135R131aR134R135hgoR2i7296R3R129R5R137R131aR136R137hgoR2i39706R3R129R5y28:flixel%2Fsounds%2Fflixel.mp3R131aR138y28:flixel%2Fsounds%2Fflixel.ogghR6tgoR2i2114R3R129R5y26:flixel%2Fsounds%2Fbeep.mp3R131aR140y26:flixel%2Fsounds%2Fbeep.ogghR6tgoR2i33629R3R133R5R139R131aR138R139hgoR2i5794R3R133R5R141R131aR140R141hgoR2i15744R3y4:FONTy9:classNamey35:__ASSET__flixel_fonts_nokiafc22_ttfR5y30:flixel%2Ffonts%2Fnokiafc22.ttfR6tgoR2i29724R3R142R143y36:__ASSET__flixel_fonts_monsterrat_ttfR5y31:flixel%2Ffonts%2Fmonsterrat.ttfR6tgoR0y33:flixel%2Fimages%2Fui%2Fbutton.pngR2i519R3R4R5R148R6tgoR0y36:flixel%2Fimages%2Flogo%2Fdefault.pngR2i3280R3R4R5R149R6tgh\",\"rootPath\":null,\"version\":2,\"libraryArgs\":[],\"libraryType\":null}";
+	var data = "{\"name\":null,\"assets\":\"aoy4:pathy32:assets%2Fimages%2Ffont%2Ftil.pngy4:sizei98y4:typey5:IMAGEy2:idR1y7:preloadtgoR0y34:assets%2Fimages%2Ffont%2Fnum_8.pngR2i204R3R4R5R7R6tgoR0y30:assets%2Fimages%2Ffont%2Fa.pngR2i170R3R4R5R8R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_4.pngR2i156R3R4R5R9R6tgoR0y36:assets%2Fimages%2Ffont%2Fu_trema.pngR2i186R3R4R5R10R6tgoR0y30:assets%2Fimages%2Ffont%2Fd.pngR2i162R3R4R5R11R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_1.pngR2i131R3R4R5R12R6tgoR0y40:assets%2Fimages%2Ffont%2Fporcentagem.pngR2i193R3R4R5R13R6tgoR0y36:assets%2Fimages%2Ffont%2Fa_agudo.pngR2i196R3R4R5R14R6tgoR0y30:assets%2Fimages%2Ffont%2Fz.pngR2i159R3R4R5R15R6tgoR0y41:assets%2Fimages%2Ffont%2Finterrogacao.pngR2i175R3R4R5R16R6tgoR0y30:assets%2Fimages%2Ffont%2Fp.pngR2i178R3R4R5R17R6tgoR0y36:assets%2Fimages%2Ffont%2Fu_agudo.pngR2i207R3R4R5R18R6tgoR0y30:assets%2Fimages%2Ffont%2Fx.pngR2i205R3R4R5R19R6tgoR0y30:assets%2Fimages%2Ffont%2Fy.pngR2i192R3R4R5R20R6tgoR0y30:assets%2Fimages%2Ffont%2Fc.pngR2i149R3R4R5R21R6tgoR0y36:assets%2Fimages%2Ffont%2Fi_agudo.pngR2i151R3R4R5R22R6tgoR0y34:assets%2Fimages%2Ffont%2Fbarra.pngR2i176R3R4R5R23R6tgoR0y30:assets%2Fimages%2Ffont%2Fe.pngR2i152R3R4R5R24R6tgoR0y36:assets%2Fimages%2Ffont%2Fo_agudo.pngR2i208R3R4R5R25R6tgoR0y34:assets%2Fimages%2Ffont%2Fo_til.pngR2i182R3R4R5R26R6tgoR0y34:assets%2Fimages%2Ffont%2Fagudo.pngR2i128R3R4R5R27R6tgoR0y30:assets%2Fimages%2Ffont%2Fj.pngR2i157R3R4R5R28R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_6.pngR2i177R3R4R5R29R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_7.pngR2i167R3R4R5R30R6tgoR0y38:assets%2Fimages%2Ffont%2Fc_cedilha.pngR2i166R3R4R5R31R6tgoR0y36:assets%2Fimages%2Ffont%2Fe_agudo.pngR2i190R3R4R5R32R6tgoR0y36:assets%2Fimages%2Ffont%2Fo_trema.pngR2i191R3R4R5R33R6tgoR0y42:assets%2Fimages%2Ffont%2Fa_circunflexo.pngR2i202R3R4R5R34R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_0.pngR2i169R3R4R5R35R6tgoR0y36:assets%2Fimages%2Ffont%2Fe_trema.pngR2i183R3R4R5R36R6tgoR0y36:assets%2Fimages%2Ffont%2Fvirgula.pngR2i110R3R4R5R37R6tgoR0y30:assets%2Fimages%2Ffont%2Fo.pngR2i172R3R4R5R38R6tgoR0y30:assets%2Fimages%2Ffont%2Fn.pngR2i218R3R4R5R39R6tgoR0y36:assets%2Fimages%2Ffont%2Fi_trema.pngR2i142R3R4R5R40R6tgoR0y30:assets%2Fimages%2Ffont%2Fr.pngR2i181R3R4R5R41R6tgoR0y40:assets%2Fimages%2Ffont%2Fdois_pontos.pngR2i100R3R4R5R42R6tgoR0y30:assets%2Fimages%2Ffont%2Fq.pngR2i180R3R4R5R43R6tgoR0y30:assets%2Fimages%2Ffont%2F-.pngR2i112R3R4R5R44R6tgoR0y42:assets%2Fimages%2Ffont%2Fe_circunflexo.pngR2i191R3R4R5R45R6tgoR0y38:assets%2Fimages%2Ffont%2Fasterisco.pngR2i152R3R4R5R46R6tgoR0y30:assets%2Fimages%2Ffont%2Fi.pngR2i119R3R4R5R47R6tgoR0y30:assets%2Fimages%2Ffont%2Fl.pngR2i144R3R4R5R48R6tgoR0y30:assets%2Fimages%2Ffont%2Ft.pngR2i153R3R4R5R49R6tgoR0y34:assets%2Fimages%2Ffont%2Ftrema.pngR2i107R3R4R5R50R6tgoR0y30:assets%2Fimages%2Ffont%2Fb.pngR2i187R3R4R5R51R6tgoR0y30:assets%2Fimages%2Ffont%2Fh.pngR2i165R3R4R5R52R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_3.pngR2i186R3R4R5R53R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_5.pngR2i187R3R4R5R54R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_9.pngR2i197R3R4R5R55R6tgoR0y33:assets%2Fimages%2Ffont%2Fmais.pngR2i153R3R4R5R56R6tgoR0y34:assets%2Fimages%2Ffont%2Fa_til.pngR2i186R3R4R5R57R6tgoR0y30:assets%2Fimages%2Ffont%2Fg.pngR2i176R3R4R5R58R6tgoR0y36:assets%2Fimages%2Ffont%2Fa_trema.pngR2i191R3R4R5R59R6tgoR0y39:assets%2Fimages%2Ffont%2Fexclamacao.pngR2i126R3R4R5R60R6tgoR0y30:assets%2Fimages%2Ffont%2Fu.pngR2i167R3R4R5R61R6tgoR0y30:assets%2Fimages%2Ffont%2Fw.pngR2i206R3R4R5R62R6tgoR0y34:assets%2Fimages%2Ffont%2Fnum_2.pngR2i170R3R4R5R63R6tgoR0y30:assets%2Fimages%2Ffont%2Fv.pngR2i175R3R4R5R64R6tgoR0y42:assets%2Fimages%2Ffont%2Fo_circunflexo.pngR2i203R3R4R5R65R6tgoR0y30:assets%2Fimages%2Ffont%2Ff.pngR2i149R3R4R5R66R6tgoR0y30:assets%2Fimages%2Ffont%2Fk.pngR2i201R3R4R5R67R6tgoR0y30:assets%2Fimages%2Ffont%2Fs.pngR2i189R3R4R5R68R6tgoR0y30:assets%2Fimages%2Ffont%2Fm.pngR2i221R3R4R5R69R6tgoR0y26:assets%2Fimages%2FLula.pngR2i3556R3R4R5R70R6tgoR0y25:assets%2Fimages%2Fsky.pngR2i6498R3R4R5R71R6tgoR0y48:assets%2Fimages%2Fbotoes%2Fmascara%2Fbotoes4.pngR2i340R3R4R5R72R6tgoR0y48:assets%2Fimages%2Fbotoes%2Fmascara%2Fbotoes3.pngR2i951R3R4R5R73R6tgoR0y53:assets%2Fimages%2Fbotoes%2Fmascara%2FmascaraBotao.pngR2i1305R3R4R5R74R6tgoR0y50:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fcoletiva.pngR2i1288R3R4R5R75R6tgoR0y49:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fbotoes9.pngR2i919R3R4R5R76R6tgoR0y50:assets%2Fimages%2Fbotoes%2Fcoletiva%2Fbotoes10.pngR2i308R3R4R5R77R6tgoR0y47:assets%2Fimages%2Fbotoes%2Fvoltar%2Fbotoes1.pngR2i865R3R4R5R78R6tgoR0y46:assets%2Fimages%2Fbotoes%2Fvoltar%2Fvoltar.pngR2i1817R3R4R5R79R6tgoR0y47:assets%2Fimages%2Fbotoes%2Fvoltar%2Fbotoes2.pngR2i751R3R4R5R80R6tgoR0y50:assets%2Fimages%2Fbotoes%2Freiniciar%2Fbotoes8.pngR2i958R3R4R5R81R6tgoR0y50:assets%2Fimages%2Fbotoes%2Freiniciar%2Fbotoes7.pngR2i319R3R4R5R82R6tgoR0y52:assets%2Fimages%2Fbotoes%2Freiniciar%2Freiniciar.pngR2i1298R3R4R5R83R6tgoR0y46:assets%2Fimages%2Fbotoes%2Ffugir%2Fbotoes6.pngR2i289R3R4R5R84R6tgoR0y44:assets%2Fimages%2Fbotoes%2Ffugir%2Ffugir.pngR2i1252R3R4R5R85R6tgoR0y46:assets%2Fimages%2Fbotoes%2Ffugir%2Fbotoes5.pngR2i825R3R4R5R86R6tgoR0y29:assets%2Fimages%2Flaranja.gifR2i196R3R4R5R87R6tgoR0y45:assets%2Fimages%2Fbackgrounds%2Fsenado_bg.pngR2i25985R3R4R5R88R6tgoR0y39:assets%2Fimages%2Fbackgrounds%2Fceu.pngR2i2739R3R4R5R89R6tgoR0y47:assets%2Fimages%2Fbackgrounds%2Fsenado_bg_3.pngR2i12407R3R4R5R90R6tgoR0y43:assets%2Fimages%2Fbackgrounds%2Faviao_1.pngR2i609R3R4R5R91R6tgoR0y43:assets%2Fimages%2Fbackgrounds%2Faviao_2.pngR2i592R3R4R5R92R6tgoR0y41:assets%2Fimages%2Fbackgrounds%2Fpatin.pngR2i279R3R4R5R93R6tgoR0y47:assets%2Fimages%2Fbackgrounds%2Fsenado_bg_2.pngR2i11505R3R4R5R94R6tgoR0y41:assets%2Fimages%2Fbackgrounds%2Faviao.pngR2i632R3R4R5R95R6tgoR0y44:assets%2Fimages%2Fbackgrounds%2Fpedestal.pngR2i136R3R4R5R96R6tgoR0y44:assets%2Fimages%2Fbackgrounds%2Fbrasilia.pngR2i95911R3R4R5R97R6tgoR0y47:assets%2Fimages%2Fbackgrounds%2Fsenado_bg_1.pngR2i15076R3R4R5R98R6tgoR0y46:assets%2Fimages%2Fbackgrounds%2Fforeground.pngR2i48274R3R4R5R99R6tgoR0y28:assets%2Fimages%2Fscreen.pngR2i112563R3R4R5R100R6tgoR0y26:assets%2Fimages%2FJair.pngR2i21611R3R4R5R101R6tgoR0y47:assets%2Fimages%2Fcoletiva%2Fforegroundbozo.pngR2i879R3R4R5R102R6tgoR0y47:assets%2Fimages%2Fcoletiva%2Fbackgroundbozo.pngR2i79628R3R4R5R103R6tgoR0y41:assets%2Fimages%2Fcoletiva%2Fbozotile.pngR2i11632R3R4R5R104R6tgoR0y40:assets%2Fimages%2Fcoletiva%2Fmascara.pngR2i465R3R4R5R105R6tgoR0y41:assets%2Fimages%2Fcoletiva%2Fmorotile.pngR2i3383R3R4R5R106R6tgoR0y42:assets%2Fimages%2Fcoletiva%2Fmicrofone.pngR2i221R3R4R5R107R6tgoR0y42:assets%2Fimages%2Fcoletiva%2Fguedstile.pngR2i3062R3R4R5R108R6tgoR0y37:assets%2Fimages%2Fcoletiva%2Ftaca.pngR2i277R3R4R5R109R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros1.pngR2i841R3R4R5R110R6tgoR0y41:assets%2Fimages%2Fobstaculos%2Flivros.pngR2i2443R3R4R5R111R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros6.pngR2i836R3R4R5R112R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros4.pngR2i764R3R4R5R113R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros2.pngR2i769R3R4R5R114R6tgoR0y44:assets%2Fimages%2Fobstaculos%2Fcensurado.pngR2i677R3R4R5R115R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros3.pngR2i838R3R4R5R116R6tgoR0y42:assets%2Fimages%2Fobstaculos%2Flivros5.pngR2i846R3R4R5R117R6tgoR0y37:assets%2Fimages%2Fdialogo%2Ftweet.pngR2i171R3R4R5R118R6tgoR0y37:assets%2Fimages%2Fdialogo%2Ftuite.pngR2i325R3R4R5R119R6tgoR0y24:assets%2Fimages%2Fvs.pngR2i648R3R4R5R120R6tgoR0y33:assets%2Fimages%2Fgroundtiles.pngR2i276R3R4R5R121R6tgoR0y29:assets%2Fimages%2Flaranja.pngR2i222R3R4R5R122R6tgoR0y29:assets%2Fimages%2Fcoracao.pngR2i571R3R4R5R123R6tgoR0y29:assets%2Fdata%2FLula.asepriteR2i4388R3y6:BINARYR5R124R6tgoR0y27:assets%2Fdata%2Fbozorun.oepR2i2979R3y4:TEXTR5R126R6tgoR0y28:assets%2Fdata%2Fbrasilia.xcfR2i184957R3R125R5R128R6tgoR0y29:assets%2Fdata%2FJair.asepriteR2i33676R3R125R5R129R6tgoR0y27:assets%2Fdata%2Fbozorun.oelR2i35904R3R127R5R130R6tgoR2i1700303R3y5:MUSICR5y46:assets%2Fmusic%2FWe%27re%20the%20Resistors.mp3y9:pathGroupaR132y46:assets%2Fmusic%2FWe%27re%20the%20Resistors.ogghR6tgoR2i957857R3y5:SOUNDR5R134R133aR132R134hgoR2i6619R3R135R5y30:assets%2Fsounds%2Fgoblin-1.oggR133aR136y30:assets%2Fsounds%2Fgoblin-1.mp3hR6tgoR2i9144R3R135R5y30:assets%2Fsounds%2Fgoblin-9.oggR133aR138y30:assets%2Fsounds%2Fgoblin-9.mp3hR6tgoR2i4224R3R131R5R137R133aR136R137hgoR2i7296R3R131R5R139R133aR138R139hgoR2i39706R3R131R5y28:flixel%2Fsounds%2Fflixel.mp3R133aR140y28:flixel%2Fsounds%2Fflixel.ogghR6tgoR2i2114R3R131R5y26:flixel%2Fsounds%2Fbeep.mp3R133aR142y26:flixel%2Fsounds%2Fbeep.ogghR6tgoR2i33629R3R135R5R141R133aR140R141hgoR2i5794R3R135R5R143R133aR142R143hgoR2i15744R3y4:FONTy9:classNamey35:__ASSET__flixel_fonts_nokiafc22_ttfR5y30:flixel%2Ffonts%2Fnokiafc22.ttfR6tgoR2i29724R3R144R145y36:__ASSET__flixel_fonts_monsterrat_ttfR5y31:flixel%2Ffonts%2Fmonsterrat.ttfR6tgoR0y33:flixel%2Fimages%2Fui%2Fbutton.pngR2i519R3R4R5R150R6tgoR0y36:flixel%2Fimages%2Flogo%2Fdefault.pngR2i3280R3R4R5R151R6tgh\",\"rootPath\":null,\"version\":2,\"libraryArgs\":[],\"libraryType\":null}";
 	var manifest = lime_utils_AssetManifest.parse(data,ManifestResources.rootPath);
 	var library = lime_utils_AssetLibrary.fromManifest(manifest);
 	lime_utils_Assets.registerLibrary("default",library);
@@ -72227,7 +72251,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 338602;
+	this.version = 673168;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
@@ -117967,8 +117991,10 @@ AssetPaths.ceu__png = "assets/images/backgrounds/ceu.png";
 AssetPaths.senado_bg_3__png = "assets/images/backgrounds/senado_bg_3.png";
 AssetPaths.aviao_1__png = "assets/images/backgrounds/aviao_1.png";
 AssetPaths.aviao_2__png = "assets/images/backgrounds/aviao_2.png";
+AssetPaths.patin__png = "assets/images/backgrounds/patin.png";
 AssetPaths.senado_bg_2__png = "assets/images/backgrounds/senado_bg_2.png";
 AssetPaths.aviao__png = "assets/images/backgrounds/aviao.png";
+AssetPaths.pedestal__png = "assets/images/backgrounds/pedestal.png";
 AssetPaths.brasilia__png = "assets/images/backgrounds/brasilia.png";
 AssetPaths.senado_bg_1__png = "assets/images/backgrounds/senado_bg_1.png";
 AssetPaths.foreground__png = "assets/images/backgrounds/foreground.png";
