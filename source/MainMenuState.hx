@@ -27,9 +27,11 @@ class MainMenuState extends FlxState
 	private var aviao:FlxSprite;
 	private var pedestal:FlxSprite;
 	private var multiplier:Float=1.0;
+	private var string:InaraString;
 	
 	override public function create():Void
 	{
+		//FlxG.debugger.visible = true;
 		var division:Int = Std.int(FlxG.height / 3);
 
 		#if mobile
@@ -41,6 +43,9 @@ class MainMenuState extends FlxState
 		ceu = new FlxSprite().loadGraphic(AssetPaths.sky__png, false, 310, 300);
 		ceu.y -= 70;
 		add(ceu);
+
+		string = new InaraString("testeeeeee123", 20, 0, 200, 0, 0);
+		add(string);
 
 		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 86, 17);
 		aviao.animation.add("voando", [0,1], 10, true);

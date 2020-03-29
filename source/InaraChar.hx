@@ -5,13 +5,13 @@ import flixel.FlxSprite;
 class InaraChar extends FlxSprite
 {
     private var _char:String;
-    private var _width:Float;
-    private var _height:Float;
+    private var _width:Int;
+    private var _height:Int;
     private var _posX:Float;
     private var _posY:Float;
     public var _changed:Bool=true;
 
-    private function setCharWidthHeightPosition(c: String, w:Float, h:Float, x:Float, y:Float):Void
+    private function setCharWidthHeightPosition(c: String, w:Int, h:Int, x:Float, y:Float):Void
     {
         _char = c;
         _width = w;
@@ -19,9 +19,9 @@ class InaraChar extends FlxSprite
         _posX = x;
         _posY = y;
     }
-    public function new(X:Float=0, Y:Float=0, Char:String, posX:Float=0, posY:Float=0)
+    public function new(Char:String, posX:Float=0, posY:Float=0)
     {
-        super(X, Y);
+        super(posX, posY);
 
         switch(Char){
             case "*" : setCharWidthHeightPosition(AssetPaths.asterisco__png, 15, 25, posX, posY);
@@ -89,13 +89,13 @@ class InaraChar extends FlxSprite
             case "z" : setCharWidthHeightPosition(AssetPaths.z__png, 27, 25, posX, posY);
         }
 
-        loadGraphic(_char, false, _width, _height, false);
+        loadGraphic(_char, false, _width, _height, true);
     }
 
     override public function update(elapsed: Float)
     {
         if(_changed){
-            setPosition(_posX, posY);
+            setPosition(_posX, _posY);
             _changed = false;
         }
     }

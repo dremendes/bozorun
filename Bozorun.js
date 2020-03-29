@@ -895,9 +895,9 @@ ApplicationMain.create = function(config) {
 	ManifestResources.init(config);
 	var _this = app.meta;
 	if(__map_reserved["build"] != null) {
-		_this.setReserved("build","101");
+		_this.setReserved("build","104");
 	} else {
-		_this.h["build"] = "101";
+		_this.h["build"] = "104";
 	}
 	var _this1 = app.meta;
 	if(__map_reserved["company"] != null) {
@@ -8517,7 +8517,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		if(flixel_FlxG.overlap(this._player,this._oranges,function(_bozo,_laranja) {
 			_laranja.destroy();
 			return;
-		},flixel_FlxObject.separate)) {
+		})) {
 			this._playJump = false;
 			if(this._amountOranges < 5) {
 				this._amountOranges += 1;
@@ -8551,7 +8551,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 				_obj2.destroy();
 			}
 			return;
-		},flixel_FlxObject.separate)) {
+		})) {
 			this._playJump = false;
 			this._jump = 0;
 			if(this._amountOranges >= 1) {
@@ -8574,13 +8574,15 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 				this._laranja5.set_visible(false);
 				break;
 			}
-			if(this._player.velocity.x <= 0) {
-				if(this._amountOranges <= 0) {
-					this._jump = -1;
-					this._playJump = false;
-					if(this._sfxDie) {
-						flixel_FlxG.sound.play("assets/sounds/goblin-9.ogg");
-						this._sfxDie = false;
+			if(this._amountOranges == 0 && flixel_FlxG.overlap(this._player,this._books,null,flixel_FlxObject.separate)) {
+				if(this._player.velocity.x <= 0) {
+					if(this._amountOranges <= 0) {
+						this._jump = -1;
+						this._playJump = false;
+						if(this._sfxDie) {
+							flixel_FlxG.sound.play("assets/sounds/goblin-9.ogg");
+							this._sfxDie = false;
+						}
 					}
 				}
 			}
@@ -9500,6 +9502,255 @@ HxOverrides.iter = function(a) {
 		return this.arr[this.cur++];
 	}};
 };
+var InaraChar = function(Char,posX,posY) {
+	if(posY == null) {
+		posY = 0;
+	}
+	if(posX == null) {
+		posX = 0;
+	}
+	this._changed = true;
+	flixel_FlxSprite.call(this,posX,posY);
+	switch(Char) {
+	case "!":
+		this.setCharWidthHeightPosition("assets/images/font/exclamacao.png",11,25,posX,posY);
+		break;
+	case "%":
+		this.setCharWidthHeightPosition("assets/images/font/porcentagem.png",26,25,posX,posY);
+		break;
+	case "*":
+		this.setCharWidthHeightPosition("assets/images/font/asterisco.png",15,25,posX,posY);
+		break;
+	case "+":
+		this.setCharWidthHeightPosition("assets/images/font/mais.png",18,25,posX,posY);
+		break;
+	case ",":
+		this.setCharWidthHeightPosition("assets/images/font/virgula.png",8,25,posX,posY);
+		break;
+	case "-":
+		this.setCharWidthHeightPosition("assets/images/font/-.png",18,25,posX,posY);
+		break;
+	case "/":
+		this.setCharWidthHeightPosition("assets/images/font/barra.png",29,25,posX,posY);
+		break;
+	case "0":
+		this.setCharWidthHeightPosition("assets/images/font/num_0.png",22,25,posX,posY);
+		break;
+	case "1":
+		this.setCharWidthHeightPosition("assets/images/font/num_1.png",12,25,posX,posY);
+		break;
+	case "2":
+		this.setCharWidthHeightPosition("assets/images/font/num_2.png",23,25,posX,posY);
+		break;
+	case "3":
+		this.setCharWidthHeightPosition("assets/images/font/num_3.png",24,25,posX,posY);
+		break;
+	case "4":
+		this.setCharWidthHeightPosition("assets/images/font/num_4.png",20,25,posX,posY);
+		break;
+	case "5":
+		this.setCharWidthHeightPosition("assets/images/font/num_5.png",23,25,posX,posY);
+		break;
+	case "6":
+		this.setCharWidthHeightPosition("assets/images/font/num_6.png",23,25,posX,posY);
+		break;
+	case "7":
+		this.setCharWidthHeightPosition("assets/images/font/num_7.png",25,25,posX,posY);
+		break;
+	case "8":
+		this.setCharWidthHeightPosition("assets/images/font/num_8.png",27,25,posX,posY);
+		break;
+	case "9":
+		this.setCharWidthHeightPosition("assets/images/font/num_9.png",25,25,posX,posY);
+		break;
+	case ":":
+		this.setCharWidthHeightPosition("assets/images/font/dois_pontos.png",7,15,posX,posY);
+		break;
+	case "?":
+		this.setCharWidthHeightPosition("assets/images/font/interrogacao.png",23,25,posX,posY);
+		break;
+	case "a":
+		this.setCharWidthHeightPosition("assets/images/font/a.png",25,25,posX,posY);
+		break;
+	case "b":
+		this.setCharWidthHeightPosition("assets/images/font/b.png",20,25,posX,posY);
+		break;
+	case "c":
+		this.setCharWidthHeightPosition("assets/images/font/c.png",22,25,posX,posY);
+		break;
+	case "d":
+		this.setCharWidthHeightPosition("assets/images/font/d.png",23,25,posX,posY);
+		break;
+	case "e":
+		this.setCharWidthHeightPosition("assets/images/font/e.png",22,25,posX,posY);
+		break;
+	case "f":
+		this.setCharWidthHeightPosition("assets/images/font/f.png",22,26,posX,posY);
+		break;
+	case "g":
+		this.setCharWidthHeightPosition("assets/images/font/g.png",22,25,posX,posY);
+		break;
+	case "h":
+		this.setCharWidthHeightPosition("assets/images/font/h.png",25,25,posX,posY);
+		break;
+	case "i":
+		this.setCharWidthHeightPosition("assets/images/font/i.png",15,25,posX,posY);
+		break;
+	case "j":
+		this.setCharWidthHeightPosition("assets/images/font/j.png",18,25,posX,posY);
+		break;
+	case "k":
+		this.setCharWidthHeightPosition("assets/images/font/k.png",20,25,posX,posY);
+		break;
+	case "l":
+		this.setCharWidthHeightPosition("assets/images/font/l.png",22,25,posX,posY);
+		break;
+	case "m":
+		this.setCharWidthHeightPosition("assets/images/font/m.png",37,25,posX,posY);
+		break;
+	case "n":
+		this.setCharWidthHeightPosition("assets/images/font/n.png",32,25,posX,posY);
+		break;
+	case "o":
+		this.setCharWidthHeightPosition("assets/images/font/o.png",22,28,posX,posY);
+		break;
+	case "p":
+		this.setCharWidthHeightPosition("assets/images/font/p.png",24,25,posX,posY);
+		break;
+	case "q":
+		this.setCharWidthHeightPosition("assets/images/font/q.png",24,26,posX,posY);
+		break;
+	case "r":
+		this.setCharWidthHeightPosition("assets/images/font/r.png",24,25,posX,posY);
+		break;
+	case "s":
+		this.setCharWidthHeightPosition("assets/images/font/s.png",22,25,posX,posY);
+		break;
+	case "t":
+		this.setCharWidthHeightPosition("assets/images/font/t.png",24,25,posX,posY);
+		break;
+	case "u":
+		this.setCharWidthHeightPosition("assets/images/font/u.png",22,27,posX,posY);
+		break;
+	case "v":
+		this.setCharWidthHeightPosition("assets/images/font/v.png",27,25,posX,posY);
+		break;
+	case "w":
+		this.setCharWidthHeightPosition("assets/images/font/w.png",41,25,posX,posY);
+		break;
+	case "x":
+		this.setCharWidthHeightPosition("assets/images/font/x.png",26,26,posX,posY);
+		break;
+	case "y":
+		this.setCharWidthHeightPosition("assets/images/font/y.png",25,25,posX,posY);
+		break;
+	case "z":
+		this.setCharWidthHeightPosition("assets/images/font/z.png",27,25,posX,posY);
+		break;
+	case "~":
+		this.setCharWidthHeightPosition("assets/images/font/til.png",15,6,posX,posY);
+		break;
+	case "¨":
+		this.setCharWidthHeightPosition("assets/images/font/trema.png",15,7,posX,posY);
+		break;
+	case "´":
+		this.setCharWidthHeightPosition("assets/images/font/agudo.png",11,10,posX,posY);
+		break;
+	case "á":
+		this.setCharWidthHeightPosition("assets/images/font/a_agudo.png",25,27,posX,posY);
+		break;
+	case "â":
+		this.setCharWidthHeightPosition("assets/images/font/a_circunflexo.png",25,30,posX,posY);
+		break;
+	case "ã":
+		this.setCharWidthHeightPosition("assets/images/font/a_til.png",25,25,posX,posY);
+		break;
+	case "ä":
+		this.setCharWidthHeightPosition("assets/images/font/a_trema.png",25,25,posX,posY);
+		break;
+	case "ç":
+		this.setCharWidthHeightPosition("assets/images/font/c_cedilha.png",22,26,posX,posY);
+		break;
+	case "é":
+		this.setCharWidthHeightPosition("assets/images/font/e_agudo.png",22,27,posX,posY);
+		break;
+	case "ê":
+		this.setCharWidthHeightPosition("assets/images/font/e_circunflexo.png",22,27,posX,posY);
+		break;
+	case "ë":
+		this.setCharWidthHeightPosition("assets/images/font/e_trema.png",22,27,posX,posY);
+		break;
+	case "í":
+		this.setCharWidthHeightPosition("assets/images/font/i_agudo.png",15,25,posX,posY);
+		break;
+	case "ï":
+		this.setCharWidthHeightPosition("assets/images/font/i_trema.png",15,25,posX,posY);
+		break;
+	case "ô":
+		this.setCharWidthHeightPosition("assets/images/font/o_circunflexo.png",22,28,posX,posY);
+		break;
+	case "õ":
+		this.setCharWidthHeightPosition("assets/images/font/o_til.png",22,28,posX,posY);
+		break;
+	case "ö":
+		this.setCharWidthHeightPosition("assets/images/font/o_trema.png",22,28,posX,posY);
+		break;
+	case "ú":
+		this.setCharWidthHeightPosition("assets/images/font/u_agudo.png",22,27,posX,posY);
+		break;
+	case "ü":
+		this.setCharWidthHeightPosition("assets/images/font/u_trema.png",22,27,posX,posY);
+		break;
+	}
+	this.loadGraphic(this._char,false,this._width,this._height,true);
+};
+$hxClasses["InaraChar"] = InaraChar;
+InaraChar.__name__ = "InaraChar";
+InaraChar.__super__ = flixel_FlxSprite;
+InaraChar.prototype = $extend(flixel_FlxSprite.prototype,{
+	_char: null
+	,_width: null
+	,_height: null
+	,_posX: null
+	,_posY: null
+	,_changed: null
+	,setCharWidthHeightPosition: function(c,w,h,x,y) {
+		this._char = c;
+		this._width = w;
+		this._height = h;
+		this._posX = x;
+		this._posY = y;
+	}
+	,update: function(elapsed) {
+		if(this._changed) {
+			this.setPosition(this._posX,this._posY);
+			this._changed = false;
+		}
+	}
+	,__class__: InaraChar
+});
+var InaraString = function(str,x,y,width,rightPad,bottomPad) {
+	var poolSize = str.length;
+	var maxHeightOfLine = 0;
+	var currentLineWidth = 0;
+	var currentLineCount = 0;
+	var currentLineY = 0;
+	this.chars = new flixel_group_FlxTypedSpriteGroup(x,y,poolSize);
+	this._x = x;
+	this._y = y;
+	var _inaraChar = new InaraChar(str.charAt(0),this._x,this._y);
+	this.chars.add(_inaraChar);
+	flixel_FlxBasic.call(this);
+};
+$hxClasses["InaraString"] = InaraString;
+InaraString.__name__ = "InaraString";
+InaraString.__super__ = flixel_FlxBasic;
+InaraString.prototype = $extend(flixel_FlxBasic.prototype,{
+	_x: null
+	,_y: null
+	,chars: null
+	,__class__: InaraString
+});
 var IntIterator = function(min,max) {
 	this.min = min;
 	this.max = max;
@@ -9550,6 +9801,7 @@ MainMenuState.prototype = $extend(flixel_FlxState.prototype,{
 	,aviao: null
 	,pedestal: null
 	,multiplier: null
+	,string: null
 	,create: function() {
 		var division = flixel_FlxG.height / 3 | 0;
 		flixel_FlxG.mouse.set_visible(true);
@@ -9557,6 +9809,8 @@ MainMenuState.prototype = $extend(flixel_FlxState.prototype,{
 		var _g = this.ceu;
 		_g.set_y(_g.y - 70);
 		this.add(this.ceu);
+		this.string = new InaraString("testeeeeee123",20,0,200,0,0);
+		this.add(this.string);
 		this.aviao = new flixel_FlxSprite().loadGraphic("assets/images/backgrounds/aviao.png",true,86,17);
 		this.aviao.animation.add("voando",[0,1],10,true);
 		this.aviao.animation.play("voando");
@@ -19441,8 +19695,8 @@ var flixel_graphics_frames_FlxFrame = function(parent,angle,flipX,flipY) {
 	var this1 = new Array(6);
 	this.blitMatrix = this1;
 	if(flixel_FlxG.renderTile) {
-		var this2 = new Array(6);
-		this.tileMatrix = this2;
+		var this11 = new Array(6);
+		this.tileMatrix = this11;
 	}
 };
 $hxClasses["flixel.graphics.frames.FlxFrame"] = flixel_graphics_frames_FlxFrame;

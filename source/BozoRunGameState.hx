@@ -372,7 +372,7 @@ class BozoRunGameState extends FlxState
 			_change = false;
 		}
 
-		if (FlxG.collide(_player, _oranges, (_bozo, _laranja) -> _laranja.destroy() )){
+		if (FlxG.overlap(_player, _oranges, (_bozo, _laranja) -> _laranja.destroy() )){
 			_playJump = false;
 			if(_amountOranges < 5) {
 				_amountOranges += 1;
@@ -402,7 +402,7 @@ class BozoRunGameState extends FlxState
 		}
 		
 		// collision with books?
-		if (!_blink && FlxG.collide(_player, _books, (_obj1, _obj2) -> if (_amountOranges >= 1) _obj2.destroy() )) {
+		if (!_blink && FlxG.overlap(_player, _books, (_obj1, _obj2) -> if (_amountOranges >= 1) _obj2.destroy() )) {
 			_playJump = false;
 			_jump = 0;
 
@@ -420,15 +420,18 @@ class BozoRunGameState extends FlxState
 				case 4:
 					_laranja5.visible = false;
 			}
-			
-			if (_player.velocity.x <= 0) {
-				if(_amountOranges <= 0) {
-					// player went splat
-					_jump = -1;
-					_playJump = false;
-					sfxDie();
+
+			if(_amountOranges == 0 && FlxG.collide(_player, _books)){
+				if (_player.velocity.x <= 0) {
+					if(_amountOranges <= 0) {
+						// player went splat
+						_jump = -1;
+						_playJump = false;
+						sfxDie();
+					}
 				}
 			}
+			
 		} else if(_blink) {
 			_player.visible = !_player.visible;
 		}
