@@ -6,6 +6,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
@@ -80,11 +81,11 @@ class BozoRunGameState extends FlxState
 
 	// collision group for generated platforms
 	private var _collisions:FlxGroup;
-	private var _books:FlxGroup;
+	private var _books:FlxSpriteGroup;
 
 	private var _amountOranges:Int=0;
 	
-	private var _oranges:FlxGroup;
+	private var _oranges:FlxSpriteGroup;
 
 	// indicate whether the collision group has changed
 	private var _change:Bool;
@@ -249,10 +250,10 @@ class BozoRunGameState extends FlxState
 		// add the collisions group to the screen so we can see it!
 		add(_collisions);
 		
-		_books = new FlxGroup();
+		_books = new FlxSpriteGroup();
 		add(_books);
 
-		_oranges = new FlxGroup();
+		_oranges = new FlxSpriteGroup();
 		add(_oranges);
 		
 	}
@@ -534,9 +535,12 @@ class BozoRunGameState extends FlxState
 		{
 			makePlatform();
 		}
+		//deleta livros e laranjas assim que estão fora da tela
+		_books.forEach(function (book) { if (book.x < (_player.x - 35)) book.destroy();});
+		_oranges.forEach(function (orange) { if (orange.x < (_player.x - 35)) orange.destroy();});
 	}
 	
-	private function setObjAndAdd2Group(Path:FlxGraphicAsset, width:Int, height:Int, group:FlxGroup, isSolid:Bool=true, isMovable:Bool=true, positionCollide:Int=FlxObject.ANY):Void 
+	private function setObjAndAdd2Group(Path:FlxGraphicAsset, width:Int, height:Int, group:FlxSpriteGroup, isSolid:Bool=true, isMovable:Bool=true, positionCollide:Int=FlxObject.ANY):Void 
 	{
 		var obj = new AssetLoader(Path, width, height);
 			obj.x = (_player.x + _edge) * random.int(0, 20) + random.int(300, 3000);
@@ -553,7 +557,7 @@ class BozoRunGameState extends FlxState
 		_edge += TILE_WIDTH*2;
 
 		if (random.int(0, 2) / 2 == 0) {
-			setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true, FlxObject.RIGHT);
+			setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
 		}
 
 		if (random.int(0, 4) / 4 == 0) {

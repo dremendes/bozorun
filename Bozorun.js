@@ -895,9 +895,9 @@ ApplicationMain.create = function(config) {
 	ManifestResources.init(config);
 	var _this = app.meta;
 	if(__map_reserved["build"] != null) {
-		_this.setReserved("build","104");
+		_this.setReserved("build","105");
 	} else {
-		_this.h["build"] = "104";
+		_this.h["build"] = "105";
 	}
 	var _this1 = app.meta;
 	if(__map_reserved["company"] != null) {
@@ -8267,9 +8267,9 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		this._collisions = new flixel_group_FlxTypedGroup();
 		this._collisions.add(this._floor);
 		this.add(this._collisions);
-		this._books = new flixel_group_FlxTypedGroup();
+		this._books = new flixel_group_FlxTypedSpriteGroup();
 		this.add(this._books);
-		this._oranges = new flixel_group_FlxTypedGroup();
+		this._oranges = new flixel_group_FlxTypedSpriteGroup();
 		this.add(this._oranges);
 	}
 	,initPlayer: function() {
@@ -8427,7 +8427,18 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 			this.onReset();
 			return;
 		}
+		var _gthis1 = this;
 		while((this._player.x + flixel_FlxG.width) * 1.3 > this._edge) this.makePlatform();
+		this._books.group.forEach(function(book) {
+			if(book.x < _gthis1._player.x - 35) {
+				book.destroy();
+			}
+		},false);
+		this._oranges.group.forEach(function(orange) {
+			if(orange.x < _gthis1._player.x - 35) {
+				orange.destroy();
+			}
+		},false);
 		this._player.maxVelocity.set_x(200 + (this._player.x * .03 | 0));
 		var _this5 = flixel_FlxG.keys;
 		var KeyArray2;
@@ -8739,7 +8750,18 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		}
 	}
 	,updatePlatforms: function() {
+		var _gthis = this;
 		while((this._player.x + flixel_FlxG.width) * 1.3 > this._edge) this.makePlatform();
+		this._books.group.forEach(function(book) {
+			if(book.x < _gthis._player.x - 35) {
+				book.destroy();
+			}
+		},false);
+		this._oranges.group.forEach(function(orange) {
+			if(orange.x < _gthis._player.x - 35) {
+				orange.destroy();
+			}
+		},false);
 	}
 	,setObjAndAdd2Group: function(Path,width,height,group,isSolid,isMovable,positionCollide) {
 		if(positionCollide == null) {
@@ -8769,7 +8791,7 @@ BozoRunGameState.prototype = $extend(flixel_FlxState.prototype,{
 		}
 		this._edge += 32;
 		if(BozoRunGameState.random.int(0,2) / 2 == 0) {
-			this.setObjAndAdd2Group(this._arrayLivros[BozoRunGameState.random.int(0,5)],45,55,this._books,true,true,16);
+			this.setObjAndAdd2Group(this._arrayLivros[BozoRunGameState.random.int(0,5)],45,55,this._books,true,true);
 		}
 		if(BozoRunGameState.random.int(0,4) / 4 == 0) {
 			this.setObjAndAdd2Group("assets/images/laranja.png",30,32,this._oranges,true,false);
@@ -19695,8 +19717,8 @@ var flixel_graphics_frames_FlxFrame = function(parent,angle,flipX,flipY) {
 	var this1 = new Array(6);
 	this.blitMatrix = this1;
 	if(flixel_FlxG.renderTile) {
-		var this11 = new Array(6);
-		this.tileMatrix = this11;
+		var this2 = new Array(6);
+		this.tileMatrix = this2;
 	}
 };
 $hxClasses["flixel.graphics.frames.FlxFrame"] = flixel_graphics_frames_FlxFrame;
@@ -72505,7 +72527,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 673168;
+	this.version = 264246;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
