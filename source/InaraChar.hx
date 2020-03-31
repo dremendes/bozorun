@@ -13,11 +13,11 @@ class InaraChar extends FlxSprite
 
     private function setCharWidthHeightPosition(c: String, w:Int, h:Int, x:Float, y:Float):Void
     {
-        _char = c;
-        _width = w;
-        _height = h;
-        _posX = x;
-        _posY = y;
+        this._char = c;
+        this._width = w;
+        this._height = h;
+        this._posX = x;
+        this._posY = y;
     }
     public function new(Char:String, posX:Float=0, posY:Float=0)
     {
@@ -87,16 +87,19 @@ class InaraChar extends FlxSprite
             case "x" : setCharWidthHeightPosition(AssetPaths.x__png, 26, 26, posX, posY);
             case "y" : setCharWidthHeightPosition(AssetPaths.y__png, 25, 25, posX, posY);
             case "z" : setCharWidthHeightPosition(AssetPaths.z__png, 27, 25, posX, posY);
+            case " " : setCharWidthHeightPosition(AssetPaths.i__png, 15, 25, posX, posY);
         }
 
-        loadGraphic(_char, false, _width, _height, true);
+        loadGraphic(this._char, false, this._width, this._height, true);
+        Char == " " ? visible = false : null;
     }
 
     override public function update(elapsed: Float)
     {
         if(_changed){
-            setPosition(_posX, _posY);
-            _changed = false;
+            setPosition(this._posX, this._posY);
+            this._changed = false;
         }
+        super.update(elapsed);
     }
 }

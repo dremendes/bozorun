@@ -18,7 +18,6 @@ class MainMenuState extends FlxState
 	private var mesa:FlxSprite;
 	private var bozoEspirra:FlxSprite;
 	private var bozoRun:FlxSprite;
-	private var vs:FlxSprite;
 	private var title:FlxText;
 	private var BtnRun:FlxButton;
 	private var BtnColetiva:FlxButton;
@@ -43,10 +42,7 @@ class MainMenuState extends FlxState
 		ceu = new FlxSprite().loadGraphic(AssetPaths.sky__png, false, 310, 300);
 		ceu.y -= 70;
 		add(ceu);
-
-		string = new InaraString("testeeeeee123", 20, 0, 200, 0, 0);
-		add(string);
-
+		
 		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 86, 17);
 		aviao.animation.add("voando", [0,1], 10, true);
 		aviao.animation.play("voando");
@@ -58,7 +54,7 @@ class MainMenuState extends FlxState
 		background.animation.add("idle", [0, 1, 2], 3, true);
 		background.animation.play("idle");
 		add(background);
-
+		
 		pato = new FlxSprite().loadGraphic(AssetPaths.patin__png, false, 30, 29);
 		pato.setPosition(180,160);
 		pato.setFacingFlip(FlxObject.RIGHT, false, false);
@@ -72,22 +68,21 @@ class MainMenuState extends FlxState
 		bozoEspirra.animation.play("idle");
 		bozoEspirra.setPosition(-10,150);
 		add(bozoEspirra);
-
+		
 		bozoRun = new FlxSprite();
 		bozoRun.loadGraphic(AssetPaths.Jair__png, true, 104, 122, true);
 		bozoRun.animation.add("arminha_com_a_mao", [20, 19], 4, true);
 		bozoRun.animation.play("arminha_com_a_mao");
 		bozoRun.setPosition(180,160);
 		add(bozoRun);
-
+		
 		pedestal = new FlxSprite().loadGraphic(AssetPaths.pedestal__png, false, 12, 102);
 		pedestal.setPosition(255, 180);
 		add(pedestal);
 
-		title = new FlxText(0, division* 1.5 - 100, FlxG.width, "BOZORUN!");
-		title.setFormat(null, 34, FlxColor.YELLOW, "center");
-		title.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.fromRGB(100,0,0), 3);
-		add(title);
+		string = new InaraString("bozorun 2020", 10, 40, 280, 0, 0);
+		add(string);
+		string._chars.group.forEach(function (sprite){ add(sprite); });
 		
 		BtnColetiva = new FlxButton(10, division * 1.5 + 40, "", callBozoColetivaGame);
 		BtnColetiva.label.size = 20;
