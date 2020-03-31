@@ -138,7 +138,6 @@ class MainMenuState extends FlxState
 	override public function destroy():Void
 	{
 		background.destroy();
-		title.destroy();
 		BtnRun.destroy();
 		
 		background = null;
