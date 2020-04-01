@@ -404,6 +404,8 @@ class BozoRunGameState extends FlxState
 		
 		// collision with books?
 		if (!_blink && FlxG.overlap(_player, _books, (_obj1, _obj2) -> if (_amountOranges >= 1) _obj2.destroy() )) {
+			if(xAcceleration > 0 && _sfxDie) FlxG.camera.shake(0.01, 0.2);
+			
 			_playJump = false;
 			_jump = 0;
 
