@@ -31,6 +31,8 @@ class MainMenuState extends FlxState
 	override public function create():Void
 	{
 		//FlxG.debugger.visible = true;
+		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
+		
 		var division:Int = Std.int(FlxG.height / 3);
 
 		#if mobile
@@ -104,12 +106,18 @@ class MainMenuState extends FlxState
 	
 	private function callBozoRunGame():Void
 	{
-		FlxG.switchState(new BozoRunGameState());
+		FlxG.camera.fade(FlxColor.BLACK, 0.33, false, function()
+		{
+			FlxG.switchState(new BozoRunGameState());
+		});
 	}
 
 	private function callBozoColetivaGame():Void
 	{
-		FlxG.switchState(new ColetivaGameState());
+		FlxG.camera.fade(FlxColor.BLACK, 0.33, false, function()
+		{
+			FlxG.switchState(new ColetivaGameState());
+		});
 	}
 
 	override public function update(elapsed:Float):Void

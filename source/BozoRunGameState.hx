@@ -15,6 +15,7 @@ import flixel.util.FlxCollision;
 import flixel.util.FlxGradient;
 import flixel.addons.display.FlxBackdrop;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxColor;
 
 /**
  * This code is based on the excelent HaxeRunner
@@ -109,6 +110,7 @@ class BozoRunGameState extends FlxState
 	override public function create():Void
 	{
 		FlxG.mouse.visible = false;
+		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 
 		// make sure world is wide enough, 100,000 tiles should be enough...
 		FlxG.worldBounds.setSize(TILE_WIDTH * 100000, 300);
@@ -334,7 +336,10 @@ class BozoRunGameState extends FlxState
 
 	private function chamarMenu():Void 
 	{
-		FlxG.switchState(new MainMenuState());
+		FlxG.camera.fade(FlxColor.BLACK, 0.33, false, function()
+		{
+			FlxG.switchState(new MainMenuState());
+		});
 	}
 	
 	/*************************
