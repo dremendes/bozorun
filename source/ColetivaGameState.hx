@@ -28,10 +28,8 @@ class ColetivaGameState extends FlxState
 	{
 		var division:Int = Std.int(FlxG.height / 3);
 
-		#if mobile
+		#if html5
 		FlxG.mouse.visible = false;
-		#else
-		FlxG.mouse.visible = true;
 		#end
 		
 		fundoColetiva = new FlxSprite();

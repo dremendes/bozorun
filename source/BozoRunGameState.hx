@@ -109,7 +109,10 @@ class BozoRunGameState extends FlxState
 		
 	override public function create():Void
 	{
+		#if html5
 		FlxG.mouse.visible = false;
+		#end
+
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 
 		// make sure world is wide enough, 100,000 tiles should be enough...
@@ -470,8 +473,9 @@ class BozoRunGameState extends FlxState
 	{
 		// make player go faster as they go farther in j curve
 		_player.maxVelocity.x = BASE_SPEED + Std.int(_player.x*.03);
-		
+		#if html5
 		_jumpPressed = FlxG.keys.anyPressed(["UP", "W", "SPACE"]);
+		#end
 
 		//Se Bozo parou ou mal está andando, ele pode morrer (e tocar o som de machucado)
 		if (_player.velocity.x > 10) _sfxDie = true;

@@ -35,9 +35,7 @@ class MainMenuState extends FlxState
 		
 		var division:Int = Std.int(FlxG.height / 3);
 
-		#if mobile
-		FlxG.mouse.visible = false;
-		#else
+		#if html5
 		FlxG.mouse.visible = true;
 		#end
 
