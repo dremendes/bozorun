@@ -16,6 +16,7 @@ import flixel.util.FlxGradient;
 import flixel.addons.display.FlxBackdrop;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
+import extension.eightsines.EsOrientation;
 
 /**
  * This code is based on the excelent HaxeRunner
@@ -55,18 +56,14 @@ class BozoRunGameState extends FlxState
 	private var _jumpPressed:Bool;
 	private var _sfxDie:Bool;
 	private var _auxX:Float = 0.0;
-	private var _livesTotal = 5;
+	private var _livesTotal = 3;
 	private var _live0:FlxSprite;
 	private var _live1:FlxSprite;
 	private var _live2:FlxSprite;
-	private var _live3:FlxSprite;
-	private var _live4:FlxSprite;
 
 	private var _laranja1:FlxSprite;
 	private var _laranja2:FlxSprite;
 	private var _laranja3:FlxSprite;
-	private var _laranja4:FlxSprite;
-	private var _laranja5:FlxSprite;
 	
 	// used to help with tracking camera movement
 	private var _ghost:FlxSprite;
@@ -113,13 +110,15 @@ class BozoRunGameState extends FlxState
 		FlxG.mouse.visible = false;
 		#end
 
+		EsOrientation.setScreenOrientation(EsOrientation.ORIENTATION_LANDSCAPE);		
+
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 
 		// make sure world is wide enough, 100,000 tiles should be enough...
 		FlxG.worldBounds.setSize(TILE_WIDTH * 100000, 300);
 		
 		// background music
-		FlxG.sound.playMusic("assets/music/We're the Resistors.mp3");
+		FlxG.sound.playMusic("assets/music/We're the Resistors.ogg");
 		
 		setupBg();
 		
@@ -208,12 +207,6 @@ class BozoRunGameState extends FlxState
 		_live2 = new FlxSprite(15, 260, AssetPaths.coracao__png);
 		add(_live2);
 
-		_live3 = new FlxSprite(30, 260, AssetPaths.coracao__png);
-		add(_live3);
-
-		_live4 = new FlxSprite(45, 260, AssetPaths.coracao__png);
-		add(_live4);
-
 		_laranja1 = new FlxSprite(30, 33, AssetPaths.laranja__png);
 		add(_laranja1);
 		_laranja1.visible = false;
@@ -225,14 +218,6 @@ class BozoRunGameState extends FlxState
 		_laranja3 = new FlxSprite(30, 33, AssetPaths.laranja__png);
 		add(_laranja3);
 		_laranja3.visible = false;
-
-		_laranja4 = new FlxSprite(30, 33, AssetPaths.laranja__png);
-		add(_laranja4);
-		_laranja4.visible = false;
-
-		_laranja5 = new FlxSprite(30, 33, AssetPaths.laranja__png);
-		add(_laranja5);
-		_laranja5.visible = false;
 
 		_bgImg3.y -= 94;
 	}
@@ -293,7 +278,7 @@ class BozoRunGameState extends FlxState
 	
 	private inline function initUI():Void
 	{
-		_reiniciarButton.setPosition(134, 0);
+		_reiniciarButton.setPosition(124, 0);
 		_voltarButton.setPosition(189, 0);
 		_scoreText.y = 2;
 
@@ -320,10 +305,6 @@ class BozoRunGameState extends FlxState
 					remove(_reiniciarButton);
 				case 2:
 					remove(_live2);
-				case 3:
-					remove(_live3);
-				case 4:
-					remove(_live4);
 			}
 
 			// re-initialize player physics and position
@@ -383,7 +364,7 @@ class BozoRunGameState extends FlxState
 
 		if (FlxG.overlap(_player, _oranges, (_bozo, _laranja) -> _laranja.destroy() )){
 			_playJump = false;
-			if(_amountOranges < 5) {
+			if(_amountOranges < 3) {
 				_amountOranges += 1;
 
 				switch(_amountOranges){
@@ -393,10 +374,6 @@ class BozoRunGameState extends FlxState
 						_laranja2.visible = true;
 					case 3:
 						_laranja3.visible = true;
-					case 4:
-						_laranja4.visible = true;
-					case 5:
-						_laranja5.visible = true;
 				}
 			}
 		}
@@ -426,10 +403,6 @@ class BozoRunGameState extends FlxState
 					_laranja2.visible = false;
 				case 2:
 					_laranja3.visible = false;
-				case 3:
-					_laranja4.visible = false;
-				case 4:
-					_laranja5.visible = false;
 			}
 
 			if(_amountOranges == 0 && FlxG.collide(_player, _books)){
@@ -606,26 +579,18 @@ class BozoRunGameState extends FlxState
 		_live0.x = _player.x - 35 + TILE_WIDTH * 2;
 		_live1.x = _player.x - 8 + TILE_WIDTH * 2;
 		_live2.x = _player.x + 18 + TILE_WIDTH * 2;
-		_live3.x = _player.x + 43 + TILE_WIDTH * 2;
-		_live4.x = _player.x + 68 + TILE_WIDTH * 2;
 		
 		_live0.y = 0;
 		_live1.y = 0;
 		_live2.y = 0;
-		_live3.y = 0;
-		_live4.y = 0;
 
 		_laranja1.x = _player.x - 34 + TILE_WIDTH * 2;
 		_laranja2.x = _player.x - 8 + TILE_WIDTH * 2;
 		_laranja3.x = _player.x + 18 + TILE_WIDTH * 2;
-		_laranja4.x = _player.x + 43 + TILE_WIDTH * 2;
-		_laranja5.x = _player.x + 65 + TILE_WIDTH * 2;
 		
 		_laranja1.y = 30;
 		_laranja2.y = 30;
 		_laranja3.y = 30;
-		_laranja4.y = 30;
-		_laranja5.y = 30;
 	}
 	
 	private inline function sfxDie():Void

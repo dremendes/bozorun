@@ -7,6 +7,7 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.FlxObject;
 import flixel.util.FlxColor;
+import extension.eightsines.EsOrientation;
 
 /**
  * Based on work from
@@ -30,8 +31,10 @@ class MainMenuState extends FlxState
 	
 	override public function create():Void
 	{
-		//FlxG.debugger.visible = true;
+		FlxG.debugger.visible = true;
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
+		onResize(900, FlxG.height);
+		EsOrientation.setScreenOrientation(EsOrientation.ORIENTATION_PORTRAIT);
 		
 		var division:Int = Std.int(FlxG.height / 3);
 
@@ -39,14 +42,16 @@ class MainMenuState extends FlxState
 		FlxG.mouse.visible = true;
 		#end
 
-		ceu = new FlxSprite().loadGraphic(AssetPaths.sky__png, false, 310, 300);
+		ceu = new FlxSprite().loadGraphic(AssetPaths.sky__png, false, 300, 300);
+		ceu.scale.set(0.967, 1);
+		ceu.updateHitbox();
 		ceu.y -= 70;
 		add(ceu);
 		
 		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 86, 17);
 		aviao.animation.add("voando", [0,1], 10, true);
 		aviao.animation.play("voando");
-		aviao.setPosition(-10, 20);
+		aviao.setPosition(0, 20);
 		add(aviao);
 		
 		background = new FlxSprite();
@@ -66,7 +71,7 @@ class MainMenuState extends FlxState
 		bozoEspirra.loadGraphic(AssetPaths.bozotile__png, true, 150, 150, true);
 		bozoEspirra.animation.add("idle", [12, 13], 4, true);
 		bozoEspirra.animation.play("idle");
-		bozoEspirra.setPosition(-10,150);
+		bozoEspirra.setPosition(0,150);
 		add(bozoEspirra);
 		
 		bozoRun = new FlxSprite();
@@ -121,10 +126,8 @@ class MainMenuState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		aviao.x += 0.8;
-		aviao.height += 0.08;
-		aviao.width += 0.04;
 
-		if(aviao.x >= 350) aviao.x = -40;
+		if(aviao.x >= 250) aviao.x = 0;
 
 		pato.x += 0.4 * multiplier;
 
