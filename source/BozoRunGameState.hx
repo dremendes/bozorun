@@ -10,20 +10,13 @@ import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.math.FlxPoint;
-import flixel.util.FlxCollision;
-import flixel.util.FlxGradient;
 import flixel.addons.display.FlxBackdrop;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import extension.eightsines.EsOrientation;
 
 /**
- * This code is based on the excelent HaxeRunner
- * which is authored by william.thompsonj
- * 
- * I've made few modifications from the original source
- * Thank you very much, William Thompson J.
+ * Based on HaxeRunner by william.thompsonj
  */
 class BozoRunGameState extends FlxState
 {
@@ -49,7 +42,6 @@ class BozoRunGameState extends FlxState
 	// how long holding jump makes player jump in seconds
 	private static inline var jumpDuration:Float = .25;
 	
-	// player object and related jump variable
 	private var _player:FlxSprite;
 	private var _jump:Float;
 	private var _playJump:Bool;
@@ -113,6 +105,7 @@ class BozoRunGameState extends FlxState
 		EsOrientation.setScreenOrientation(EsOrientation.ORIENTATION_LANDSCAPE);		
 
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
+		FlxG.camera.antialiasing = true;
 
 		// make sure world is wide enough, 100,000 tiles should be enough...
 		FlxG.worldBounds.setSize(TILE_WIDTH * 100000, 300);
@@ -186,7 +179,7 @@ class BozoRunGameState extends FlxState
 		_reiniciarButton.loadGraphic(AssetPaths.reiniciar__png, true, 60, 36);
 		add(_reiniciarButton);
 
-		_voltarButton = new FlxButton(0, 0, "", chamarMenu);
+		_voltarButton = new FlxButton(0, 0, "", () -> FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new MainMenuState()) ) );
 		_voltarButton.loadGraphic(AssetPaths.voltar__png, true, 60, 36);
 		add(_voltarButton);
 		
@@ -245,7 +238,6 @@ class BozoRunGameState extends FlxState
 
 		_oranges = new FlxSpriteGroup();
 		add(_oranges);
-		
 	}
 	
 	private inline function initPlayer():Void
@@ -273,7 +265,7 @@ class BozoRunGameState extends FlxState
 
 		_blink = true;
 		var timer = new haxe.Timer(3000);
-		timer.run = function() { _blink = false; _player.visible = true;}
+		timer.run = () -> { _blink = false; _player.visible = true;}
 	}
 	
 	private inline function initUI():Void
@@ -298,14 +290,13 @@ class BozoRunGameState extends FlxState
 	private function onReset():Void
 	{
 		_livesTotal--;
-		if (_livesTotal >= 1) {	
+		if (_livesTotal >= 1)
 			switch (_livesTotal) {
 				case 1:
 					_live1.visible = false;
 					remove(_reiniciarButton);
 				case 2:
 					remove(_live2);
-			}
 
 			// re-initialize player physics and position
 			initPlayer();
@@ -316,14 +307,6 @@ class BozoRunGameState extends FlxState
 			// reset platforms and draw starting area
 			initPlatforms();
 		}
-	}
-
-	private function chamarMenu():Void 
-	{
-		FlxG.camera.fade(FlxColor.BLACK, 0.33, false, function()
-		{
-			FlxG.switchState(new MainMenuState());
-		});
 	}
 	
 	/*************************
@@ -381,10 +364,9 @@ class BozoRunGameState extends FlxState
 		if(FlxG.collide(_player, _collisions)){
 			_playJump = false;
 			// player hit the floor?
-			if (_player.velocity.x > 0 && !_jumpPressed) {
+			if (_player.velocity.x > 0 && !_jumpPressed)
 				// reset jump variable
 				_jump = 0;
-			}
 		}
 		
 		// collision with books?
@@ -405,20 +387,14 @@ class BozoRunGameState extends FlxState
 					_laranja3.visible = false;
 			}
 
-			if(_amountOranges == 0 && FlxG.collide(_player, _books)){
-				if (_player.velocity.x <= 0) {
-					if(_amountOranges <= 0) {
-						// player went splat
-						_jump = -1;
-						_playJump = false;
-						sfxDie();
-					}
-				}
+			if(_amountOranges == 0 && FlxG.collide(_player, _books) && _player.velocity.x <= 0 && _amountOranges <= 0){
+				// player went splat
+				_jump = -1;
+				_playJump = false;
+				sfxDie();
 			}
 			
-		} else if(_blink) {
-			_player.visible = !_player.visible;
-		}
+		} else if(_blink) _player.visible = !_player.visible;
 		
 		playerAnimation();
 		super.update(FlxG.elapsed);
@@ -430,9 +406,7 @@ class BozoRunGameState extends FlxState
 	{
 		_score = Std.int(_player.x / (TILE_WIDTH));
 		
-		if (_player.x > (_record * TILE_WIDTH)) {
-			_record = _score;
-		}
+		if (_player.x > (_record * TILE_WIDTH)) _record = _score;
 		
 		_scoreText.text = Std.string("Recorde: " + _record + "m");
 		
@@ -454,21 +428,17 @@ class BozoRunGameState extends FlxState
 		if (_player.velocity.x > 10) _sfxDie = true;
 
 		#if (FLX_NO_MOUSE || web || mobile)
-		for (touch in FlxG.touches.list) {
-        	if(touch.justReleased) {
-				_jumpPressed = false;
-			} else if (touch.justPressed || touch.pressed) {
+		for (touch in FlxG.touches.list)
+        	(touch.justReleased) ?
+				_jumpPressed = false
+			: if (touch.justPressed || touch.pressed)
 				_jumpPressed = true;
-            }
-		}
 		#end
 		
 		if (_jump != -1 && _jumpPressed)
 		{
 			// play jump sound just once
-			if (_jump == 0) {
-				sfxJump();
-			}
+			if (_jump == 0) FlxG.sound.play(AssetPaths.goblin_1__ogg);
 			
 			// Duration of jump
 			_jump += FlxG.elapsed;
@@ -497,8 +467,7 @@ class BozoRunGameState extends FlxState
 				// make sure fall animation plays
 				_playJump = true;
 			}
-		}
-		else if (!_jumpPressed || _jump == -1) {
+		} else if (!_jumpPressed || _jump == -1) {
 			if (_player.velocity.y < 0) {
 				// set acceleration to pull to ground
 				_player.acceleration.y = yAcceleration;
@@ -517,51 +486,49 @@ class BozoRunGameState extends FlxState
 		// check if we need to make more platforms
 		while (( _player.x + FlxG.width) * 1.3 > _edge )
 		{
-			makePlatform();
+			makeBozoObjects();
+			//deleta livros e laranjas assim que estão fora da tela
+			_books.forEach( (book) -> if (book.x < (_player.x - 35)) book.destroy() );
+			_oranges.forEach( (orange) -> if (orange.x < (_player.x - 35)) orange.destroy() );
 		}
-		//deleta livros e laranjas assim que estão fora da tela
-		_books.forEach(function (book) { if (book.x < (_player.x - 35)) book.destroy();});
-		_oranges.forEach(function (orange) { if (orange.x < (_player.x - 35)) orange.destroy();});
 	}
 	
-	private function setObjAndAdd2Group(Path:FlxGraphicAsset, width:Int, height:Int, group:FlxSpriteGroup, isSolid:Bool=true, isMovable:Bool=true, positionCollide:Int=FlxObject.ANY):Void 
+	private function setObjAndAdd2Group(Path:FlxGraphicAsset, 
+										width:Int, 
+										height:Int, 
+										group:FlxSpriteGroup, 
+										isSolid:Bool=true, 
+										isMovable:Bool=true):Void 
 	{
 		var obj = new AssetLoader(Path, width, height);
 			obj.x = (_player.x + _edge) * random.int(0, 20) + random.int(300, 3000);
 			obj.y = random.int(140, 250);
-			obj.allowCollisions = positionCollide;
 			obj.solid = isSolid;
 			obj.immovable = isMovable;
 			add(obj);
 			group.add(obj);
 	}
 	
-	private function makePlatform(wide:Int=0, high:Int=0):Void
+	private function makeBozoObjects(wide:Int=0, high:Int=0):Void
 	{		
 		_edge += TILE_WIDTH*2;
 
-		if (random.int(0, 2) / 2 == 0) {
-			setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
-		}
-
-		if (random.int(0, 4) / 4 == 0) {
-			setObjAndAdd2Group(AssetPaths.laranja__png, 30, 32, _oranges, true, false);
-		}
+		if (random.int(0, 2) / 2 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
+		if (random.int(0, 4) / 4 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 30, 32, _oranges, true, false);
 
 		_change = true;
 	}
 	
 	private inline function playerAnimation():Void
 	{
-		if (_player.velocity.x == 0) {
-			_player.animation.play("die");
-		} else if (_playJump) {
-			_player.animation.play("jump");
-		} else if (_player.velocity.y != 0) {
-			_player.animation.play("fall");
-		} else {
+		if (_player.velocity.x == 0)
+			_player.animation.play("die")
+		else if (_playJump)
+			_player.animation.play("jump")
+		else if (_player.velocity.y != 0)
+			_player.animation.play("fall")
+		else 
 			_player.animation.play("run");
-		}
 	}
 	
 	private inline function setAnimations():Void
@@ -580,17 +547,13 @@ class BozoRunGameState extends FlxState
 		_live1.x = _player.x - 8 + TILE_WIDTH * 2;
 		_live2.x = _player.x + 18 + TILE_WIDTH * 2;
 		
-		_live0.y = 0;
-		_live1.y = 0;
-		_live2.y = 0;
+		_live0.y = _live1.y =_live2.y = 0;
 
 		_laranja1.x = _player.x - 34 + TILE_WIDTH * 2;
 		_laranja2.x = _player.x - 8 + TILE_WIDTH * 2;
 		_laranja3.x = _player.x + 18 + TILE_WIDTH * 2;
 		
-		_laranja1.y = 30;
-		_laranja2.y = 30;
-		_laranja3.y = 30;
+		_laranja1.y = _laranja2.y = _laranja3.y = 30;
 	}
 	
 	private inline function sfxDie():Void
@@ -599,10 +562,5 @@ class BozoRunGameState extends FlxState
 			FlxG.sound.play(AssetPaths.goblin_9__ogg);
 			_sfxDie = false;
 		}
-	}
-	
-	private inline function sfxJump():Void
-	{
-		FlxG.sound.play(AssetPaths.goblin_1__ogg);
 	}
 }
