@@ -185,7 +185,7 @@ class MainMenuState extends FlxState
 	{
 		aviao.x += 0.8;
 
-		if(aviao.x >= 250 + paddingSide) aviao.x = 0;
+		if(aviao.x >= 305 + paddingSide) aviao.x = 0 + paddingSide;
 
 		pato.x += 0.4 * multiplier;
 
