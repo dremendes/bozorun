@@ -16,10 +16,8 @@ import extension.eightsines.EsOrientation;
 class MainMenuState extends FlxState
 {
 	private var background:FlxSprite;
-	private var mesa:FlxSprite;
 	private var bozoEspirra:FlxSprite;
 	private var bozoRun:FlxSprite;
-	private var title:FlxText;
 	private var BtnRun:FlxButton;
 	private var BtnColetiva:FlxButton;
 	private var ceu:FlxSprite;
@@ -27,7 +25,7 @@ class MainMenuState extends FlxState
 	private var aviao:FlxSprite;
 	private var pedestal:FlxSprite;
 	private var multiplier:Float=1.0;
-	private var string:InaraString;
+	private var stringTitulo:InaraString;
 	private var paddingSide:Float = (FlxG.width - 300) / 2;
 	
 	override public function create():Void
@@ -129,15 +127,15 @@ class MainMenuState extends FlxState
 		add(pedestal);
 
 		#if android
-		string = new InaraString("bozorun", 10 + paddingSide, 40, 280 * (FlxG.width/300), 0, 0, FlxG.width/300, FlxG.height/300);
+		stringTitulo = new InaraString("bozorun", 10 + paddingSide, 40, 280 * (FlxG.width/300), 0, 0, FlxG.width/300, FlxG.height/300);
 		#else
-		string = new InaraString("bozorun", 70 + paddingSide, 40, 280, 0, 0);
+		stringTitulo = new InaraString("bozorun", 70 + paddingSide, 40, 280, 0, 0);
 		#end
 
-		add(string);
-		string._chars.group.forEach(function (sprite){ add(sprite); });
+		add(stringTitulo);
+		stringTitulo._chars.group.forEach(function (letra){ add(letra); });
 		
-		BtnColetiva = new FlxButton(10, division * 1.5 + 40, "", callBozoColetivaGame);
+		BtnColetiva = new FlxButton(10, division * 1.5 + 40, "", () -> FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new ColetivaGameState()) ));
 		BtnColetiva.label.size = 20;
 		BtnColetiva.loadGraphic(AssetPaths.coletiva__png , true, 60, 36);
 		BtnColetiva.scale.set(1.6, .9);
@@ -150,7 +148,7 @@ class MainMenuState extends FlxState
 
 		//add(BtnColetiva);
 		
-		BtnRun = new FlxButton(0, 0, "", callBozoRunGame);
+		BtnRun = new FlxButton(0, 0, "", () -> FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new BozoRunGameState()) ));
 		BtnRun.label.size = 20;
 		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 36);
 		
@@ -163,22 +161,6 @@ class MainMenuState extends FlxState
 		#end
 
 		add(BtnRun);
-	}
-	
-	private function callBozoRunGame():Void
-	{
-		FlxG.camera.fade(FlxColor.BLACK, 0.33, false, function()
-		{
-			FlxG.switchState(new BozoRunGameState());
-		});
-	}
-
-	private function callBozoColetivaGame():Void
-	{
-		FlxG.camera.fade(FlxColor.BLACK, 0.33, false, function()
-		{
-			FlxG.switchState(new ColetivaGameState());
-		});
 	}
 
 	override public function update(elapsed:Float):Void
@@ -208,7 +190,6 @@ class MainMenuState extends FlxState
 		BtnRun.destroy();
 		
 		background = null;
-		title = null;
 		BtnRun = null;
 		
 		super.destroy();
