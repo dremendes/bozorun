@@ -62,7 +62,7 @@ class BozoRunGameState extends FlxState
 	private var _ghost:FlxSprite;
 	
 	// where to start generating platforms
-	private var _edge:Int;
+	private var _pontaDireitaCenario:Int;
 	
 	// background image
 	private var _bgImgGrp:FlxGroup;
@@ -114,17 +114,14 @@ class BozoRunGameState extends FlxState
 		// background music
 		FlxG.sound.playMusic("assets/music/We're the Resistors.ogg");
 		
-		setupBg();
+		configurarFundo();
 		
-		setupPlayer();
+		configurarBozo();
 		
 		// prepare player related variables
 		iniciarBozo();
 		
-		setupUI();
-		
-		// prepare UI variables
-		iniciarInterface();
+		configurarInterface();
 		
 		// setup platform logic
 		setupPlatforms();
@@ -134,7 +131,7 @@ class BozoRunGameState extends FlxState
 	}
 	
 	
-	private inline function setupBg():Void
+	private inline function configurarFundo():Void
 	{
 		_bgImg0 = new FlxBackdrop(AssetPaths.sky__png, 0.1, 0, true, false, 0, 0);
 		_bgImg3 = new FlxBackdrop(AssetPaths.foreground__png, 0.4, 0, true, false, 0, 0);
@@ -146,7 +143,7 @@ class BozoRunGameState extends FlxState
 		this.add(_bgImgGrp);
 	}
 	
-	private inline function setupPlayer():Void
+	private inline function configurarBozo():Void
 	{
 		// make a player sprite
 		_bozo = new FlxSprite().loadGraphic(AssetPaths.Jair__png, true, 104, 122);
@@ -159,7 +156,7 @@ class BozoRunGameState extends FlxState
 		_record = Std.int(_bozo.x);
 		
 		// set animations to use this run
-		setAnimations();
+		configuraAnimacoes();
 		
 		// face player to the right
 		_bozo.facing = FlxObject.RIGHT;
@@ -174,52 +171,64 @@ class BozoRunGameState extends FlxState
 		FlxG.camera.follow(_ghost);
 	}
 	
-	private inline function setupUI():Void
+	private inline function configurarInterface():Void
 	{
 		_pausarButton = new FlxButton(0, 0, "", () -> openSubState(new PausadoSubState(new FlxColor(0x99808080))) );
 		_pausarButton.loadGraphic(AssetPaths.pausar__png, true, 60, 36);
+		_pausarButton.setPosition(124, 4);
+		_pausarButton.scrollFactor.set(0, 0);
 		add(_pausarButton);
 
 		_voltarButton = new FlxButton(0, 0, "", () -> FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new MainMenuState()) ) );
 		_voltarButton.loadGraphic(AssetPaths.voltar__png, true, 60, 36);
+		_voltarButton.setPosition(189, 4);
+		_voltarButton.scrollFactor.set(0, 0);
 		add(_voltarButton);
 		
 		// add score counter 
-		_scoreText = new FlxText(0, 0, TILE_WIDTH * 3, "");
+		_scoreText = new FlxText(78, 8, TILE_WIDTH * 3 - 3, "");
+		_scoreText.scrollFactor.set(0, 0);
 		_scoreText.borderStyle = OUTLINE;
-		_scoreText.alignment = "right";
 		_scoreText.color = 0xFF0000; // red color
 		add(_scoreText);
 		
 		// add lives indicator
-		_live0 = new FlxSprite().loadGraphic(AssetPaths.coracao__png , true, 28, 23);
+		_live0 = new FlxSprite(0,0).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
+		_live0.scrollFactor.set(0, 0);
 		_live0.animation.add('vivo', [0], 1, false);
 		_live0.animation.add('morto', [1], 1, false);
 		add(_live0);
 
-		_live1 = new FlxSprite().loadGraphic(AssetPaths.coracao__png , true, 28, 23);
+		_live1 = new FlxSprite(23,0).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
+		_live1.scrollFactor.set(0, 0);
 		_live1.animation.add('vivo', [0], 1, false);
 		_live1.animation.add('morto', [1], 1, false);
 		add(_live1);
 
-		_live2 = new FlxSprite().loadGraphic(AssetPaths.coracao__png , true, 28, 23);
+		_live2 = new FlxSprite(46,0).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
+		_live2.scrollFactor.set(0, 0);
 		_live2.animation.add('vivo', [0], 1, false);
 		_live2.animation.add('morto', [1], 1, false);
 		add(_live2);
 
-		_laranja1 = new FlxSprite(30, 33, AssetPaths.laranja__png);
-		add(_laranja1);
+		_laranja1 = new FlxSprite(0, 24, AssetPaths.laranja__png);
+		_laranja1.scrollFactor.set(0, 0);
 		_laranja1.visible = false;
+		add(_laranja1);
 
-		_laranja2 = new FlxSprite(30, 33, AssetPaths.laranja__png);
-		add(_laranja2);
+		_laranja2 = new FlxSprite(24, 24, AssetPaths.laranja__png);
+		_laranja2.scrollFactor.set(0, 0);
 		_laranja2.visible = false;
+		add(_laranja2);
 
-		_laranja3 = new FlxSprite(30, 33, AssetPaths.laranja__png);
-		add(_laranja3);
+		_laranja3 = new FlxSprite(48, 24, AssetPaths.laranja__png);
+		_laranja3.scrollFactor.set(0, 0);
 		_laranja3.visible = false;
+		add(_laranja3);
 
 		_bgImg3.y -= 94;
+
+		_score = _record;
 	}
 	
 	private inline function setupPlatforms():Void
@@ -264,8 +273,7 @@ class BozoRunGameState extends FlxState
 		_bozo.maxVelocity.set(BASE_SPEED, yVelocity);
 		_bozo.acceleration.set(xAcceleration, yAcceleration);
 		
-		// setup player animations
-		setAnimations();
+		configuraAnimacoes();
 		
 		// move camera to match player
 		_ghost.x = _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
@@ -275,33 +283,16 @@ class BozoRunGameState extends FlxState
 		_timerPiscando.run = () -> { _piscando = false; _bozo.visible = true; _timerPiscando.stop(); }
 	}
 	
-	private inline function iniciarInterface():Void
-	{
-		_pausarButton.setPosition(124, 0);
-		_voltarButton.setPosition(189, 0);
-		_scoreText.y = 2;
-
-		_score = _record;
-		positionText();
-	}
-	
 	private inline function initPlatforms():Void
 	{
 		// collision group is up to date
 		_change = false;
 		
 		// reset edge screen where we generate new platforms
-		_edge = (_record-1)*TILE_WIDTH;
+		_pontaDireitaCenario = (_record-1)*TILE_WIDTH;
 	}
 	
-	private inline function onReiniciar():Void
-	{
-
-		if (_livesTotal > 0){
-			// re-initialize player physics and position
-			iniciarBozo();
-		}
-	}
+	private inline function onReiniciar():Void if (_livesTotal > 0) iniciarBozo();// reseta parametros do Bozo
 	
 	/*************************
 	 * 
@@ -314,19 +305,11 @@ class BozoRunGameState extends FlxState
 	 *************************/
 	
 	override public function update(elapsed:Float):Void
-	{
-		#if !(android || blackberry || iphone || ios || mobile)
-		// player hit keyboard reset key?
-		if (FlxG.keys.anyJustReleased(["R", "ENTER"])) {
-			onReiniciar();
-			return;
-		}
-		#end
-		
+	{		
 		// platform garbage handling
 		updatePlatforms();
 		
-		updatePlayer();
+		atualizaBozo();
 		
 		// collision group changed?
 		if (_change) {
@@ -341,9 +324,7 @@ class BozoRunGameState extends FlxState
 
 		if (FlxG.overlap(_bozo, _oranges, (_bozo, _laranja) -> _laranja.destroy() )){
 			_playJump = false;
-			if(_amountOranges < 3) {
-				_amountOranges += 1;
-
+			if(_amountOranges < 3 && ++_amountOranges == _amountOranges)
 				switch(_amountOranges){
 					case 1:
 						_laranja1.visible = true;
@@ -352,25 +333,22 @@ class BozoRunGameState extends FlxState
 					case 3:
 						_laranja3.visible = true;
 				}
-			}
 		}
 
 		if(FlxG.collide(_bozo, _collisions)){
 			_playJump = false;
-			// player hit the floor?
-			if (_bozo.velocity.x > 0 && !_jumpPressed)
-				// reset jump variable
-				_jump = 0;
+			// bozo tá no chão?
+			if (_bozo.velocity.x > 0 && !_jumpPressed) _jump = 0; // reset jump variable
 		}
 		
-		// collision with books?
+		// colidiu com livro?
 		if (!_piscando && FlxG.overlap(_bozo, _books, (_obj1, _obj2) -> if (_amountOranges >= 1) _obj2.destroy() )) {
 			if(xAcceleration > 0 && _sfxDie) FlxG.camera.shake(0.01, 0.2);
 			
 			_playJump = false;
 			_jump = 0;
 
-			if(_amountOranges >= 1) _amountOranges = _amountOranges - 1;
+			if(_amountOranges >= 1) _amountOranges--;
 			
 			switch(_amountOranges){
 				case 0:
@@ -411,15 +389,13 @@ class BozoRunGameState extends FlxState
 		
 		if (_bozo.x > (_record * TILE_WIDTH)) _record = _score;
 		
-		_scoreText.text = Std.string("Recorde: " + _record + "m");
-		
-		positionText();
+		_scoreText.text = Std.string("Recorde" + _record + "m");
 		
 		// camera tracks ghost, not player (prevent tracking jumps)
 		_ghost.x = _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
 	}
 	
-	private inline function updatePlayer():Void
+	private inline function atualizaBozo():Void
 	{
 		// make player go faster as they go farther in j curve
 		_bozo.maxVelocity.x = BASE_SPEED + Std.int(_bozo.x*.03);
@@ -487,7 +463,7 @@ class BozoRunGameState extends FlxState
 	private inline function updatePlatforms():Void
 	{		
 		// check if we need to make more platforms
-		while (( _bozo.x + FlxG.width) * 1.3 > _edge )
+		while (( _bozo.x + FlxG.width) * 1.3 > _pontaDireitaCenario )
 		{
 			makeBozoObjects();
 			//deleta livros e laranjas assim que estão fora da tela
@@ -504,7 +480,7 @@ class BozoRunGameState extends FlxState
 										isMovable:Bool=true):Void 
 	{
 		var obj = new AssetLoader(Path, width, height);
-			obj.x = (_bozo.x + _edge) * random.int(0, 20) + random.int(300, 3000);
+			obj.x = (_bozo.x + FlxG.width) + random.int(300, 350);
 			obj.y = random.int(140, 250);
 			obj.solid = isSolid;
 			obj.immovable = isMovable;
@@ -514,10 +490,10 @@ class BozoRunGameState extends FlxState
 	
 	private inline function makeBozoObjects(wide:Int=0, high:Int=0):Void
 	{		
-		_edge += TILE_WIDTH*2;
+		_pontaDireitaCenario += TILE_WIDTH*2;
 
-		if (random.int(0, 2) / 2 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
-		if (random.int(0, 4) / 4 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 30, 32, _oranges, true, false);
+		if (random.int(0, 20) / 20 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
+		if (random.int(0, 50) / 50 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 23, 23, _oranges, true, false);
 
 		_change = true;
 	}
@@ -525,38 +501,21 @@ class BozoRunGameState extends FlxState
 	private inline function playerAnimation():Void
 	{
 		if (_bozo.velocity.x == 0)
-			_bozo.animation.play("die")
+			_bozo.animation.play("morrendo")
 		else if (_playJump)
-			_bozo.animation.play("jump")
+			_bozo.animation.play("pulando")
 		else if (_bozo.velocity.y != 0)
-			_bozo.animation.play("fall")
+			_bozo.animation.play("caindo")
 		else 
-			_bozo.animation.play("run");
+			_bozo.animation.play("fugindo");
 	}
 	
-	private inline function setAnimations():Void
+	private inline function configuraAnimacoes():Void
 	{	
-		_bozo.animation.add("run", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 30, true);
-		_bozo.animation.add("jump",  [15, 14], 7, false);
-		_bozo.animation.add("fall", [16, 17], 7, false);
-		_bozo.animation.add("die", [22, 23], 15, false);
-	}
-	
-	private inline function positionText():Void
-	{
-		_scoreText.x = _bozo.x + FlxG.width - (4 * TILE_WIDTH) + 12;
-		
-		_live0.x = _bozo.x - 35 + TILE_WIDTH * 2;
-		_live1.x = _bozo.x - 8 + TILE_WIDTH * 2;
-		_live2.x = _bozo.x + 18 + TILE_WIDTH * 2;
-		
-		_live0.y = _live1.y =_live2.y = 0;
-
-		_laranja1.x = _bozo.x - 34 + TILE_WIDTH * 2;
-		_laranja2.x = _bozo.x - 8 + TILE_WIDTH * 2;
-		_laranja3.x = _bozo.x + 18 + TILE_WIDTH * 2;
-		
-		_laranja1.y = _laranja2.y = _laranja3.y = 30;
+		_bozo.animation.add("fugindo", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 30, true);
+		_bozo.animation.add("pulando",  [15, 14], 7, false);
+		_bozo.animation.add("caindo", [16, 17], 7, false);
+		_bozo.animation.add("morrendo", [22, 23], 15, false);
 	}
 	
 	private inline function sfxDie():Void
@@ -568,8 +527,8 @@ class BozoRunGameState extends FlxState
 			timerPraReiniciar.run = () -> { onReiniciar(); timerPraReiniciar.stop(); }
 		}
 	}
-
-	private inline function destruirTudo():Void
+	
+	override public function destroy():Void
 	{
 		_bozo.destroy();
 		_live0.destroy();
@@ -589,11 +548,6 @@ class BozoRunGameState extends FlxState
 		_pausarButton.destroy();
 		_voltarButton.destroy();
 		_scoreText.destroy();
-	}
-
-	override public function destroy():Void
-	{
-		destruirTudo();		
 		super.destroy();
 	}
 }

@@ -11,7 +11,7 @@ class PausadoSubState extends FlxSubState
 	{
 		super.create();
 
-		_botaoFechar = new FlxButton(124, 0, "", () -> close());
+		_botaoFechar = new FlxButton(124, 2, "", () -> close());
 		_botaoFechar.loadGraphic(AssetPaths.pausar__png, true, 60, 36);
 		add(_botaoFechar);
 	}
