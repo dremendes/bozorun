@@ -895,9 +895,9 @@ ApplicationMain.create = function(config) {
 	ManifestResources.init(config);
 	var _this = app.meta;
 	if(__map_reserved["build"] != null) {
-		_this.setReserved("build","127");
+		_this.setReserved("build","128");
 	} else {
-		_this.h["build"] = "127";
+		_this.h["build"] = "128";
 	}
 	var _this1 = app.meta;
 	if(__map_reserved["company"] != null) {

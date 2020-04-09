@@ -66,9 +66,9 @@ class BozoRunGameState extends FlxState
 	
 	// background image
 	private var _bgImgGrp:FlxGroup;
-	private var _bgImg0:FlxSprite;
-	private var _bgImg3:FlxSprite;
-	private var _floor:FlxSprite;
+	private var _bgImg0:FlxBackdrop;
+	private var _bgImg3:FlxBackdrop;
+	private var _floor:FlxBackdrop;
 
 	// collision group for generated platforms
 	private var _collisions:FlxGroup;
