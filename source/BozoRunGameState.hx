@@ -131,6 +131,7 @@ class BozoRunGameState extends FlxState
 	private inline function configurarFundo():Void
 	{
 		_bgImg0 = new FlxBackdrop(AssetPaths.sky__png, 0.1, 0, true, false, 0, 0);
+		_bgImg0.scale.set(1,1.2);
 		_bgImg3 = new FlxBackdrop(AssetPaths.bgnovo__png, 0.4, 0, true, false, 0, 0);
 		_bgImgGrp = new FlxGroup();
 

@@ -191,7 +191,15 @@ class MainMenuState extends FlxState
 	{
 		background.destroy();
 		BtnRun.destroy();
-		
+		bozoEspirra.destroy();
+		bozoRun.destroy();
+		BtnRun.destroy();
+		BtnColetiva.destroy();
+		ceu.destroy();
+		pato.destroy();
+		aviao.destroy();
+		pedestal.destroy();
+		stringTitulo.destroy();
 		background = null;
 		BtnRun = null;
 		
