@@ -131,7 +131,6 @@ class BozoRunGameState extends FlxState
 	private inline function configurarFundo():Void
 	{
 		_bgImg0 = new FlxBackdrop(AssetPaths.sky__png, 0.1, 0, true, false, 0, 0);
-		_bgImg0.scale.set(1,1.2);
 		_bgImg3 = new FlxBackdrop(AssetPaths.bgnovo__png, 0.4, 0, true, false, 0, 0);
 		_bgImgGrp = new FlxGroup();
 
@@ -225,7 +224,7 @@ class BozoRunGameState extends FlxState
 		add(_laranja3);
 
 		_bgImg3.y += 30;
-		_bgImg0.y -= 90;
+		_bgImg0.y -= 70;
 		
 		_score = _record;
 	}
@@ -537,9 +536,6 @@ class BozoRunGameState extends FlxState
 		_laranja2.destroy();
 		_laranja3.destroy();
 		_ghost.destroy();
-		_bgImgGrp.destroy();
-		_bgImg0.destroy();
-		_bgImg3.destroy();
 		_floor.destroy();
 		_collisions.destroy();
 		_books.destroy();
