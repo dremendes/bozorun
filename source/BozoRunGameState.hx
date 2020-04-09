@@ -536,7 +536,10 @@ class BozoRunGameState extends FlxState
 		_laranja2.destroy();
 		_laranja3.destroy();
 		_ghost.destroy();
+		_bgImg0.destroy();
+		_bgImg3.destroy();
 		_floor.destroy();
+		_bgImgGrp.destroy();
 		_collisions.destroy();
 		_books.destroy();
 		_oranges.destroy();
