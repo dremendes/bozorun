@@ -25,7 +25,7 @@ class BozoRunGameState extends FlxState
 	private static var random = new FlxRandom();
 	
 	// base speed for player, stands for xVelocity
-	private static inline var BASE_SPEED:Int = 200;
+	private static inline var BASE_SPEED:Int = 400;
 	
 	// how fast the player speeds up going to the right
 	private static inline var xAcceleration:Int = 120;
@@ -63,9 +63,11 @@ class BozoRunGameState extends FlxState
 	
 	// where to start generating platforms
 	private var _pontaDireitaCenario:Int;
+	private var _posicaoOcupadaX:Float=0;
+	private var _permiteSpawn:Bool=false;
 	
 	// background image
-	private var _bgImgGrp:FlxSpriteGroup;
+	private var _fundosGrupo:FlxSpriteGroup;
 	private var _fundoCeu:FlxBackdrop;
 	private var _fundoCenario:FlxBackdrop;
 	private var _floor:FlxBackdrop;
@@ -132,12 +134,13 @@ class BozoRunGameState extends FlxState
 	{
 		_fundoCeu = new FlxBackdrop(AssetPaths.sky__png, 0.1, 0, true, false, 0, 0);
 		_fundoCenario = new FlxBackdrop(AssetPaths.bgnovo__png, 0.4, 0, true, false, 0, 0);
-		_bgImgGrp = new FlxSpriteGroup();
+		_fundoCenario.scale.set(1.5, 1.5);
+		_fundosGrupo = new FlxSpriteGroup();
 
-		_bgImgGrp.add(_fundoCeu);
-		_bgImgGrp.add(_fundoCenario);
+		_fundosGrupo.add(_fundoCeu);
+		_fundosGrupo.add(_fundoCenario);
 		
-		this.add(_bgImgGrp);
+		add(_fundosGrupo);
 	}
 	
 	private inline function configurarBozo():Void
@@ -223,8 +226,8 @@ class BozoRunGameState extends FlxState
 		_laranja3.visible = false;
 		add(_laranja3);
 
-		_fundoCenario.y += 30;
-		_fundoCeu.y -= 70;
+		_fundoCenario.y += 90;
+		_fundoCeu.y -= 40;
 		
 		_score = _record;
 	}
@@ -279,6 +282,13 @@ class BozoRunGameState extends FlxState
 		_piscando = true;
 		var _timerPiscando = new haxe.Timer(3000);
 		_timerPiscando.run = () -> { _piscando = false; _bozo.visible = true; _timerPiscando.stop(); }
+
+		var _timerSpawn = new haxe.Timer(300);
+		_timerSpawn.run = () -> { 
+			_permiteSpawn = true; 
+			var _timerPermite = new haxe.Timer(10);
+			_timerPermite.run = () -> { _permiteSpawn = false; _timerPermite.stop(); } 
+		}
 	}
 	
 	private inline function initPlatforms():Void
@@ -469,6 +479,13 @@ class BozoRunGameState extends FlxState
 			_oranges.forEach( (orange) -> if (orange.x < (_bozo.x - 35)) orange.destroy() );
 		}
 	}
+
+	private inline function gerarIntForaDaFaixaX(x:Float, _rangeProibido:Float):Float{
+		var randomIntPosX:Float = _bozo.x + FlxG.width + random.int(300, 350);
+		return ((x - _rangeProibido) > randomIntPosX) || ((x + _rangeProibido) < randomIntPosX)
+			? randomIntPosX
+			: gerarIntForaDaFaixaX(x, _rangeProibido);
+	} 
 	
 	private inline function setObjAndAdd2Group(Path:FlxGraphicAsset, 
 										width:Int, 
@@ -478,10 +495,11 @@ class BozoRunGameState extends FlxState
 										isMovable:Bool=true):Void 
 	{
 		var obj = new AssetLoader(Path, width, height);
-			obj.x = (_bozo.x + FlxG.width) + random.int(300, 350);
+			obj.x = gerarIntForaDaFaixaX(_posicaoOcupadaX, 30);
 			obj.y = random.int(140, 250);
 			obj.solid = isSolid;
 			obj.immovable = isMovable;
+			_posicaoOcupadaX = obj.x;
 			add(obj);
 			group.add(obj);
 	}
@@ -490,8 +508,10 @@ class BozoRunGameState extends FlxState
 	{		
 		_pontaDireitaCenario += TILE_WIDTH*2;
 
-		if (random.int(0, 20) / 20 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
-		if (random.int(0, 50) / 50 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 23, 23, _oranges, true, false);
+		if(_permiteSpawn) {
+			if (random.int(0, 2) / 2 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
+			if (random.int(0, 5) / 5 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 23, 23, _oranges, true, false);
+		}
 
 		_change = true;
 	}
@@ -539,7 +559,7 @@ class BozoRunGameState extends FlxState
 		_fundoCeu.destroy();
 		_fundoCenario.destroy();
 		_floor.destroy();
-		_bgImgGrp.destroy();
+		_fundosGrupo.destroy();
 		_collisions.destroy();
 		_books.destroy();
 		_oranges.destroy();
