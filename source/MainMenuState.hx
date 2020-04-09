@@ -41,8 +41,8 @@ class MainMenuState extends FlxState
 		FlxG.mouse.visible = true;
 		#end
 
-		ceu = new FlxSprite().loadGraphic(AssetPaths.sky__png, false, 300, 300);
-		ceu.scale.set(0.967, 1);
+		ceu = new FlxSprite().loadGraphic(AssetPaths.sky__png, false, 301, 300);
+		ceu.scale.set(0.995, 1);
 		ceu.updateHitbox();
 		ceu.y -= 70;
 		ceu.x += paddingSide;
@@ -161,6 +161,9 @@ class MainMenuState extends FlxState
 		#end
 
 		add(BtnRun);
+
+		// música de fundo
+		FlxG.sound.playMusic("assets/music/bozosong.ogg");
 	}
 
 	override public function update(elapsed:Float):Void

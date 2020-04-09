@@ -111,9 +111,6 @@ class BozoRunGameState extends FlxState
 		// make sure world is wide enough, 100,000 tiles should be enough...
 		FlxG.worldBounds.setSize(TILE_WIDTH * 100000, 300);
 		
-		// background music
-		FlxG.sound.playMusic("assets/music/We're the Resistors.ogg");
-		
 		configurarFundo();
 		
 		configurarBozo();
@@ -134,7 +131,7 @@ class BozoRunGameState extends FlxState
 	private inline function configurarFundo():Void
 	{
 		_bgImg0 = new FlxBackdrop(AssetPaths.sky__png, 0.1, 0, true, false, 0, 0);
-		_bgImg3 = new FlxBackdrop(AssetPaths.foreground__png, 0.4, 0, true, false, 0, 0);
+		_bgImg3 = new FlxBackdrop(AssetPaths.bgnovo__png, 0.4, 0, true, false, 0, 0);
 		_bgImgGrp = new FlxGroup();
 
 		_bgImgGrp.add(_bgImg0);
@@ -226,8 +223,9 @@ class BozoRunGameState extends FlxState
 		_laranja3.visible = false;
 		add(_laranja3);
 
-		_bgImg3.y -= 94;
-
+		_bgImg3.y += 30;
+		_bgImg0.y -= 90;
+		
 		_score = _record;
 	}
 	
