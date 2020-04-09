@@ -25,7 +25,7 @@ class BozoRunGameState extends FlxState
 	private static var random = new FlxRandom();
 	
 	// base speed for player, stands for xVelocity
-	private static inline var BASE_SPEED:Int = 400;
+	private static inline var BASE_SPEED:Int = 200;
 	
 	// how fast the player speeds up going to the right
 	private static inline var xAcceleration:Int = 120;
@@ -64,7 +64,6 @@ class BozoRunGameState extends FlxState
 	// where to start generating platforms
 	private var _pontaDireitaCenario:Int;
 	private var _posicaoOcupadaX:Float=0;
-	private var _permiteSpawn:Bool=false;
 	
 	// background image
 	private var _fundosGrupo:FlxSpriteGroup;
@@ -282,13 +281,6 @@ class BozoRunGameState extends FlxState
 		_piscando = true;
 		var _timerPiscando = new haxe.Timer(3000);
 		_timerPiscando.run = () -> { _piscando = false; _bozo.visible = true; _timerPiscando.stop(); }
-
-		var _timerSpawn = new haxe.Timer(300);
-		_timerSpawn.run = () -> { 
-			_permiteSpawn = true; 
-			var _timerPermite = new haxe.Timer(10);
-			_timerPermite.run = () -> { _permiteSpawn = false; _timerPermite.stop(); } 
-		}
 	}
 	
 	private inline function initPlatforms():Void
@@ -508,10 +500,8 @@ class BozoRunGameState extends FlxState
 	{		
 		_pontaDireitaCenario += TILE_WIDTH*2;
 
-		if(_permiteSpawn) {
-			if (random.int(0, 2) / 2 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
-			if (random.int(0, 5) / 5 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 23, 23, _oranges, true, false);
-		}
+		if (random.int(0, 20) / 20 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
+		if (random.int(0, 50) / 50 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 23, 23, _oranges, true, false);
 
 		_change = true;
 	}
