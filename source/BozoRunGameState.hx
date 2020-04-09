@@ -65,9 +65,9 @@ class BozoRunGameState extends FlxState
 	private var _pontaDireitaCenario:Int;
 	
 	// background image
-	private var _bgImgGrp:FlxGroup;
-	private var _bgImg0:FlxBackdrop;
-	private var _bgImg3:FlxBackdrop;
+	private var _bgImgGrp:FlxSpriteGroup;
+	private var _fundoCeu:FlxBackdrop;
+	private var _fundoCenario:FlxBackdrop;
 	private var _floor:FlxBackdrop;
 
 	// collision group for generated platforms
@@ -130,12 +130,12 @@ class BozoRunGameState extends FlxState
 	
 	private inline function configurarFundo():Void
 	{
-		_bgImg0 = new FlxBackdrop(AssetPaths.sky__png, 0.1, 0, true, false, 0, 0);
-		_bgImg3 = new FlxBackdrop(AssetPaths.bgnovo__png, 0.4, 0, true, false, 0, 0);
-		_bgImgGrp = new FlxGroup();
+		_fundoCeu = new FlxBackdrop(AssetPaths.sky__png, 0.1, 0, true, false, 0, 0);
+		_fundoCenario = new FlxBackdrop(AssetPaths.bgnovo__png, 0.4, 0, true, false, 0, 0);
+		_bgImgGrp = new FlxSpriteGroup();
 
-		_bgImgGrp.add(_bgImg0);
-		_bgImgGrp.add(_bgImg3);
+		_bgImgGrp.add(_fundoCeu);
+		_bgImgGrp.add(_fundoCenario);
 		
 		this.add(_bgImgGrp);
 	}
@@ -223,8 +223,8 @@ class BozoRunGameState extends FlxState
 		_laranja3.visible = false;
 		add(_laranja3);
 
-		_bgImg3.y += 30;
-		_bgImg0.y -= 70;
+		_fundoCenario.y += 30;
+		_fundoCeu.y -= 70;
 		
 		_score = _record;
 	}
@@ -536,8 +536,8 @@ class BozoRunGameState extends FlxState
 		_laranja2.destroy();
 		_laranja3.destroy();
 		_ghost.destroy();
-		_bgImg0.destroy();
-		_bgImg3.destroy();
+		_fundoCeu.destroy();
+		_fundoCenario.destroy();
 		_floor.destroy();
 		_bgImgGrp.destroy();
 		_collisions.destroy();
