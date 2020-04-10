@@ -25,13 +25,13 @@ class BozoRunGameState extends FlxState
 	private static var random = new FlxRandom();
 	
 	// base speed for player, stands for xVelocity
-	private static inline var BASE_SPEED:Int = 250;
+	private static inline var BASE_SPEED:Int = 200;
 	
 	// how fast the player speeds up going to the right
 	private static inline var xAcceleration:Int = 120;
 	
 	// force that pulls sprite to the right
-	private static inline var xDrag:Int = 150;
+	private static inline var xDrag:Int = 100;
 	
 	// represents how strong gravity pulls up or down
 	private static inline var yAcceleration:Int = 1400;
@@ -500,8 +500,8 @@ class BozoRunGameState extends FlxState
 	{		
 		_pontaDireitaCenario += TILE_WIDTH*2;
 
-		if (_pontaDireitaCenario % 100 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
-		if (_pontaDireitaCenario % 250 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 23, 23, _oranges, true, false);
+		if (_pontaDireitaCenario % 200 == 0) if(random.int(0, 2) % 2 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
+		if (_pontaDireitaCenario % 350 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 23, 23, _oranges, true, false);
 
 		_change = true;
 	}

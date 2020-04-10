@@ -27,6 +27,7 @@ class MainMenuState extends FlxState
 	private var multiplier:Float=1.0;
 	private var stringTitulo:InaraString;
 	private var paddingSide:Float = (FlxG.width - 300) / 2;
+	private var paddingTop:Float = (FlxG.height - 300) / 2;
 	
 	override public function create():Void
 	{
@@ -46,6 +47,7 @@ class MainMenuState extends FlxState
 		ceu.updateHitbox();
 		ceu.y -= 70;
 		ceu.x += paddingSide;
+		ceu.y += paddingTop;
 		
 		#if android
 		ceu.scale.set(FlxG.width/300, FlxG.height/300);
@@ -58,6 +60,7 @@ class MainMenuState extends FlxState
 		aviao.animation.play("voando");
 		aviao.setPosition(0, 20);
 		aviao.x += paddingSide;
+		aviao.y += paddingTop;
 		
 		#if android
 		aviao.scale.set(FlxG.width/300, FlxG.height/300);
@@ -70,6 +73,7 @@ class MainMenuState extends FlxState
 		background.animation.add("idle", [0, 1, 2], 3, true);
 		background.animation.play("idle");
 		background.x += paddingSide;
+		background.y += paddingTop;
 		
 		#if android
 		background.scale.set(FlxG.width/300, FlxG.height/300);
@@ -83,6 +87,7 @@ class MainMenuState extends FlxState
 		pato.setFacingFlip(FlxObject.LEFT, true, false);
 		pato.facing = FlxObject.LEFT;
 		pato.x += paddingSide;
+		pato.y += paddingTop;
 		
 		#if android
 		pato.scale.set(FlxG.width/300, FlxG.height/300);
@@ -96,6 +101,7 @@ class MainMenuState extends FlxState
 		bozoEspirra.animation.play("idle");
 		bozoEspirra.setPosition(0,150);
 		bozoEspirra.x += paddingSide;
+		bozoEspirra.y += paddingTop;
 		
 		#if android
 		bozoEspirra.scale.set(FlxG.width/300, FlxG.height/300);
@@ -109,6 +115,7 @@ class MainMenuState extends FlxState
 		bozoRun.animation.play("arminha_com_a_mao");
 		bozoRun.setPosition(180,160);
 		bozoRun.x += paddingSide;
+		bozoRun.y += paddingTop;
 		
 		#if android
 		bozoRun.scale.set(FlxG.width/300, FlxG.height/300);
@@ -119,6 +126,7 @@ class MainMenuState extends FlxState
 		pedestal = new FlxSprite().loadGraphic(AssetPaths.pedestal__png, false, 12, 102);
 		pedestal.setPosition(255, 180);
 		pedestal.x += paddingSide;
+		pedestal.y += paddingTop;
 		
 		#if android
 		pedestal.scale.set(FlxG.width/300, FlxG.height/300);
