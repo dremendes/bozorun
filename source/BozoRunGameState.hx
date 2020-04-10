@@ -25,13 +25,13 @@ class BozoRunGameState extends FlxState
 	private static var random = new FlxRandom();
 	
 	// base speed for player, stands for xVelocity
-	private static inline var BASE_SPEED:Int = 200;
+	private static inline var BASE_SPEED:Int = 250;
 	
 	// how fast the player speeds up going to the right
 	private static inline var xAcceleration:Int = 120;
 	
 	// force that pulls sprite to the right
-	private static inline var xDrag:Int = 100;
+	private static inline var xDrag:Int = 150;
 	
 	// represents how strong gravity pulls up or down
 	private static inline var yAcceleration:Int = 1400;
@@ -463,17 +463,17 @@ class BozoRunGameState extends FlxState
 	private inline function updatePlatforms():Void
 	{		
 		// check if we need to make more platforms
-		while (( _bozo.x + FlxG.width) * 1.3 > _pontaDireitaCenario )
+		while (( _bozo.x + FlxG.width) * 2 > _pontaDireitaCenario )
 		{
 			makeBozoObjects();
 			//deleta livros e laranjas assim que estão fora da tela
-			_books.forEach( (book) -> if (book.x < (_bozo.x - 35)) book.destroy() );
-			_oranges.forEach( (orange) -> if (orange.x < (_bozo.x - 35)) orange.destroy() );
+			_books.forEach( (book) -> if (book.x < (_bozo.x - 35)) { book.destroy(); _books.remove(book); });
+			_oranges.forEach( (orange) -> if (orange.x < (_bozo.x - 35)) { orange.destroy(); _oranges.remove(orange); });
 		}
 	}
 
 	private inline function gerarIntForaDaFaixaX(x:Float, _rangeProibido:Float):Float{
-		var randomIntPosX:Float = _bozo.x + FlxG.width + random.int(300, 350);
+		var randomIntPosX:Float = _bozo.x + FlxG.width + random.int(250, 380);
 		return ((x - _rangeProibido) > randomIntPosX) || ((x + _rangeProibido) < randomIntPosX)
 			? randomIntPosX
 			: gerarIntForaDaFaixaX(x, _rangeProibido);
@@ -500,8 +500,8 @@ class BozoRunGameState extends FlxState
 	{		
 		_pontaDireitaCenario += TILE_WIDTH*2;
 
-		if (random.int(0, 20) / 20 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
-		if (random.int(0, 50) / 50 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 23, 23, _oranges, true, false);
+		if (_pontaDireitaCenario % 100 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
+		if (_pontaDireitaCenario % 250 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 23, 23, _oranges, true, false);
 
 		_change = true;
 	}
