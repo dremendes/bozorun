@@ -53,7 +53,7 @@ class BozoRunGameState extends FlxState
 	private var _live0:FlxSprite;
 	private var _live1:FlxSprite;
 	private var _live2:FlxSprite;
-	private var _paddingTop:Float = (FlxG.height - 300) / 2;
+	private var _paddingTop:Float = (FlxG.width < FlxG.height) ? (FlxG.height - 300) / 2 : 0;
 
 	private var _laranja1:FlxSprite;
 	private var _laranja2:FlxSprite;
@@ -113,7 +113,7 @@ class BozoRunGameState extends FlxState
 		FlxG.camera.antialiasing = true;
 
 		// make sure world is wide enough, 100,000 tiles should be enough...
-		FlxG.worldBounds.setSize(TILE_WIDTH * 100000, 400 + _paddingTop);
+		FlxG.worldBounds.setSize(TILE_WIDTH * 100000, 400 + _paddingTop*2);
 		FlxG.worldBounds.setPosition(FlxG.worldBounds.left, FlxG.worldBounds.top);
 		
 		configurarFundo();
@@ -134,7 +134,8 @@ class BozoRunGameState extends FlxState
 	{
 		_fundoCeu = new FlxBackdrop(AssetPaths.sky__png, 0.1, 0, true, false, 0, 0);
 		_fundoCenario = new FlxBackdrop(AssetPaths.bgnovo__png, 0.4, 0, true, false, 0, 0);
-		_fundoCenario.scale.set(1.5, 1.5);
+		_fundoCeu.scale.set(1, _paddingTop == 0 ? 1.2 : 2);
+		_fundoCenario.scale.set(1.5, _paddingTop == 0 ? 1.5 : 2.5);
 		_fundosGrupo = new FlxSpriteGroup();
 
 		_fundosGrupo.add(_fundoCeu);
@@ -173,60 +174,60 @@ class BozoRunGameState extends FlxState
 	private inline function configurarInterface():Void
 	{
 		_pausarButton = new FlxButton(0, 0, "", () -> openSubState(new PausadoSubState(new FlxColor(0x99808080))) );
-		_pausarButton.loadGraphic(AssetPaths.pausar__png, true, 60, 36);
-		_pausarButton.setPosition(124, 4 + _paddingTop);
+		_pausarButton.loadGraphic(AssetPaths.pausar__png, true, 60, 34);
+		_pausarButton.setPosition(124, 4);
 		_pausarButton.scrollFactor.set(0, 0);
 		add(_pausarButton);
 
 		_voltarButton = new FlxButton(0, 0, "", () -> FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new MainMenuState()) ) );
-		_voltarButton.loadGraphic(AssetPaths.voltar__png, true, 60, 36);
-		_voltarButton.setPosition(189, 4 + _paddingTop);
+		_voltarButton.loadGraphic(AssetPaths.voltar__png, true, 60, 34);
+		_voltarButton.setPosition(189, 4);
 		_voltarButton.scrollFactor.set(0, 0);
 		add(_voltarButton);
 		
 		// add score counter 
-		_scoreText = new FlxText(78, 8 + _paddingTop, TILE_WIDTH * 3 - 3, "");
+		_scoreText = new FlxText(78, 8, TILE_WIDTH * 3 - 3, "");
 		_scoreText.scrollFactor.set(0, 0);
 		_scoreText.borderStyle = OUTLINE;
 		_scoreText.color = 0xFF0000; // red color
 		add(_scoreText);
 		
 		// add lives indicator
-		_live0 = new FlxSprite(0,0 + _paddingTop).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
+		_live0 = new FlxSprite(0,0).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
 		_live0.scrollFactor.set(0, 0);
 		_live0.animation.add('vivo', [0], 1, false);
 		_live0.animation.add('morto', [1], 1, false);
 		add(_live0);
 
-		_live1 = new FlxSprite(23,0 + _paddingTop).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
+		_live1 = new FlxSprite(23,0).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
 		_live1.scrollFactor.set(0, 0);
 		_live1.animation.add('vivo', [0], 1, false);
 		_live1.animation.add('morto', [1], 1, false);
 		add(_live1);
 
-		_live2 = new FlxSprite(46,0 + _paddingTop).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
+		_live2 = new FlxSprite(46,0).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
 		_live2.scrollFactor.set(0, 0);
 		_live2.animation.add('vivo', [0], 1, false);
 		_live2.animation.add('morto', [1], 1, false);
 		add(_live2);
 
-		_laranja1 = new FlxSprite(0, 24 + _paddingTop, AssetPaths.laranja__png);
+		_laranja1 = new FlxSprite(0, 24, AssetPaths.laranja__png);
 		_laranja1.scrollFactor.set(0, 0);
 		_laranja1.visible = false;
 		add(_laranja1);
 
-		_laranja2 = new FlxSprite(24, 24 + _paddingTop, AssetPaths.laranja__png);
+		_laranja2 = new FlxSprite(24, 24, AssetPaths.laranja__png);
 		_laranja2.scrollFactor.set(0, 0);
 		_laranja2.visible = false;
 		add(_laranja2);
 
-		_laranja3 = new FlxSprite(48, 24 + _paddingTop, AssetPaths.laranja__png);
+		_laranja3 = new FlxSprite(48, 24, AssetPaths.laranja__png);
 		_laranja3.scrollFactor.set(0, 0);
 		_laranja3.visible = false;
 		add(_laranja3);
 
-		_fundoCenario.y += 90 + _paddingTop;
-		_fundoCeu.y += _paddingTop;
+		_fundoCenario.y += _paddingTop == 0 ? 70 : 170;
+		//_fundoCeu.y += _paddingTop;
 		
 		_score = _record;
 	}
@@ -238,7 +239,8 @@ class BozoRunGameState extends FlxState
 		_chao.allowCollisions = FlxObject.ANY;
 		_chao.immovable = true;
 		_chao.solid = true;
-		_chao.setPosition(0, 290 + _paddingTop);
+		_chao.scale.set(1,3);
+		_chao.setPosition(0, 290 + _paddingTop * 2);
 		_chao.setSize(100000, 32);
 		add(_chao);
 		
@@ -488,7 +490,7 @@ class BozoRunGameState extends FlxState
 	{
 		var obj = new AssetLoader(Path, width, height);
 			obj.x = gerarIntForaDaFaixaX(_posicaoOcupadaX, 30);
-			obj.y = random.float(140 + _paddingTop, 250 + _paddingTop);
+			obj.y = random.float(140 + _paddingTop * 2, 250 + _paddingTop * 2);
 			obj.solid = isSolid;
 			obj.immovable = isMovable;
 			_posicaoOcupadaX = obj.x;

@@ -46,11 +46,7 @@ class MainMenuState extends FlxState
 		ceu.scale.set(0.995, 1);
 		ceu.x += paddingSide;
 		ceu.y += paddingTop;
-		
-		#if android
 		ceu.scale.set(FlxG.width/300, FlxG.height/300);
-		#end
-
 		add(ceu);
 		
 		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 86, 17);
@@ -59,11 +55,7 @@ class MainMenuState extends FlxState
 		aviao.setPosition(0, 20);
 		aviao.x += paddingSide;
 		aviao.y += paddingTop;
-		
-		#if android
 		aviao.scale.set(FlxG.width/300, FlxG.height/300);
-		#end
-
 		add(aviao);
 		
 		background = new FlxSprite();
@@ -72,11 +64,7 @@ class MainMenuState extends FlxState
 		background.animation.play("idle");
 		background.x += paddingSide;
 		background.y += paddingTop;
-		
-		#if android
 		background.scale.set(FlxG.width/300, FlxG.height/300);
-		#end
-
 		add(background);
 		
 		pato = new FlxSprite().loadGraphic(AssetPaths.patin__png, false, 30, 29);
@@ -86,11 +74,7 @@ class MainMenuState extends FlxState
 		pato.facing = FlxObject.LEFT;
 		pato.x += paddingSide;
 		pato.y += paddingTop;
-		
-		#if android
 		pato.scale.set(FlxG.width/300, FlxG.height/300);
-		#end
-
 		add(pato);
 		
 		bozoEspirra = new FlxSprite();
@@ -99,8 +83,7 @@ class MainMenuState extends FlxState
 		bozoEspirra.animation.play("idle");
 		bozoEspirra.setPosition(0,150);
 		bozoEspirra.x += paddingSide;
-		bozoEspirra.y += paddingTop;
-		
+		bozoEspirra.y += paddingTop * 2;
 		add(bozoEspirra);
 		
 		bozoRun = new FlxSprite();
@@ -109,21 +92,21 @@ class MainMenuState extends FlxState
 		bozoRun.animation.play("arminha_com_a_mao");
 		bozoRun.setPosition(180,160);
 		bozoRun.x += paddingSide;
-		bozoRun.y += paddingTop;
+		bozoRun.y += paddingTop * 2;
 		
 		add(bozoRun);
 		
 		pedestal = new FlxSprite().loadGraphic(AssetPaths.pedestal__png, false, 12, 102);
 		pedestal.setPosition(255, 180);
 		pedestal.x += paddingSide;
-		pedestal.y += paddingTop;
+		pedestal.y += paddingTop * 2;
 
 		add(pedestal);
 
 		#if android
-		stringTitulo = new InaraString("bozorun", 10 + paddingSide, 40 + paddingTop, 280 * (FlxG.width/300), 0, 0, FlxG.width/300, FlxG.height/300);
+		stringTitulo = new InaraString("bozorun", 10 + paddingSide, 60 + paddingTop, 280 * (FlxG.width/300), 0, 0, FlxG.width/300, FlxG.height/300);
 		#else
-		stringTitulo = new InaraString("bozorun", 70 + paddingSide, 40 + paddingTop, 280, 0, 0);
+		stringTitulo = new InaraString("bozorun", 70 + paddingSide, 60 + paddingTop, 280, 0, 0);
 		#end
 
 		add(stringTitulo);
@@ -136,24 +119,20 @@ class MainMenuState extends FlxState
 		BtnColetiva.x = 35 + paddingSide;
 		BtnColetiva.y += 25;
 		
-		#if android
 		BtnColetiva.scale.set(FlxG.width/300, FlxG.height/300);
-		#end
-
+		
 		//add(BtnColetiva);
 		
 		BtnRun = new FlxButton(0, 0, "", () -> FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new BozoRunGameState()) ));
 		BtnRun.label.size = 20;
-		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 36);
+		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 34);
 		
 		//BtnRun.x = 200;
 		BtnRun.x = 200 + paddingSide;
-		BtnRun.y = 122 + paddingTop;
+		BtnRun.y = 112 + paddingTop * 2;
 		
-		#if android
 		BtnRun.scale.set(FlxG.width/300, FlxG.height/300);
-		#end
-
+		
 		add(BtnRun);
 
 		// música de fundo
