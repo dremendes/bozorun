@@ -53,6 +53,7 @@ class BozoRunGameState extends FlxState
 	private var _live0:FlxSprite;
 	private var _live1:FlxSprite;
 	private var _live2:FlxSprite;
+	private var _paddingTop:Float = (FlxG.height - 300) / 2;
 
 	private var _laranja1:FlxSprite;
 	private var _laranja2:FlxSprite;
@@ -69,10 +70,10 @@ class BozoRunGameState extends FlxState
 	private var _fundosGrupo:FlxSpriteGroup;
 	private var _fundoCeu:FlxBackdrop;
 	private var _fundoCenario:FlxBackdrop;
-	private var _floor:FlxBackdrop;
+	private var _chao:FlxBackdrop;
 
 	// collision group for generated platforms
-	private var _collisions:FlxGroup;
+	private var _collisions:FlxSpriteGroup;
 	private var _books:FlxSpriteGroup;
 
 	private var _amountOranges:Int=0;
@@ -104,28 +105,28 @@ class BozoRunGameState extends FlxState
 		FlxG.mouse.visible = false;
 		#end
 
+		#if android
 		EsOrientation.setScreenOrientation(EsOrientation.ORIENTATION_LANDSCAPE);		
+		#end
 
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 		FlxG.camera.antialiasing = true;
 
 		// make sure world is wide enough, 100,000 tiles should be enough...
-		FlxG.worldBounds.setSize(TILE_WIDTH * 100000, 300);
+		FlxG.worldBounds.setSize(TILE_WIDTH * 100000, 400 + _paddingTop);
+		FlxG.worldBounds.setPosition(FlxG.worldBounds.left, FlxG.worldBounds.top);
 		
 		configurarFundo();
-		
-		configurarBozo();
-		
-		// prepare player related variables
-		iniciarBozo();
 		
 		configurarInterface();
 		
 		// setup platform logic
+		initPlatforms();
 		setupPlatforms();
 		
-		// prepare platform variables
-		initPlatforms();
+		// prepare player related variables
+		configurarBozo();
+		iniciarBozo();
 	}
 	
 	
@@ -152,7 +153,6 @@ class BozoRunGameState extends FlxState
 		_bozo.setGraphicSize(104, 122);
 
 		_record = Std.int(_bozo.x);
-		_record = Std.int(_bozo.x);
 		
 		// set animations to use this run
 		configuraAnimacoes();
@@ -174,59 +174,59 @@ class BozoRunGameState extends FlxState
 	{
 		_pausarButton = new FlxButton(0, 0, "", () -> openSubState(new PausadoSubState(new FlxColor(0x99808080))) );
 		_pausarButton.loadGraphic(AssetPaths.pausar__png, true, 60, 36);
-		_pausarButton.setPosition(124, 4);
+		_pausarButton.setPosition(124, 4 + _paddingTop);
 		_pausarButton.scrollFactor.set(0, 0);
 		add(_pausarButton);
 
 		_voltarButton = new FlxButton(0, 0, "", () -> FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new MainMenuState()) ) );
 		_voltarButton.loadGraphic(AssetPaths.voltar__png, true, 60, 36);
-		_voltarButton.setPosition(189, 4);
+		_voltarButton.setPosition(189, 4 + _paddingTop);
 		_voltarButton.scrollFactor.set(0, 0);
 		add(_voltarButton);
 		
 		// add score counter 
-		_scoreText = new FlxText(78, 8, TILE_WIDTH * 3 - 3, "");
+		_scoreText = new FlxText(78, 8 + _paddingTop, TILE_WIDTH * 3 - 3, "");
 		_scoreText.scrollFactor.set(0, 0);
 		_scoreText.borderStyle = OUTLINE;
 		_scoreText.color = 0xFF0000; // red color
 		add(_scoreText);
 		
 		// add lives indicator
-		_live0 = new FlxSprite(0,0).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
+		_live0 = new FlxSprite(0,0 + _paddingTop).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
 		_live0.scrollFactor.set(0, 0);
 		_live0.animation.add('vivo', [0], 1, false);
 		_live0.animation.add('morto', [1], 1, false);
 		add(_live0);
 
-		_live1 = new FlxSprite(23,0).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
+		_live1 = new FlxSprite(23,0 + _paddingTop).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
 		_live1.scrollFactor.set(0, 0);
 		_live1.animation.add('vivo', [0], 1, false);
 		_live1.animation.add('morto', [1], 1, false);
 		add(_live1);
 
-		_live2 = new FlxSprite(46,0).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
+		_live2 = new FlxSprite(46,0 + _paddingTop).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
 		_live2.scrollFactor.set(0, 0);
 		_live2.animation.add('vivo', [0], 1, false);
 		_live2.animation.add('morto', [1], 1, false);
 		add(_live2);
 
-		_laranja1 = new FlxSprite(0, 24, AssetPaths.laranja__png);
+		_laranja1 = new FlxSprite(0, 24 + _paddingTop, AssetPaths.laranja__png);
 		_laranja1.scrollFactor.set(0, 0);
 		_laranja1.visible = false;
 		add(_laranja1);
 
-		_laranja2 = new FlxSprite(24, 24, AssetPaths.laranja__png);
+		_laranja2 = new FlxSprite(24, 24 + _paddingTop, AssetPaths.laranja__png);
 		_laranja2.scrollFactor.set(0, 0);
 		_laranja2.visible = false;
 		add(_laranja2);
 
-		_laranja3 = new FlxSprite(48, 24, AssetPaths.laranja__png);
+		_laranja3 = new FlxSprite(48, 24 + _paddingTop, AssetPaths.laranja__png);
 		_laranja3.scrollFactor.set(0, 0);
 		_laranja3.visible = false;
 		add(_laranja3);
 
-		_fundoCenario.y += 90;
-		_fundoCeu.y -= 40;
+		_fundoCenario.y += 90 + _paddingTop;
+		_fundoCeu.y += _paddingTop;
 		
 		_score = _record;
 	}
@@ -234,17 +234,17 @@ class BozoRunGameState extends FlxState
 	private inline function setupPlatforms():Void
 	{
 		// pool to hold platform objects
-		_floor = new FlxBackdrop(AssetPaths.groundtiles__png, 1, 0, true, false, 0, 0);
-		_floor.y = 280;
-		_floor.allowCollisions = FlxObject.ANY;
-		_floor.collisonXDrag = false;
-		_floor.immovable = true;
-		_floor.width = 1000000;
-		add(_floor);
+		_chao = new FlxBackdrop(AssetPaths.groundtiles__png, 1, 0, true, false, 0, 0);
+		_chao.allowCollisions = FlxObject.ANY;
+		_chao.immovable = true;
+		_chao.solid = true;
+		_chao.setPosition(0, 290 + _paddingTop);
+		_chao.setSize(100000, 32);
+		add(_chao);
 		
 		// holds all collision objects
-		_collisions = new FlxGroup();
-		_collisions.add(_floor);
+		_collisions = new FlxSpriteGroup();
+		_collisions.add(_chao);
 		
 		// add the collisions group to the screen so we can see it!
 		add(_collisions);
@@ -265,7 +265,7 @@ class BozoRunGameState extends FlxState
 		_sfxDie = true;
 		
 		// setup player position
-		_bozo.setPosition(_record*TILE_WIDTH, 0);
+		_bozo.setPosition(_record*TILE_WIDTH, 0 + _paddingTop);
 		
 		// Basic player physics
 		_bozo.drag.x = xDrag;
@@ -488,7 +488,7 @@ class BozoRunGameState extends FlxState
 	{
 		var obj = new AssetLoader(Path, width, height);
 			obj.x = gerarIntForaDaFaixaX(_posicaoOcupadaX, 30);
-			obj.y = random.int(140, 250);
+			obj.y = random.float(140 + _paddingTop, 250 + _paddingTop);
 			obj.solid = isSolid;
 			obj.immovable = isMovable;
 			_posicaoOcupadaX = obj.x;
@@ -548,7 +548,7 @@ class BozoRunGameState extends FlxState
 		_ghost.destroy();
 		_fundoCeu.destroy();
 		_fundoCenario.destroy();
-		_floor.destroy();
+		_chao.destroy();
 		_fundosGrupo.destroy();
 		_collisions.destroy();
 		_books.destroy();

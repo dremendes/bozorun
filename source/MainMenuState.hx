@@ -31,7 +31,7 @@ class MainMenuState extends FlxState
 	
 	override public function create():Void
 	{
-		FlxG.debugger.visible = true;
+		//FlxG.debugger.visible = true;
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 		FlxG.camera.antialiasing = true;
 		EsOrientation.setScreenOrientation(EsOrientation.ORIENTATION_LANDSCAPE);
@@ -44,8 +44,6 @@ class MainMenuState extends FlxState
 
 		ceu = new FlxSprite().loadGraphic(AssetPaths.sky__png, false, 301, 300);
 		ceu.scale.set(0.995, 1);
-		ceu.updateHitbox();
-		ceu.y -= 70;
 		ceu.x += paddingSide;
 		ceu.y += paddingTop;
 		
@@ -103,10 +101,6 @@ class MainMenuState extends FlxState
 		bozoEspirra.x += paddingSide;
 		bozoEspirra.y += paddingTop;
 		
-		#if android
-		bozoEspirra.scale.set(FlxG.width/300, FlxG.height/300);
-		#end
-
 		add(bozoEspirra);
 		
 		bozoRun = new FlxSprite();
@@ -117,27 +111,19 @@ class MainMenuState extends FlxState
 		bozoRun.x += paddingSide;
 		bozoRun.y += paddingTop;
 		
-		#if android
-		bozoRun.scale.set(FlxG.width/300, FlxG.height/300);
-		#end
-
 		add(bozoRun);
 		
 		pedestal = new FlxSprite().loadGraphic(AssetPaths.pedestal__png, false, 12, 102);
 		pedestal.setPosition(255, 180);
 		pedestal.x += paddingSide;
 		pedestal.y += paddingTop;
-		
-		#if android
-		pedestal.scale.set(FlxG.width/300, FlxG.height/300);
-		#end
 
 		add(pedestal);
 
 		#if android
-		stringTitulo = new InaraString("bozorun", 10 + paddingSide, 40, 280 * (FlxG.width/300), 0, 0, FlxG.width/300, FlxG.height/300);
+		stringTitulo = new InaraString("bozorun", 10 + paddingSide, 40 + paddingTop, 280 * (FlxG.width/300), 0, 0, FlxG.width/300, FlxG.height/300);
 		#else
-		stringTitulo = new InaraString("bozorun", 70 + paddingSide, 40, 280, 0, 0);
+		stringTitulo = new InaraString("bozorun", 70 + paddingSide, 40 + paddingTop, 280, 0, 0);
 		#end
 
 		add(stringTitulo);
@@ -162,7 +148,7 @@ class MainMenuState extends FlxState
 		
 		//BtnRun.x = 200;
 		BtnRun.x = 200 + paddingSide;
-		BtnRun.y = 122;
+		BtnRun.y = 122 + paddingTop;
 		
 		#if android
 		BtnRun.scale.set(FlxG.width/300, FlxG.height/300);
