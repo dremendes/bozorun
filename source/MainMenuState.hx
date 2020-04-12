@@ -114,7 +114,7 @@ class MainMenuState extends FlxState
 		
 		BtnColetiva = new FlxButton(10, division * 1.5 + 40, "", () -> FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new ColetivaGameState()) ));
 		BtnColetiva.label.size = 20;
-		BtnColetiva.loadGraphic(AssetPaths.coletiva__png , true, 60, 36);
+		BtnColetiva.loadGraphic(AssetPaths.coletiva__png , true, 60, 34);
 		BtnColetiva.scale.set(1.6, .9);
 		BtnColetiva.x = 35 + paddingSide;
 		BtnColetiva.y += 25;

@@ -1,6 +1,5 @@
 package;
 
-import flixel.math.FlxRandom;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -22,7 +21,7 @@ class BozoRunGameState extends FlxState
 {
 	private static inline var TILE_WIDTH:Int = 16;
 	private static inline var TILE_HEIGHT:Int = 16;
-	private static var random = new FlxRandom();
+	private static var random = FlxG.random;
 	
 	// base speed for player, stands for xVelocity
 	private static inline var BASE_SPEED:Int = 200;
@@ -85,7 +84,6 @@ class BozoRunGameState extends FlxState
 	
 	// score counter and timer
 	private var _score:Int;
-	private var _record:Int;
 	
 	private var _pausarButton:FlxButton;
 
@@ -121,7 +119,6 @@ class BozoRunGameState extends FlxState
 		configurarInterface();
 		
 		// setup platform logic
-		initPlatforms();
 		setupPlatforms();
 		
 		// prepare player related variables
@@ -152,8 +149,6 @@ class BozoRunGameState extends FlxState
 
         _bozo.updateHitbox();
 		_bozo.setGraphicSize(104, 122);
-
-		_record = Std.int(_bozo.x);
 		
 		// set animations to use this run
 		configuraAnimacoes();
@@ -226,15 +221,11 @@ class BozoRunGameState extends FlxState
 		_laranja3.visible = false;
 		add(_laranja3);
 
-		_fundoCenario.y += _paddingTop == 0 ? 70 : 170;
-		//_fundoCeu.y += _paddingTop;
-		
-		_score = _record;
+		_fundoCenario.y += _paddingTop == 0 ? 70 : 170;		
 	}
 	
 	private inline function setupPlatforms():Void
 	{
-		// pool to hold platform objects
 		_chao = new FlxBackdrop(AssetPaths.groundtiles__png, 1, 0, true, false, 0, 0);
 		_chao.allowCollisions = FlxObject.ANY;
 		_chao.immovable = true;
@@ -244,7 +235,6 @@ class BozoRunGameState extends FlxState
 		_chao.setSize(100000, 32);
 		add(_chao);
 		
-		// holds all collision objects
 		_collisions = new FlxSpriteGroup();
 		_collisions.add(_chao);
 		
@@ -256,6 +246,7 @@ class BozoRunGameState extends FlxState
 
 		_oranges = new FlxSpriteGroup();
 		add(_oranges);
+		_pontaDireitaCenario = (_score-1)*TILE_WIDTH;
 	}
 	
 	private inline function iniciarBozo():Void
@@ -267,7 +258,7 @@ class BozoRunGameState extends FlxState
 		_sfxDie = true;
 		
 		// setup player position
-		_bozo.setPosition(_record*TILE_WIDTH, 0 + _paddingTop);
+		_bozo.setPosition(_score*TILE_WIDTH, 0 + _paddingTop);
 		
 		// Basic player physics
 		_bozo.drag.x = xDrag;
@@ -283,15 +274,6 @@ class BozoRunGameState extends FlxState
 		_piscando = true;
 		var _timerPiscando = new haxe.Timer(3000);
 		_timerPiscando.run = () -> { _piscando = false; _bozo.visible = true; _timerPiscando.stop(); }
-	}
-	
-	private inline function initPlatforms():Void
-	{
-		// collision group is up to date
-		_change = false;
-		
-		// reset edge screen where we generate new platforms
-		_pontaDireitaCenario = (_record-1)*TILE_WIDTH;
 	}
 	
 	private inline function onReiniciar():Void if (_livesTotal > 0) iniciarBozo();// reseta parametros do Bozo
@@ -388,10 +370,8 @@ class BozoRunGameState extends FlxState
 	private inline function updateUI():Void
 	{
 		_score = Std.int(_bozo.x / (TILE_WIDTH));
-		
-		if (_bozo.x > (_record * TILE_WIDTH)) _record = _score;
-		
-		_scoreText.text = Std.string("Recorde" + _record + "m");
+				
+		_scoreText.text = Std.string("Recorde" + _score + "m");
 		
 		// camera tracks ghost, not player (prevent tracking jumps)
 		_ghost.x = _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
