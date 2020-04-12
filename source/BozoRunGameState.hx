@@ -115,7 +115,6 @@ class BozoRunGameState extends FlxState
 		FlxG.worldBounds.setPosition(FlxG.worldBounds.left, FlxG.worldBounds.top);
 		
 		configurarFundo();
-		
 		configurarInterface();
 		
 		// setup platform logic
@@ -379,8 +378,9 @@ class BozoRunGameState extends FlxState
 	
 	private inline function atualizaBozo():Void
 	{
-		// make player go faster as they go farther in j curve
-		_bozo.maxVelocity.x = BASE_SPEED + Std.int(_bozo.x*.03);
+		// acelera, até o máximo de 500
+		if(_bozo.maxVelocity.x < 500) _bozo.maxVelocity.x = BASE_SPEED + Std.int(_bozo.x*.03);
+
 		#if html5
 		_jumpPressed = FlxG.keys.anyPressed(["UP", "W", "SPACE"]);
 		#end
