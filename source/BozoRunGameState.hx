@@ -325,22 +325,26 @@ class BozoRunGameState extends FlxState
 		}
 		
 		// colidiu com livro?
-		if (!_piscando && FlxG.overlap(_bozo, _books, (_obj1, _obj2) -> if (_amountOranges >= 1) _obj2.destroy() )) {
+		if (!_piscando && FlxG.overlap(_bozo, _books, 
+			function (_obj1, _obj2) { 
+				if (_obj1.x < _obj2.x && _obj1.y < _obj2.y && _amountOranges >= 1) {
+					_obj2.destroy();
+					if(_amountOranges >= 1) _amountOranges--;
+			
+					switch(_amountOranges){
+						case 0:
+							_laranja1.visible = false;
+						case 1: 
+							_laranja2.visible = false;
+						case 2:
+							_laranja3.visible = false;
+					}
+				} else if(_amountOranges >= 1) FlxG.collide(_bozo, _books); } )
+			) {
 			if(xAcceleration > 0 && _sfxDie) FlxG.camera.shake(0.01, 0.2);
 			
 			_playJump = false;
 			_jump = 0;
-
-			if(_amountOranges >= 1) _amountOranges--;
-			
-			switch(_amountOranges){
-				case 0:
-					_laranja1.visible = false;
-				case 1: 
-					_laranja2.visible = false;
-				case 2:
-					_laranja3.visible = false;
-			}
 
 			if(_amountOranges == 0 && FlxG.collide(_bozo, _books) && _bozo.velocity.x <= 0 && _amountOranges <= 0){
 				// player went splat
@@ -356,7 +360,6 @@ class BozoRunGameState extends FlxState
 				}
 				sfxDie();
 			}
-			
 		} else if(_piscando) _bozo.visible = !_bozo.visible;
 		
 		playerAnimation();
