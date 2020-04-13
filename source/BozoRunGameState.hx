@@ -327,7 +327,7 @@ class BozoRunGameState extends FlxState
 		// colidiu com livro?
 		if (!_piscando && FlxG.overlap(_bozo, _books, 
 			function (_obj1, _obj2) { 
-				if (_obj1.x < _obj2.x && _obj1.y < _obj2.y && _amountOranges >= 1) {
+				if ((_obj1.x + 30) < _obj2.x && (_obj1.y - 30) < _obj2.y && _amountOranges >= 1) {
 					_obj2.destroy();
 					if(_amountOranges >= 1) _amountOranges--;
 			
@@ -382,7 +382,7 @@ class BozoRunGameState extends FlxState
 	private inline function atualizaBozo():Void
 	{
 		// acelera, até o máximo de 500
-		if(_bozo.maxVelocity.x < 500) _bozo.maxVelocity.x = BASE_SPEED + Std.int(_bozo.x*.03);
+		if(_bozo.maxVelocity.x < 500) _bozo.maxVelocity.x = 500;
 
 		#if html5
 		_jumpPressed = FlxG.keys.anyPressed(["UP", "W", "SPACE"]);
