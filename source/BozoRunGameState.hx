@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
@@ -13,6 +12,7 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import extension.eightsines.EsOrientation;
+import flixel.ui.FlxVirtualPad;
 
 /**
  * Based on HaxeRunner by william.thompsonj
@@ -42,9 +42,12 @@ class BozoRunGameState extends FlxState
 	private static inline var jumpDuration:Float = .25;
 	
 	private var _bozo:FlxSprite;
+	private var _bozoDeitado:FlxSprite;
 	private var _jump:Float;
 	private var _playJump:Bool;
 	private var _jumpPressed:Bool;
+	private var _playDown:Bool;
+	private var _downPressed:Bool;
 	private var _sfxDie:Bool;
 	private var _tooglePausar:Bool=false;
 	private var _auxX:Float = 0.0;
@@ -53,7 +56,7 @@ class BozoRunGameState extends FlxState
 	private var _live1:FlxSprite;
 	private var _live2:FlxSprite;
 	private var _paddingTop:Float = (FlxG.width < FlxG.height) ? (FlxG.height - 300) / 2 : 0;
-
+	
 	private var _laranja1:FlxSprite;
 	private var _laranja2:FlxSprite;
 	private var _laranja3:FlxSprite;
@@ -70,21 +73,23 @@ class BozoRunGameState extends FlxState
 	private var _fundoCeu:FlxBackdrop;
 	private var _fundoCenario:FlxBackdrop;
 	private var _chao:FlxBackdrop;
-
+	
 	// collision group for generated platforms
-	private var _collisions:FlxSpriteGroup;
-	private var _books:FlxSpriteGroup;
-
+	private var _collisions:FlxSpriteGroup = new FlxSpriteGroup();
+	private var _books:FlxSpriteGroup = new FlxSpriteGroup();
+	
 	private var _amountOranges:Int=0;
 	
-	private var _oranges:FlxSpriteGroup;
-
+	private var _oranges:FlxSpriteGroup = new FlxSpriteGroup();
+	
 	// indicate whether the collision group has changed
 	private var _change:Bool;
 	
 	// score counter and timer
 	private var _score:Int;
 	
+	private var _gamePadUp:FlxButton;
+	private var _gamePadDown:FlxButton;
 	private var _pausarButton:FlxButton;
 
 	private var _voltarButton:FlxButton;
@@ -116,7 +121,7 @@ class BozoRunGameState extends FlxState
 		
 		configurarFundo();
 		configurarInterface();
-		
+
 		// setup platform logic
 		setupPlatforms();
 		
@@ -157,6 +162,10 @@ class BozoRunGameState extends FlxState
 		
 		// add player to FlxState
 		add(_bozo);
+
+		_bozoDeitado = new FlxSprite().loadGraphic(AssetPaths.jairtomando__png, true, 122, 140);
+		_bozoDeitado.animation.add("deitando", [0, 1, 2, 3], 4, true);
+		_bozoDeitado.animation.add("flexao", [1, 2, 3, 4, 5, 6, 7], 14, true);
 		
 		// something that follows player's x movement
 		_ghost = new FlxSprite(_bozo.x+FlxG.width-TILE_WIDTH, FlxG.height / 2);
@@ -167,12 +176,19 @@ class BozoRunGameState extends FlxState
 	
 	private inline function configurarInterface():Void
 	{
+		//Abaixo adiciono os grupos dos objetos ao estado antes da interface mas pq??
+		//R: pra que os objetos do hud fiquem na frente, veja:
+		//https://groups.google.com/d/msg/haxeflixel/DrDXEani_oY/Om_KzuCVWeEJ
+		add(_books);
+		add(_oranges);
+		add(_collisions);
+		
 		_pausarButton = new FlxButton(0, 0, "", () -> openSubState(new PausadoSubState(new FlxColor(0x99808080))) );
 		_pausarButton.loadGraphic(AssetPaths.pausar__png, true, 60, 34);
 		_pausarButton.setPosition(124, 4);
 		_pausarButton.scrollFactor.set(0, 0);
 		add(_pausarButton);
-
+		
 		_voltarButton = new FlxButton(0, 0, "", () -> FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new MainMenuState()) ) );
 		_voltarButton.loadGraphic(AssetPaths.voltar__png, true, 60, 34);
 		_voltarButton.setPosition(189, 4);
@@ -192,34 +208,48 @@ class BozoRunGameState extends FlxState
 		_live0.animation.add('vivo', [0], 1, false);
 		_live0.animation.add('morto', [1], 1, false);
 		add(_live0);
-
+		
 		_live1 = new FlxSprite(23,0).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
 		_live1.scrollFactor.set(0, 0);
 		_live1.animation.add('vivo', [0], 1, false);
 		_live1.animation.add('morto', [1], 1, false);
 		add(_live1);
-
+		
 		_live2 = new FlxSprite(46,0).loadGraphic(AssetPaths.coracao__png , true, 28, 23);
 		_live2.scrollFactor.set(0, 0);
 		_live2.animation.add('vivo', [0], 1, false);
 		_live2.animation.add('morto', [1], 1, false);
 		add(_live2);
-
+		
 		_laranja1 = new FlxSprite(0, 24, AssetPaths.laranja__png);
 		_laranja1.scrollFactor.set(0, 0);
 		_laranja1.visible = false;
 		add(_laranja1);
-
+		
 		_laranja2 = new FlxSprite(24, 24, AssetPaths.laranja__png);
 		_laranja2.scrollFactor.set(0, 0);
 		_laranja2.visible = false;
 		add(_laranja2);
-
+		
 		_laranja3 = new FlxSprite(48, 24, AssetPaths.laranja__png);
 		_laranja3.scrollFactor.set(0, 0);
 		_laranja3.visible = false;
 		add(_laranja3);
-
+		
+		_gamePadUp = new FlxButton(0, 0, "", () -> openSubState(new PausadoSubState(new FlxColor(0x99808080))) );
+		_gamePadUp.loadGraphic(AssetPaths.seta__png, true, 36, 36);
+		_gamePadUp.setPosition(FlxG.width - 40, FlxG.height - 85);
+		_gamePadUp.scrollFactor.set(0, 0);
+		//add(_gamePadUp);
+		
+		_gamePadDown = new FlxButton(0, 0, "", () -> _playDown = true);
+		_gamePadDown.loadGraphic(AssetPaths.seta__png, true, 36, 36);
+		_gamePadDown.setPosition(FlxG.width - 40, FlxG.height - 45);
+		_gamePadDown.scrollFactor.set(0, 0);
+		_gamePadDown.setFacingFlip(FlxObject.DOWN, false, true);
+		_gamePadDown.facing = FlxObject.DOWN;
+		//add(_gamePadDown);
+		
 		_fundoCenario.y += _paddingTop == 0 ? 70 : 170;		
 	}
 	
@@ -232,19 +262,8 @@ class BozoRunGameState extends FlxState
 		_chao.scale.set(1,3);
 		_chao.setPosition(0, 290 + _paddingTop * 2);
 		_chao.setSize(100000, 32);
-		add(_chao);
 		
-		_collisions = new FlxSpriteGroup();
-		_collisions.add(_chao);
-		
-		// add the collisions group to the screen so we can see it!
-		add(_collisions);
-		
-		_books = new FlxSpriteGroup();
-		add(_books);
-
-		_oranges = new FlxSpriteGroup();
-		add(_oranges);
+		_collisions.add(_chao);		
 		_pontaDireitaCenario = (_score-1)*TILE_WIDTH;
 	}
 	
@@ -253,7 +272,9 @@ class BozoRunGameState extends FlxState
 		// setup jump height
 		_jump = -1;
 		_playJump = true;
+		_playDown = false;
 		_jumpPressed = false;
+		_downPressed = false;
 		_sfxDie = true;
 		
 		// setup player position
@@ -286,7 +307,6 @@ class BozoRunGameState extends FlxState
 	 * and smooth. If possible, design updater functions to be inlined.
 	 * 
 	 *************************/
-	
 	override public function update(elapsed:Float):Void
 	{		
 		// platform garbage handling
@@ -447,9 +467,8 @@ class BozoRunGameState extends FlxState
 	
 	private inline function updatePlatforms():Void
 	{		
-		// check if we need to make more platforms
-		while (( _bozo.x + FlxG.width) * 2 > _pontaDireitaCenario )
-		{
+		// confere se precisa fazer mais chão
+		while (( _bozo.x + FlxG.width) * 2 > _pontaDireitaCenario ) {
 			makeBozoObjects();
 			//deleta livros e laranjas assim que estão fora da tela
 			_books.forEach( (book) -> if (book.x < (_bozo.x - 35)) { book.destroy(); _books.remove(book); });
@@ -457,7 +476,8 @@ class BozoRunGameState extends FlxState
 		}
 	}
 
-	private inline function gerarIntForaDaFaixaX(x:Float, _rangeProibido:Float):Float{
+	private inline function gerarIntForaDaFaixaX(x:Float, _rangeProibido:Float):Float
+	{
 		var randomIntPosX:Float = _bozo.x + FlxG.width + random.int(250, 380);
 		return ((x - _rangeProibido) > randomIntPosX) || ((x + _rangeProibido) < randomIntPosX)
 			? randomIntPosX
@@ -477,7 +497,6 @@ class BozoRunGameState extends FlxState
 			obj.solid = isSolid;
 			obj.immovable = isMovable;
 			_posicaoOcupadaX = obj.x;
-			add(obj);
 			group.add(obj);
 	}
 	
@@ -499,8 +518,10 @@ class BozoRunGameState extends FlxState
 			_bozo.animation.play("pulando")
 		else if (_bozo.velocity.y != 0)
 			_bozo.animation.play("caindo")
-		else 
-			_bozo.animation.play("fugindo");
+		else if (_playDown) {
+			_bozo.stamp(_bozoDeitado);
+			_bozoDeitado.animation.play("deitando");
+		} else _bozo.animation.play("fugindo");
 	}
 	
 	private inline function configuraAnimacoes():Void
@@ -509,6 +530,7 @@ class BozoRunGameState extends FlxState
 		_bozo.animation.add("pulando",  [15, 14], 7, false);
 		_bozo.animation.add("caindo", [16, 17], 7, false);
 		_bozo.animation.add("morrendo", [22, 23], 15, false);
+		_bozo.animation.add("deitando", [0, 1, 2, 3], 4, true);
 	}
 	
 	private inline function sfxDie():Void
