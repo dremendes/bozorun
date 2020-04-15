@@ -150,22 +150,17 @@ class BozoRunGameState extends FlxState
 		// make a player sprite
 		_bozo = new FlxSprite().loadGraphic(AssetPaths.Jair__png, true, 104, 122);
 		_bozo.scale.set(0.4, 1);
-
-        _bozo.updateHitbox();
-		_bozo.setGraphicSize(104, 122);
+		_bozo.updateHitbox();
+		_bozo.scale.set(1, 1);
 		
+		_bozoDeitado = new FlxSprite().loadGraphic(AssetPaths.jairtomando__png, true, 122, 140);
+		_bozoDeitado.visible = false;
 		// set animations to use this run
 		configuraAnimacoes();
 		
-		// face player to the right
-		_bozo.facing = FlxObject.RIGHT;
-		
 		// add player to FlxState
 		add(_bozo);
-
-		_bozoDeitado = new FlxSprite().loadGraphic(AssetPaths.jairtomando__png, true, 122, 140);
-		_bozoDeitado.animation.add("deitando", [0, 1, 2, 3], 4, true);
-		_bozoDeitado.animation.add("flexao", [1, 2, 3, 4, 5, 6, 7], 14, true);
+		add(_bozoDeitado);
 		
 		// something that follows player's x movement
 		_ghost = new FlxSprite(_bozo.x+FlxG.width-TILE_WIDTH, FlxG.height / 2);
@@ -176,8 +171,8 @@ class BozoRunGameState extends FlxState
 	
 	private inline function configurarInterface():Void
 	{
-		//Abaixo adiciono os grupos dos objetos ao estado antes da interface mas pq??
-		//R: pra que os objetos do hud fiquem na frente, veja:
+		//Abaixo adiciono os grupos dos objetos ao estado antes da interface 
+		//pra que os objetos do hud fiquem na frente, veja:
 		//https://groups.google.com/d/msg/haxeflixel/DrDXEani_oY/Om_KzuCVWeEJ
 		add(_books);
 		add(_oranges);
@@ -279,12 +274,18 @@ class BozoRunGameState extends FlxState
 		
 		// setup player position
 		_bozo.setPosition(_score*TILE_WIDTH, 0 + _paddingTop);
+		_bozoDeitado.setPosition(_score*TILE_WIDTH, -20 + _paddingTop);
 		
 		// Basic player physics
 		_bozo.drag.x = xDrag;
 		_bozo.velocity.set(0, 0);
 		_bozo.maxVelocity.set(BASE_SPEED, yVelocity);
 		_bozo.acceleration.set(xAcceleration, yAcceleration);
+
+		_bozoDeitado.drag.x = xDrag;
+		_bozoDeitado.velocity.set(0, 0);
+		_bozoDeitado.maxVelocity.set(BASE_SPEED, yVelocity);
+		_bozoDeitado.acceleration.set(xAcceleration, yAcceleration);
 		
 		configuraAnimacoes();
 		
@@ -343,6 +344,8 @@ class BozoRunGameState extends FlxState
 			// bozo tá no chão?
 			if (_bozo.velocity.x > 0 && !_jumpPressed) _jump = 0; // reset jump variable
 		}
+
+		FlxG.collide(_bozoDeitado, _collisions);
 		
 		// colidiu com livro?
 		if (!_piscando && FlxG.overlap(_bozo, _books, 
@@ -402,7 +405,10 @@ class BozoRunGameState extends FlxState
 	private inline function atualizaBozo():Void
 	{
 		// acelera, até o máximo de 500
-		if(_bozo.maxVelocity.x < 500) _bozo.maxVelocity.x = 500;
+		if(_bozo.maxVelocity.x < 500) {
+			_bozo.maxVelocity.x = 500;
+			_bozoDeitado.maxVelocity.x = 500;
+		}
 
 		#if html5
 		_jumpPressed = FlxG.keys.anyPressed(["UP", "W", "SPACE"]);
@@ -519,8 +525,9 @@ class BozoRunGameState extends FlxState
 		else if (_bozo.velocity.y != 0)
 			_bozo.animation.play("caindo")
 		else if (_playDown) {
-			_bozo.stamp(_bozoDeitado);
-			_bozoDeitado.animation.play("deitando");
+			_bozo.visible = false;
+			_bozoDeitado.visible = true;
+			_bozoDeitado.animation.play("flexao");
 		} else _bozo.animation.play("fugindo");
 	}
 	
@@ -531,6 +538,9 @@ class BozoRunGameState extends FlxState
 		_bozo.animation.add("caindo", [16, 17], 7, false);
 		_bozo.animation.add("morrendo", [22, 23], 15, false);
 		_bozo.animation.add("deitando", [0, 1, 2, 3], 4, true);
+
+		_bozoDeitado.animation.add("deitando", [0, 1, 2, 3], 4, true);
+		_bozoDeitado.animation.add("flexao", [1, 2, 3, 4, 5, 6, 7], 14, true);
 	}
 	
 	private inline function sfxDie():Void
