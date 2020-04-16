@@ -47,7 +47,6 @@ class BozoRunGameState extends FlxState
 	private var _playJump:Bool;
 	private var _jumpPressed:Bool;
 	private var _playDown:Bool;
-	private var _downPressed:Bool;
 	private var _sfxDie:Bool;
 	private var _tooglePausar:Bool=false;
 	private var _auxX:Float = 0.0;
@@ -154,6 +153,8 @@ class BozoRunGameState extends FlxState
 		_bozo.scale.set(1, 1);
 		
 		_bozoDeitado = new FlxSprite().loadGraphic(AssetPaths.jairtomando__png, true, 122, 140);
+		_bozoDeitado.height = 45;
+		_bozoDeitado.offset.set(0, 90);
 		_bozoDeitado.visible = false;
 		// set animations to use this run
 		configuraAnimacoes();
@@ -231,7 +232,7 @@ class BozoRunGameState extends FlxState
 		_laranja3.visible = false;
 		add(_laranja3);
 		
-		_gamePadUp = new FlxButton(0, 0, "", () -> openSubState(new PausadoSubState(new FlxColor(0x99808080))) );
+		_gamePadUp = new FlxButton(0, 0, "", () -> _playDown ? _playDown = false : _jumpPressed = true);
 		_gamePadUp.loadGraphic(AssetPaths.seta__png, true, 36, 36);
 		_gamePadUp.setPosition(FlxG.width - 40, FlxG.height - 85);
 		_gamePadUp.scrollFactor.set(0, 0);
@@ -269,7 +270,6 @@ class BozoRunGameState extends FlxState
 		_playJump = true;
 		_playDown = false;
 		_jumpPressed = false;
-		_downPressed = false;
 		_sfxDie = true;
 		
 		// setup player position
@@ -298,6 +298,21 @@ class BozoRunGameState extends FlxState
 	}
 	
 	private inline function onReiniciar():Void if (_livesTotal > 0) iniciarBozo();// reseta parametros do Bozo
+
+	private inline function processaColisaoBozoLivros(_obj1, _obj2):Void { 
+	if ((_obj1.x + 30) < _obj2.x && (_obj1.y - 30) < _obj2.y && _amountOranges >= 1) {
+		_obj2.destroy();
+		if(_amountOranges >= 1) _amountOranges--;
+
+		switch(_amountOranges){
+			case 0:
+				_laranja1.visible = false;
+			case 1: 
+				_laranja2.visible = false;
+			case 2:
+				_laranja3.visible = false;
+		}
+	} else if(_amountOranges >= 1) _playDown ? FlxG.collide(_bozoDeitado, _books) : FlxG.collide(_bozo, _books); }
 	
 	/*************************
 	 * 
@@ -326,7 +341,7 @@ class BozoRunGameState extends FlxState
 			_change = false;
 		}
 
-		if (FlxG.overlap(_bozo, _oranges, (_bozo, _laranja) -> _laranja.destroy() )){
+		if (_playDown ? FlxG.overlap(_bozoDeitado, _oranges, (_bozoDeitado, _laranja) -> _laranja.destroy() ) : FlxG.overlap(_bozo, _oranges, (_bozo, _laranja) -> _laranja.destroy() ) ){
 			_playJump = false;
 			if(_amountOranges < 3 && ++_amountOranges == _amountOranges)
 				switch(_amountOranges){
@@ -339,37 +354,21 @@ class BozoRunGameState extends FlxState
 				}
 		}
 
+		FlxG.collide(_bozoDeitado, _collisions);
 		if(FlxG.collide(_bozo, _collisions)){
 			_playJump = false;
 			// bozo tá no chão?
 			if (_bozo.velocity.x > 0 && !_jumpPressed) _jump = 0; // reset jump variable
-		}
-
-		FlxG.collide(_bozoDeitado, _collisions);
+		};
 		
 		// colidiu com livro?
-		if (!_piscando && FlxG.overlap(_bozo, _books, 
-			function (_obj1, _obj2) { 
-				if ((_obj1.x + 30) < _obj2.x && (_obj1.y - 30) < _obj2.y && _amountOranges >= 1) {
-					_obj2.destroy();
-					if(_amountOranges >= 1) _amountOranges--;
-			
-					switch(_amountOranges){
-						case 0:
-							_laranja1.visible = false;
-						case 1: 
-							_laranja2.visible = false;
-						case 2:
-							_laranja3.visible = false;
-					}
-				} else if(_amountOranges >= 1) FlxG.collide(_bozo, _books); } )
-			) {
+		if (!_piscando && (!_playDown ? FlxG.overlap(_bozo, _books, processaColisaoBozoLivros) : FlxG.overlap(_bozoDeitado, _books, processaColisaoBozoLivros )) ) {
 			if(xAcceleration > 0 && _sfxDie) FlxG.camera.shake(0.01, 0.2);
 			
 			_playJump = false;
 			_jump = 0;
 
-			if(_amountOranges == 0 && FlxG.collide(_bozo, _books) && _bozo.velocity.x <= 0 && _amountOranges <= 0){
+			if(_amountOranges == 0 && (_playDown ? FlxG.collide(_bozoDeitado, _books) : FlxG.collide(_bozo, _books) ) && (_bozo.velocity.x <= 0 || _bozoDeitado.velocity.x <= 0) && _amountOranges <= 0){
 				// player went splat
 				_jump = -1;
 				_playJump = false;
@@ -383,7 +382,11 @@ class BozoRunGameState extends FlxState
 				}
 				sfxDie();
 			}
-		} else if(_piscando) _bozo.visible = !_bozo.visible;
+		} else if(_piscando){
+			_playDown ? 
+			_bozoDeitado.visible = !_bozoDeitado.visible :
+			_bozo.visible = !_bozo.visible;
+		}
 		
 		playerAnimation();
 		
@@ -409,21 +412,16 @@ class BozoRunGameState extends FlxState
 			_bozo.maxVelocity.x = 500;
 			_bozoDeitado.maxVelocity.x = 500;
 		}
+		//sincroniza posição dos Bozos
+		_bozo.velocity.x > _bozoDeitado.velocity.x ? _bozo.velocity.x = _bozoDeitado.velocity.x : _bozoDeitado.velocity.x = _bozo.velocity.x;
 
 		#if html5
-		_jumpPressed = FlxG.keys.anyPressed(["UP", "W", "SPACE"]);
+		FlxG.keys.anyPressed(["UP"]) ? _playDown ? _playDown = false : _jumpPressed = true : _jumpPressed = false;
+		FlxG.keys.anyPressed(["DOWN"]) ? _playDown = true : null;
 		#end
 
 		//Se Bozo parou ou mal está andando, ele pode morrer (e tocar o som de machucado)
 		if (_bozo.velocity.x > 10) _sfxDie = true;
-
-		#if (FLX_NO_MOUSE || web || mobile)
-		for (touch in FlxG.touches.list)
-        	(touch.justReleased) ?
-				_jumpPressed = false
-			: if (touch.justPressed || touch.pressed)
-				_jumpPressed = true;
-		#end
 		
 		if (_jump != -1 && _jumpPressed)
 		{
@@ -528,7 +526,11 @@ class BozoRunGameState extends FlxState
 			_bozo.visible = false;
 			_bozoDeitado.visible = true;
 			_bozoDeitado.animation.play("flexao");
-		} else _bozo.animation.play("fugindo");
+		} else {
+			_bozo.animation.play("fugindo");
+			_bozoDeitado.visible = false;
+			_bozo.visible = true;
+		}
 	}
 	
 	private inline function configuraAnimacoes():Void

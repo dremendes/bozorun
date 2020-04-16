@@ -13,4 +13,4 @@ Toque e pressione a tela do celular para pular mais alto.
 
 Se estiver num pc, pressione UP ou ESPAÇO para pular.
 
-Source do jogo: [https://github.com/fullynotanalien/bozorun](https://github.com/andremendesc/bozorun)
+Source do jogo: [https://github.com/fullynotanalien/bozorun](https://github.com/fullynotanalien/bozorun)

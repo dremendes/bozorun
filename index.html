@@ -7,6 +7,7 @@
 	<title>Bozorun</title>
 	
 	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<link rel="manifest" href="manifest.json">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 
     <meta property="og:title" content="Bozorun" />
@@ -19,7 +20,20 @@
 	<link rel="shortcut icon" type="image/png" href="./favicon.png">
 	
 	<!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M6YDQS08ZR"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-M6YDQS08ZR"></script>
+	<script>
+	function toggleFullscreen() {
+		let elem = document.querySelector("video");
+
+		if (!document.fullscreenElement) {
+			elem.requestFullscreen().catch(err => {
+			alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+			});
+		} else {
+			document.exitFullscreen();
+		}
+	}
+	</script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
