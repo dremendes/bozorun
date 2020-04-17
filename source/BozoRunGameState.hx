@@ -115,8 +115,8 @@ class BozoRunGameState extends FlxState
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 		FlxG.camera.antialiasing = true;
 
-		// make sure world is wide enough, 100,000 tiles should be enough...
-		FlxG.worldBounds.setSize(TILE_WIDTH * 100000, 400 + _paddingTop*2);
+		// make sure world is wide enough, 200,000 tiles should be enough...
+		FlxG.worldBounds.setSize(TILE_WIDTH * 200000, 400 + _paddingTop*2);
 		FlxG.worldBounds.setPosition(FlxG.worldBounds.left, FlxG.worldBounds.top);
 		
 		configurarFundo();
