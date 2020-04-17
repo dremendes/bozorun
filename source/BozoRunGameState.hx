@@ -13,8 +13,6 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import extension.eightsines.EsOrientation;
 import flixel.ui.FlxVirtualPad;
-import flixel.input.mouse.FlxMouseEventManager;
-
 /**
  * Based on HaxeRunner by william.thompsonj
  */
@@ -244,22 +242,17 @@ class BozoRunGameState extends FlxState
 		
 		_gamePadUp = new FlxButton(0, 0, "");
 		_gamePadUp.loadGraphic(AssetPaths.seta__png, true, 36, 36);
-		_gamePadUp.setPosition(FlxG.width - 40, FlxG.height - 85);
+		_gamePadUp.setPosition(FlxG.width - 40, FlxG.height / 2 - 20);
 		_gamePadUp.scrollFactor.set(0, 0);
 		add(_gamePadUp);
 		
 		_gamePadDown = new FlxButton(0, 0, "", () -> _playDown = true);
 		_gamePadDown.loadGraphic(AssetPaths.seta__png, true, 36, 36);
-		_gamePadDown.setPosition(FlxG.width - 40, FlxG.height - 45);
+		_gamePadDown.setPosition(FlxG.width - 40, FlxG.height / 2 + 20);
 		_gamePadDown.scrollFactor.set(0, 0);
 		_gamePadDown.setFacingFlip(FlxObject.DOWN, false, true);
 		_gamePadDown.facing = FlxObject.DOWN;
 		add(_gamePadDown);
-
-		FlxMouseEventManager.add(_gamePadUp,
-			(s:FlxSprite) -> _taPulando = true,
-			(s:FlxSprite) -> _taPulando = false
-		);
 		
 		_fundoCenario.y += _paddingTop == 0 ? 70 : 170;		
 	}
@@ -436,6 +429,9 @@ class BozoRunGameState extends FlxState
 		//sincroniza posição dos Bozos
 		_bozo.velocity.x > _bozoDeitado.velocity.x ? _bozo.velocity.x = _bozoDeitado.velocity.x : _bozoDeitado.velocity.x = _bozo.velocity.x;
 
+		var _taTocando:Bool = FlxG.touches.getFirst() != null;
+		_taPulando = _taTocando && FlxG.touches.getFirst().justPressedPosition.y < 163 ? true : false;
+		if(_taTocando && FlxG.touches.getFirst().justPressedPosition.y > 163) _playDown = true;
 		
 		#if html5
 		FlxG.keys.anyPressed(["DOWN"]) ? _playDown = true : null;
