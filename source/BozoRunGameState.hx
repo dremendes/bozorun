@@ -13,6 +13,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import extension.eightsines.EsOrientation;
 import flixel.ui.FlxVirtualPad;
+import flixel.input.mouse.FlxMouseEventManager;
 
 /**
  * Based on HaxeRunner by william.thompsonj
@@ -22,6 +23,7 @@ class BozoRunGameState extends FlxState
 	private static inline var TILE_WIDTH:Int = 16;
 	private static inline var TILE_HEIGHT:Int = 16;
 	private static var random = FlxG.random;
+	private static var _taPulando:Bool = false;
 	
 	// base speed for player, stands for xVelocity
 	private static inline var BASE_SPEED:Int = 200;
@@ -105,7 +107,7 @@ class BozoRunGameState extends FlxState
 	override public function create():Void
 	{
 		#if html5
-		FlxG.mouse.visible = false;
+		FlxG.mouse.visible = true;
 		#end
 
 		#if android
@@ -240,7 +242,7 @@ class BozoRunGameState extends FlxState
 		_laranja3.visible = false;
 		add(_laranja3);
 		
-		_gamePadUp = new FlxButton(0, 0, "", () -> { if(_playDown){ levantaBozo(); _playDown = false; } else setTimerPulo(); });
+		_gamePadUp = new FlxButton(0, 0, "");
 		_gamePadUp.loadGraphic(AssetPaths.seta__png, true, 36, 36);
 		_gamePadUp.setPosition(FlxG.width - 40, FlxG.height - 85);
 		_gamePadUp.scrollFactor.set(0, 0);
@@ -253,6 +255,11 @@ class BozoRunGameState extends FlxState
 		_gamePadDown.setFacingFlip(FlxObject.DOWN, false, true);
 		_gamePadDown.facing = FlxObject.DOWN;
 		add(_gamePadDown);
+
+		FlxMouseEventManager.add(_gamePadUp,
+			(s:FlxSprite) -> _taPulando = true,
+			(s:FlxSprite) -> _taPulando = false
+		);
 		
 		_fundoCenario.y += _paddingTop == 0 ? 70 : 170;		
 	}
@@ -429,22 +436,17 @@ class BozoRunGameState extends FlxState
 		//sincroniza posição dos Bozos
 		_bozo.velocity.x > _bozoDeitado.velocity.x ? _bozo.velocity.x = _bozoDeitado.velocity.x : _bozoDeitado.velocity.x = _bozo.velocity.x;
 
+		
 		#if html5
-		FlxG.keys.anyPressed(["UP"]) ? _playDown ? levantaBozo() : setTimerPulo() : _jumpPressed = false;
 		FlxG.keys.anyPressed(["DOWN"]) ? _playDown = true : null;
+		(FlxG.keys.anyPressed(["UP"]) || _taPulando) ? _playDown ? levantaBozo() : setTimerPulo() : _jumpPressed = false;
 		#end
-
+		#if mobile
+		_taPulando ? _playDown ? levantaBozo() : setTimerPulo() : _jumpPressed = false;
+		#end
+		
 		//Se Bozo parou ou mal está andando, ele pode morrer (e tocar o som de machucado)
 		if (_bozo.velocity.x > 10) _sfxDie = true;
-
-		#if (FLX_NO_MOUSE || web || mobile)
-		if (FlxG.touches.getFirst() != null && FlxG.touches.getFirst().justPressedPosition.distanceTo(_gamePadDown.getPosition()) > 10)
-		for (touch in FlxG.touches.list)
-        	(touch.justReleased) ?
-				_jumpPressed = false
-			: if (touch.justPressed || touch.pressed)
-				_jumpPressed = true;
-		#end
 		
 		if (_jump != -1 && _jumpPressed)
 		{

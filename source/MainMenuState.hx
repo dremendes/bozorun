@@ -31,7 +31,7 @@ class MainMenuState extends FlxState
 	
 	override public function create():Void
 	{
-		FlxG.debugger.visible = true;
+		//FlxG.debugger.visible = true;
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 		FlxG.camera.antialiasing = true;
 		EsOrientation.setScreenOrientation(EsOrientation.ORIENTATION_LANDSCAPE);
