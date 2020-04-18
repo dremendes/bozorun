@@ -450,10 +450,10 @@ class BozoRunGameState extends FlxState
 	
 	private inline function atualizaBozo():Void
 	{
-		// acelera, até o máximo de 500
-		if(_bozo.maxVelocity.x < 500) {
-			_bozo.maxVelocity.x = 500;
-			_bozoDeitado.maxVelocity.x = 500;
+		// acelera, até o máximo de 420
+		if(_bozo.maxVelocity.x < 420) {
+			_bozo.maxVelocity.x = 420;
+			_bozoDeitado.maxVelocity.x = 420;
 		}
 		//sincroniza posição dos Bozos
 		_bozo.velocity.x > _bozoDeitado.velocity.x ? _bozo.velocity.x = _bozoDeitado.velocity.x : _bozoDeitado.velocity.x = _bozo.velocity.x;
