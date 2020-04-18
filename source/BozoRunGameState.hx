@@ -275,7 +275,7 @@ class BozoRunGameState extends FlxState
 		_chao.solid = true;
 		_chao.scale.set(1,3);
 		_chao.setPosition(0, 290 + _paddingTop * 2);
-		_chao.setSize(100000, 32);
+		_chao.setSize(200000, 32);
 		
 		_collisions.add(_chao);		
 		_pontaDireitaCenario = (_score-1)*TILE_WIDTH;
@@ -323,8 +323,9 @@ class BozoRunGameState extends FlxState
 		var pluft = new FlxSprite().loadGraphic(AssetPaths.pluft__png, true, 36, 38);
 		pluft.animation.add("explode", [0, 1, 2, 3, 4], false);
 		pluft.animation.play("explode");
+		pluft.scale.set(3, 3);
 		pluft.animation.finishCallback = (s) -> pluft.destroy();
-		pluft.setPosition(x, y);
+		pluft.setPosition(x, y + 15);
 		add(pluft);
 	}
 
@@ -436,7 +437,7 @@ class BozoRunGameState extends FlxState
 		_scoreText.text = Std.string("Recorde" + _score + "m");
 		
 		// camera tracks ghost, not player (prevent tracking jumps)
-		_ghost.x = _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
+		_ghost.x = -50 + _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
 	}
 
 	private inline function levantaBozo():Void
@@ -524,8 +525,8 @@ class BozoRunGameState extends FlxState
 		while (( _bozo.x + FlxG.width) * 2 > _pontaDireitaCenario ) {
 			makeBozoObjects();
 			//deleta livros e laranjas assim que estão fora da tela
-			_books.forEach( (book) -> if (book.x < (_bozo.x - 35)) { book.destroy(); _books.remove(book); });
-			_oranges.forEach( (orange) -> if (orange.x < (_bozo.x - 35)) { orange.destroy(); _oranges.remove(orange); });
+			_books.forEach( (book) -> if (book.x < (_bozo.x - 85)) { book.destroy(); _books.remove(book); });
+			_oranges.forEach( (orange) -> if (orange.x < (_bozo.x - 85)) { orange.destroy(); _oranges.remove(orange); });
 		}
 	}
 
