@@ -1,4 +1,4 @@
-# [bozorun.github.io](http://bozorun.github.io)
+# [bozorun.netlify.app](http://bozorun.netlify.app)
 ![Tela do site](https://raw.githubusercontent.com/fullynotanalien/bozorun/master/assets/images/bozorun2020.png)
 
 # Bozorun
