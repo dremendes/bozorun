@@ -24,7 +24,7 @@ class BozoRunGameState extends FlxState
 	private static var _taPulando:Bool = false;
 	
 	// base speed for player, stands for xVelocity
-	private static inline var BASE_SPEED:Int = 200;
+	private static inline var BASE_SPEED:Int = 150;
 	
 	// how fast the player speeds up going to the right
 	private static inline var xAcceleration:Int = 120;
@@ -43,6 +43,8 @@ class BozoRunGameState extends FlxState
 	
 	private var _bozo:FlxSprite;
 	private var _bozoDeitado:FlxSprite;
+	private var _aviao:FlxSprite;
+	private var _inverteAviao:Int;
 	private var _jump:Float;
 	private var _playJump:Bool;
 	private var _jumpPressed:Bool;
@@ -76,10 +78,10 @@ class BozoRunGameState extends FlxState
 	// collision group for generated platforms
 	private var _collisions:FlxSpriteGroup = new FlxSpriteGroup();
 	private var _books:FlxSpriteGroup = new FlxSpriteGroup();
-	
+	private var _oranges:FlxSpriteGroup = new FlxSpriteGroup();
+	private var _plufts:FlxSpriteGroup = new FlxSpriteGroup();
 	private var _amountOranges:Int=0;
 	
-	private var _oranges:FlxSpriteGroup = new FlxSpriteGroup();
 	
 	// indicate whether the collision group has changed
 	private var _change:Bool;
@@ -133,11 +135,18 @@ class BozoRunGameState extends FlxState
 	
 	private inline function configurarFundo():Void
 	{
-		_fundoCeu = new FlxBackdrop(AssetPaths.sky__png, 0.1, 0, true, false, 0, 0);
-		_fundoCenario = new FlxBackdrop(AssetPaths.bg__png, 0.4, 0, true, false, 0, 0);
+		_fundoCeu = new FlxBackdrop(AssetPaths.sky__png, -2, 0, true, false, 0, 0);
+		_fundoCeu.velocity.x = -20;
+		_fundoCenario = new FlxBackdrop(AssetPaths.bg__png, -5, 0, true, false, 0, 0);
 		_fundoCeu.scale.set(1, _paddingTop == 0 ? 1.2 : 2);
 		_fundoCenario.scale.set(1.5, _paddingTop == 0 ? 1.5 : 2.5);
 		_fundosGrupo = new FlxSpriteGroup();
+
+		_aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 86, 17);
+		_aviao.animation.add("voando", [0,1], 10, true);
+		_aviao.animation.play("voando");
+		_aviao.setPosition(0, 20);
+		add(_aviao);
 
 		_fundosGrupo.add(_fundoCeu);
 		_fundosGrupo.add(_fundoCenario);
@@ -186,6 +195,7 @@ class BozoRunGameState extends FlxState
 		add(_books);
 		add(_oranges);
 		add(_collisions);
+		add(_plufts);
 		
 		_pausarButton = new FlxButton(0, 0, "", () -> openSubState(new PausadoSubState(new FlxColor(0x99808080))) );
 		_pausarButton.loadGraphic(AssetPaths.pausar__png, true, 60, 34);
@@ -240,15 +250,15 @@ class BozoRunGameState extends FlxState
 		_laranja3.visible = false;
 		add(_laranja3);
 		
-		_gamePadUp = new FlxButton(0, 0, "");
+		_gamePadUp = new FlxButton(0, 0, "");	
 		_gamePadUp.loadGraphic(AssetPaths.seta__png, true, 36, 36);
-		_gamePadUp.setPosition(FlxG.width - 40, FlxG.height / 2 - 20);
+		_gamePadUp.setPosition(FlxG.width - 40, FlxG.height / 2 - 35);
 		_gamePadUp.scrollFactor.set(0, 0);
 		add(_gamePadUp);
 		
 		_gamePadDown = new FlxButton(0, 0, "", () -> _playDown = true);
 		_gamePadDown.loadGraphic(AssetPaths.seta__png, true, 36, 36);
-		_gamePadDown.setPosition(FlxG.width - 40, FlxG.height / 2 + 20);
+		_gamePadDown.setPosition(FlxG.width - 40, FlxG.height / 2 + 5);
 		_gamePadDown.scrollFactor.set(0, 0);
 		_gamePadDown.setFacingFlip(FlxObject.DOWN, false, true);
 		_gamePadDown.facing = FlxObject.DOWN;
@@ -308,8 +318,19 @@ class BozoRunGameState extends FlxState
 	
 	private inline function onReiniciar():Void if (_livesTotal > 0) iniciarBozo() else { _bozo.acceleration.x = _bozoDeitado.acceleration.x = _bozo.velocity.x = _bozoDeitado.velocity.x = 0; }// reseta parametros do Bozo
 
+	private inline function tocarPluftAnimacao(x:Float, y:Float):Void
+	{
+		var pluft = new FlxSprite().loadGraphic(AssetPaths.pluft__png, true, 36, 38);
+		pluft.animation.add("explode", [0, 1, 2, 3, 4], false);
+		pluft.animation.play("explode");
+		pluft.animation.finishCallback = (s) -> pluft.destroy();
+		pluft.setPosition(x, y);
+		add(pluft);
+	}
+
 	private inline function processaColisaoBozoLivros(_obj1, _obj2):Void { 
 		if ((_obj1.x + 30) < _obj2.x && (_obj1.y - 30) < _obj2.y && _amountOranges >= 1) {
+			tocarPluftAnimacao(_obj2.x, _obj2.y);
 			_obj2.destroy();
 			if(_amountOranges >= 1) _amountOranges--;
 
@@ -373,15 +394,15 @@ class BozoRunGameState extends FlxState
 		
 		// colidiu com livro?
 		if (!_piscando && (_playDown ? FlxG.overlap(_bozoDeitado, _books, processaColisaoBozoLivros ) : FlxG.overlap(_bozo, _books, processaColisaoBozoLivros)) ) {
-			if(xAcceleration > 0 && _sfxDie) FlxG.camera.shake(0.01, 0.2);
 			
 			_playJump = false;
 			_jump = 0;
-
+			
 			if(_amountOranges == 0 && (_playDown ? FlxG.collide(_bozoDeitado, _books) : FlxG.collide(_bozo, _books) ) && (_bozo.velocity.x <= 0 || _bozoDeitado.velocity.x <= 0) && _amountOranges <= 0){
 				// player went splat
 				_jump = -1;
 				_playJump = false;
+				if(xAcceleration > 0 && _sfxDie) FlxG.camera.shake(0.01, 0.2);
 				if(_sfxDie){
 					_livesTotal -= 1;
 					switch (_livesTotal){
@@ -395,10 +416,17 @@ class BozoRunGameState extends FlxState
 		} else if(_piscando) _bozo.visible = !_bozo.visible;
 		
 		playerAnimation();
+		atualizaAviao();
 		
 		super.update(FlxG.elapsed);
 		
 		updateUI();
+	}
+
+	private inline function atualizaAviao():Void
+	{
+		_inverteAviao = ((_aviao.x + _aviao.width) >= FlxG.width) ? -1 : 1;
+		_aviao.x += _inverteAviao * 0.8;
 	}
 	
 	private inline function updateUI():Void
@@ -430,8 +458,8 @@ class BozoRunGameState extends FlxState
 		_bozo.velocity.x > _bozoDeitado.velocity.x ? _bozo.velocity.x = _bozoDeitado.velocity.x : _bozoDeitado.velocity.x = _bozo.velocity.x;
 
 		var _taTocando:Bool = FlxG.touches.getFirst() != null;
-		_taPulando = _taTocando && FlxG.touches.getFirst().justPressedPosition.y < 163 ? true : false;
-		if(_taTocando && FlxG.touches.getFirst().justPressedPosition.y > 163) _playDown = true;
+		_taPulando = _taTocando && (FlxG.touches.getFirst().justPressedPosition.y < (FlxG.height / 2)) ? true : false;
+		if(_taTocando && (FlxG.touches.getFirst().justPressedPosition.y > (FlxG.height / 2))) _playDown = true;
 		
 		#if html5
 		FlxG.keys.anyPressed(["DOWN"]) ? _playDown = true : null;
@@ -514,13 +542,13 @@ class BozoRunGameState extends FlxState
 										height:Int, 
 										group:FlxSpriteGroup, 
 										isSolid:Bool=true, 
-										isMovable:Bool=true):Void 
+										isImmovable:Bool=true):Void 
 	{
 		var obj = new AssetLoader(Path, width, height);
 			obj.x = gerarIntForaDaFaixaX(_posicaoOcupadaX, 30);
 			obj.y = random.float(140 + _paddingTop * 2, 250 + _paddingTop * 2);
 			obj.solid = isSolid;
-			obj.immovable = isMovable;
+			obj.immovable = isImmovable;
 			_posicaoOcupadaX = obj.x;
 			group.add(obj);
 	}

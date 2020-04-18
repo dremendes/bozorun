@@ -1,5 +1,6 @@
 package;
 
+import flixel.addons.display.FlxBackdrop;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
@@ -7,6 +8,7 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.FlxObject;
 import flixel.util.FlxColor;
+import flixel.addons.display.FlxBackdrop;
 import extension.eightsines.EsOrientation;
 
 /**
@@ -20,7 +22,6 @@ class MainMenuState extends FlxState
 	private var bozoRun:FlxSprite;
 	private var BtnRun:FlxButton;
 	private var BtnColetiva:FlxButton;
-	private var ceu:FlxSprite;
 	private var pato:FlxSprite;
 	private var aviao:FlxSprite;
 	private var pedestal:FlxSprite;
@@ -28,6 +29,7 @@ class MainMenuState extends FlxState
 	private var stringTitulo:InaraString;
 	private var paddingSide:Float = (FlxG.width - 300) / 2;
 	private var paddingTop:Float = (FlxG.height - 300) / 2;
+	private var fundoCeu:FlxBackdrop;
 	
 	override public function create():Void
 	{
@@ -42,19 +44,16 @@ class MainMenuState extends FlxState
 		FlxG.mouse.visible = true;
 		#end
 
-		ceu = new FlxSprite().loadGraphic(AssetPaths.sky__png, false, 301, 300);
-		ceu.scale.set(0.995, 1);
-		ceu.x += paddingSide;
-		ceu.y += paddingTop;
-		ceu.scale.set(FlxG.width/300, FlxG.height/300);
-		add(ceu);
+		fundoCeu = new FlxBackdrop(AssetPaths.sky__png, -2, 0, true, false, 0, 0);
+		fundoCeu.scale.set(FlxG.width/300, FlxG.height/300);
+		fundoCeu.y -= 40;
+		fundoCeu.velocity.x = -20;
+		add(fundoCeu);
 		
 		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 86, 17);
 		aviao.animation.add("voando", [0,1], 10, true);
 		aviao.animation.play("voando");
 		aviao.setPosition(0, 20);
-		aviao.x += paddingSide;
-		aviao.y += paddingTop;
 		aviao.scale.set(FlxG.width/300, FlxG.height/300);
 		add(aviao);
 		
@@ -168,7 +167,7 @@ class MainMenuState extends FlxState
 		bozoRun.destroy();
 		BtnRun.destroy();
 		BtnColetiva.destroy();
-		ceu.destroy();
+		fundoCeu.destroy();
 		pato.destroy();
 		aviao.destroy();
 		pedestal.destroy();
