@@ -414,6 +414,7 @@ class BozoRunGameState extends FlxState
 				}
 				sfxDie();
 			}
+			if(!_piscando) FlxG.collide(_playDown ? _bozoDeitado : _bozo, _books);
 		} else if(_piscando) _bozo.visible = !_bozo.visible;
 		
 		playerAnimation();
