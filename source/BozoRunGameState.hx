@@ -117,8 +117,8 @@ class BozoRunGameState extends FlxState
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 		FlxG.camera.antialiasing = true;
 
-		// make sure world is wide enough, 200,000 tiles should be enough...
-		FlxG.worldBounds.setSize(TILE_WIDTH * 200000, 400 + _paddingTop*2);
+		// make sure world is wide enough, 400,000 tiles should be enough...
+		FlxG.worldBounds.setSize(TILE_WIDTH * 400000, 400 + _paddingTop*2);
 		FlxG.worldBounds.setPosition(FlxG.worldBounds.left, FlxG.worldBounds.top);
 		
 		configurarFundo();
@@ -275,7 +275,7 @@ class BozoRunGameState extends FlxState
 		_chao.solid = true;
 		_chao.scale.set(1,3);
 		_chao.setPosition(0, 290 + _paddingTop * 2);
-		_chao.setSize(200000, 32);
+		_chao.setSize(400000, 32);
 		
 		_collisions.add(_chao);		
 		_pontaDireitaCenario = (_score-1)*TILE_WIDTH;
@@ -394,8 +394,7 @@ class BozoRunGameState extends FlxState
 		};
 		
 		// colidiu com livro?
-		if (!_piscando && (_playDown ? FlxG.overlap(_bozoDeitado, _books, processaColisaoBozoLivros ) : FlxG.overlap(_bozo, _books, processaColisaoBozoLivros)) ) {
-			
+		if (!_piscando && (_playDown ? FlxG.overlap(_bozoDeitado, _books, processaColisaoBozoLivros ) : FlxG.overlap(_bozo, _books, processaColisaoBozoLivros)) ) {	
 			_playJump = false;
 			_jump = 0;
 			

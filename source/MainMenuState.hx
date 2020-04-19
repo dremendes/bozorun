@@ -77,8 +77,8 @@ class MainMenuState extends FlxState
 		add(pato);
 		
 		bozoEspirra = new FlxSprite();
-		bozoEspirra.loadGraphic(AssetPaths.bozotile__png, true, 150, 150, true);
-		bozoEspirra.animation.add("idle", [12, 13], 4, true);
+		bozoEspirra.loadGraphic(AssetPaths.bozotile__png, true, 120, 140, true);
+		bozoEspirra.animation.add("idle", [22, 23, 24, 25, 26, 27, 28, 29], 8, true);
 		bozoEspirra.animation.play("idle");
 		bozoEspirra.setPosition(0,150);
 		bozoEspirra.x += paddingSide;
