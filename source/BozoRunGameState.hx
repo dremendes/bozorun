@@ -44,7 +44,6 @@ class BozoRunGameState extends FlxState
 	private var _bozo:FlxSprite;
 	private var _bozoDeitado:FlxSprite;
 	private var _aviao:FlxSprite;
-	private var _inverteAviao:Int;
 	private var _jump:Float;
 	private var _playJump:Bool;
 	private var _jumpPressed:Bool;
@@ -52,7 +51,7 @@ class BozoRunGameState extends FlxState
 	private var _sfxDie:Bool;
 	private var _tooglePausar:Bool=false;
 	private var _auxX:Float = 0.0;
-	private var _livesTotal = 3;
+	private var _totalVidas = 3;
 	private var _live0:FlxSprite;
 	private var _live1:FlxSprite;
 	private var _live2:FlxSprite;
@@ -146,10 +145,10 @@ class BozoRunGameState extends FlxState
 		_aviao.animation.add("voando", [0,1], 10, true);
 		_aviao.animation.play("voando");
 		_aviao.setPosition(0, 20);
-		add(_aviao);
 
 		_fundosGrupo.add(_fundoCeu);
 		_fundosGrupo.add(_fundoCenario);
+		_fundosGrupo.add(_aviao);
 		
 		add(_fundosGrupo);
 	}
@@ -316,7 +315,9 @@ class BozoRunGameState extends FlxState
 		_timerPiscando.run = () -> { _piscando = false; _bozo.visible = true; _timerPiscando.stop(); }
 	}
 	
-	private inline function onReiniciar():Void if (_livesTotal > 0) iniciarBozo() else { _bozo.acceleration.x = _bozoDeitado.acceleration.x = _bozo.velocity.x = _bozoDeitado.velocity.x = 0; }// reseta parametros do Bozo
+	private inline function onReiniciar():Void 
+		_totalVidas > 0 ? iniciarBozo() 
+		: _bozo.acceleration.x = _bozoDeitado.acceleration.x = _bozo.velocity.x = _bozoDeitado.velocity.x = 0;// reseta parametros do Bozo
 
 	private inline function tocarPluftAnimacao(x:Float, y:Float):Void
 	{
@@ -404,8 +405,8 @@ class BozoRunGameState extends FlxState
 				_playJump = false;
 				if(xAcceleration > 0 && _sfxDie) FlxG.camera.shake(0.01, 0.2);
 				if(_sfxDie){
-					_livesTotal -= 1;
-					switch (_livesTotal){
+					_totalVidas -= 1;
+					switch (_totalVidas){
 						case 2:	_live2.animation.play("morto");
 						case 1:	_live1.animation.play("morto");
 						case 0:	_live0.animation.play("morto");
@@ -423,11 +424,7 @@ class BozoRunGameState extends FlxState
 		updateUI();
 	}
 
-	private inline function atualizaAviao():Void
-	{
-		_inverteAviao = ((_aviao.x + _aviao.width) >= FlxG.width) ? -1 : 1;
-		_aviao.x += _inverteAviao * 0.8;
-	}
+	private inline function atualizaAviao():Void _aviao.x += 6.75;
 	
 	private inline function updateUI():Void
 	{
