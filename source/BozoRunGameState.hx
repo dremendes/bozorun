@@ -344,7 +344,7 @@ class BozoRunGameState extends FlxState
 				case 2:
 					_laranja3.visible = false;
 			}
-		} else FlxG.collide(_bozo, _books);
+		}
 	}
 	
 	/*************************
