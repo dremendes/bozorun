@@ -413,7 +413,6 @@ class BozoRunGameState extends FlxState
 						case 0:	_live0.animation.play("morto");
 					}
 				}
-				FlxG.sound.play(AssetPaths.tiro__ogg);
 				sfxDie();
 			}
 			if(!_piscando) FlxG.collide(_playDown ? _bozoDeitado : _bozo, _books);
@@ -606,6 +605,7 @@ class BozoRunGameState extends FlxState
 	private inline function sfxDie():Void
 		if (_sfxDie) {
 			FlxG.sound.play(AssetPaths.goblin_9__ogg);
+			FlxG.sound.play(AssetPaths.tiro__ogg);
 			_sfxDie = false;
 			var timerPraReiniciar = new haxe.Timer(500);
 			timerPraReiniciar.run = () -> { _playDown = false; onReiniciar(); timerPraReiniciar.stop(); }
