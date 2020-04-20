@@ -334,6 +334,7 @@ class BozoRunGameState extends FlxState
 		if ((_obj1.x + 30) < _obj2.x && (_obj1.y - 60) < _obj2.y && _amountOranges >= 1) {
 			tocarPluftAnimacao(_obj2.x, _obj2.y);
 			_obj2.destroy();
+			FlxG.sound.play(AssetPaths.tiro__ogg);
 			if(_amountOranges >= 1) _amountOranges--;
 
 			switch(_amountOranges){
@@ -412,6 +413,7 @@ class BozoRunGameState extends FlxState
 						case 0:	_live0.animation.play("morto");
 					}
 				}
+				FlxG.sound.play(AssetPaths.tiro__ogg);
 				sfxDie();
 			}
 			if(!_piscando) FlxG.collide(_playDown ? _bozoDeitado : _bozo, _books);
@@ -626,6 +628,7 @@ class BozoRunGameState extends FlxState
 		_collisions.destroy();
 		_books.destroy();
 		_oranges.destroy();
+		_plufts.destroy();
 		_pausarButton.destroy();
 		_voltarButton.destroy();
 		_scoreText.destroy();
