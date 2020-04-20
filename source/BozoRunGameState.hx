@@ -331,7 +331,7 @@ class BozoRunGameState extends FlxState
 	}
 
 	private inline function processaColisaoBozoLivros(_obj1, _obj2):Void { 
-		if ((_obj1.x + 30) < _obj2.x && (_obj1.y - 30) < _obj2.y && _amountOranges >= 1) {
+		if ((_obj1.x + 30) < _obj2.x && (_obj1.y - 50) < _obj2.y && _amountOranges >= 1) {
 			tocarPluftAnimacao(_obj2.x, _obj2.y);
 			_obj2.destroy();
 			if(_amountOranges >= 1) _amountOranges--;
