@@ -45,7 +45,7 @@ class BozoRunGameState extends FlxState
 	private var _bozoDeitado:FlxSprite;
 	private var _aviao:FlxSprite;
 	private var _jump:Float;
-	private var _playJump:Bool;
+	private var _tocarPulo:Bool;
 	private var _jumpPressed:Bool;
 	private var _playDown:Bool;
 	private var _sfxDie:Bool;
@@ -75,15 +75,15 @@ class BozoRunGameState extends FlxState
 	private var _chao:FlxBackdrop;
 	
 	// collision group for generated platforms
-	private var _collisions:FlxSpriteGroup = new FlxSpriteGroup();
-	private var _books:FlxSpriteGroup = new FlxSpriteGroup();
-	private var _oranges:FlxSpriteGroup = new FlxSpriteGroup();
+	private var _grupoChao:FlxSpriteGroup = new FlxSpriteGroup();
+	private var _grupoLivros:FlxSpriteGroup = new FlxSpriteGroup();
+	private var _grupoLaranjas:FlxSpriteGroup = new FlxSpriteGroup();
 	private var _plufts:FlxSpriteGroup = new FlxSpriteGroup();
-	private var _amountOranges:Int=0;
+	private var _quantiaLaranjas:Int=0;
 	
 	
 	// indicate whether the collision group has changed
-	private var _change:Bool;
+	private var _mudou:Bool;
 	
 	// score counter and timer
 	private var _score:Int;
@@ -191,9 +191,9 @@ class BozoRunGameState extends FlxState
 		//Abaixo adiciono os grupos dos objetos ao estado antes da interface 
 		//pra que os objetos do hud fiquem na frente, veja:
 		//https://groups.google.com/d/msg/haxeflixel/DrDXEani_oY/Om_KzuCVWeEJ
-		add(_books);
-		add(_oranges);
-		add(_collisions);
+		add(_grupoLivros);
+		add(_grupoLaranjas);
+		add(_grupoChao);
 		add(_plufts);
 		
 		_pausarButton = new FlxButton(0, 0, "", () -> openSubState(new PausadoSubState(new FlxColor(0x99808080))) );
@@ -276,7 +276,7 @@ class BozoRunGameState extends FlxState
 		_chao.setPosition(0, 290 + _paddingTop * 2);
 		_chao.setSize(400000, 32);
 		
-		_collisions.add(_chao);		
+		_grupoChao.add(_chao);		
 		_pontaDireitaCenario = (_score-1)*TILE_WIDTH;
 	}
 	
@@ -284,7 +284,7 @@ class BozoRunGameState extends FlxState
 	{
 		// setup jump height
 		_jump = -1;
-		_playJump = true;
+		_tocarPulo = true;
 		_playDown = false;
 		_jumpPressed = false;
 		_sfxDie = true;
@@ -319,25 +319,25 @@ class BozoRunGameState extends FlxState
 		_totalVidas > 0 ? iniciarBozo() 
 		: _bozo.acceleration.x = _bozoDeitado.acceleration.x = _bozo.velocity.x = _bozoDeitado.velocity.x = 0;// reseta parametros do Bozo
 
-	private inline function tocarPluftAnimacao(x:Float, y:Float):Void
+	private inline function tocarPluftAnimacao(x:Float, y:Float, scale:Float=3):Void
 	{
 		var pluft = new FlxSprite().loadGraphic(AssetPaths.pluft__png, true, 36, 38);
 		pluft.animation.add("explode", [0, 1, 2, 3, 4], false);
 		pluft.animation.play("explode");
-		pluft.scale.set(3, 3);
+		pluft.scale.set(scale, scale);
 		pluft.animation.finishCallback = (s) -> pluft.destroy();
 		pluft.setPosition(x, y + 15);
 		add(pluft);
 	}
 
 	private inline function processaColisaoBozoLivros(_obj1, _obj2):Void { 
-		if ((_obj1.x + 30) < _obj2.x && (_obj1.y - 60) < _obj2.y && _amountOranges >= 1) {
+		if ((_obj1.x + 30) < _obj2.x && (_obj1.y - 60) < _obj2.y && _quantiaLaranjas >= 1) {
 			tocarPluftAnimacao(_obj2.x, _obj2.y);
 			_obj2.destroy();
 			FlxG.sound.play(AssetPaths.tiro__ogg);
-			if(_amountOranges >= 1) _amountOranges--;
+			if(_quantiaLaranjas >= 1) _quantiaLaranjas--;
 
-			switch(_amountOranges){
+			switch(_quantiaLaranjas){
 				case 0:
 					_laranja1.visible = false;
 				case 1: 
@@ -365,20 +365,20 @@ class BozoRunGameState extends FlxState
 		atualizaBozo();
 		
 		// collision group changed?
-		if (_change) {
+		if (_mudou) {
 			// update collision group so it doesn't freak out
-			_collisions.update(FlxG.elapsed);
-			_oranges.update(FlxG.elapsed);
-			_books.update(FlxG.elapsed);
+			_grupoChao.update(FlxG.elapsed);
+			_grupoLaranjas.update(FlxG.elapsed);
+			_grupoLivros.update(FlxG.elapsed);
 			
 			// collision group is up to date
-			_change = false;
+			_mudou = false;
 		}
 
-		if (_playDown ? FlxG.overlap(_bozoDeitado, _oranges, (_bozoDeitado, _laranja) -> _laranja.destroy() ) : FlxG.overlap(_bozo, _oranges, (_bozo, _laranja) -> _laranja.destroy() ) ){
-			_playJump = false;
-			if(_amountOranges < 3 && ++_amountOranges == _amountOranges)
-				switch(_amountOranges){
+		if (_playDown ? FlxG.overlap(_bozoDeitado, _grupoLaranjas, (_bozoDeitado, _laranja) -> _laranja.destroy() ) : FlxG.overlap(_bozo, _grupoLaranjas, (_bozo, _laranja) -> _laranja.destroy() ) ){
+			_tocarPulo = false;
+			if(_quantiaLaranjas < 3 && ++_quantiaLaranjas == _quantiaLaranjas)
+				switch(_quantiaLaranjas){
 					case 1:
 						_laranja1.visible = true;
 					case 2: 
@@ -388,22 +388,22 @@ class BozoRunGameState extends FlxState
 				}
 		}
 
-		FlxG.collide(_bozoDeitado, _collisions);
-		if(FlxG.collide(_bozo, _collisions)){
-			_playJump = false;
+		FlxG.collide(_bozoDeitado, _grupoChao);
+		if(FlxG.collide(_bozo, _grupoChao)){
+			_tocarPulo = false;
 			// bozo tá no chão?
 			if (_bozo.velocity.x > 0 && !_jumpPressed) _jump = 0; // reset jump variable
 		};
 		
 		// colidiu com livro?
-		if (!_piscando && (_playDown ? FlxG.overlap(_bozoDeitado, _books, processaColisaoBozoLivros ) : FlxG.overlap(_bozo, _books, processaColisaoBozoLivros)) ) {	
-			_playJump = false;
+		if (!_piscando && (_playDown ? FlxG.overlap(_bozoDeitado, _grupoLivros, processaColisaoBozoLivros ) : FlxG.overlap(_bozo, _grupoLivros, processaColisaoBozoLivros)) ) {	
+			_tocarPulo = false;
 			_jump = 0;
 			
-			if(_amountOranges == 0 && (_playDown ? FlxG.collide(_bozoDeitado, _books) : FlxG.collide(_bozo, _books) ) && (_bozo.velocity.x <= 0 || _bozoDeitado.velocity.x <= 0) && _amountOranges <= 0){
+			if(_quantiaLaranjas == 0 && (_playDown ? FlxG.collide(_bozoDeitado, _grupoLivros) : FlxG.collide(_bozo, _grupoLivros) ) && (_bozo.velocity.x <= 0 || _bozoDeitado.velocity.x <= 0) && _quantiaLaranjas <= 0){
 				// player went splat
 				_jump = -1;
-				_playJump = false;
+				_tocarPulo = false;
 				if(xAcceleration > 0 && _sfxDie) FlxG.camera.shake(0.01, 0.2);
 				if(_sfxDie){
 					_totalVidas -= 1;
@@ -415,7 +415,7 @@ class BozoRunGameState extends FlxState
 				}
 				sfxDie();
 			}
-			if(!_piscando) FlxG.collide(_playDown ? _bozoDeitado : _bozo, _books);
+			if(!_piscando) FlxG.collide(_playDown ? _bozoDeitado : _bozo, _grupoLivros);
 		} else if(_piscando) _bozo.visible = !_bozo.visible;
 		
 		playerAnimation();
@@ -474,14 +474,17 @@ class BozoRunGameState extends FlxState
 		if (_jump != -1 && _jumpPressed)
 		{
 			// play jump sound just once
-			if (_jump == 0) FlxG.sound.play(AssetPaths.goblin_1__ogg);
+			if (_jump == 0) {
+				FlxG.sound.play(AssetPaths.goblin_1__ogg);
+				tocarPluftAnimacao(_bozo.x + 15, _bozo.y + 80, 1.5);
+			}
 			
 			// Duration of jump
 			_jump += FlxG.elapsed;
 			
 			if (_bozo.velocity.y >= 0) {
 				// play jump animation
-				_playJump = true;
+				_tocarPulo = true;
 				
 				// get player off the platform
 				_bozo.y -= 1;
@@ -501,7 +504,7 @@ class BozoRunGameState extends FlxState
 				_jump = -1;
 				
 				// make sure fall animation plays
-				_playJump = true;
+				_tocarPulo = true;
 			}
 		} else if (!_jumpPressed || _jump == -1) {
 			if (_bozo.velocity.y < 0) {
@@ -523,8 +526,8 @@ class BozoRunGameState extends FlxState
 		while (( _bozo.x + FlxG.width) * 2 > _pontaDireitaCenario ) {
 			makeBozoObjects();
 			//deleta livros e laranjas assim que estão fora da tela
-			_books.forEach( (book) -> if (book.x < (_bozo.x - 85)) { book.destroy(); _books.remove(book); });
-			_oranges.forEach( (orange) -> if (orange.x < (_bozo.x - 85)) { orange.destroy(); _oranges.remove(orange); });
+			_grupoLivros.forEach( (book) -> if (book.x < (_bozo.x - 85)) { book.destroy(); _grupoLivros.remove(book); });
+			_grupoLaranjas.forEach( (orange) -> if (orange.x < (_bozo.x - 85)) { orange.destroy(); _grupoLaranjas.remove(orange); });
 		}
 	}
 
@@ -556,10 +559,10 @@ class BozoRunGameState extends FlxState
 	{		
 		_pontaDireitaCenario += TILE_WIDTH*2;
 
-		if (_pontaDireitaCenario % 200 == 0) if(random.int(0, 2) % 2 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _books, true, true);
-		if (_pontaDireitaCenario % 350 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 23, 23, _oranges, true, false);
+		if (_pontaDireitaCenario % 200 == 0) if(random.int(0, 2) % 2 == 0) setObjAndAdd2Group(_arrayLivros[random.int(0, 5)] , 45, 55, _grupoLivros, true, true);
+		if (_pontaDireitaCenario % 350 == 0) setObjAndAdd2Group(AssetPaths.laranja__png, 23, 23, _grupoLaranjas, true, false);
 
-		_change = true;
+		_mudou = true;
 	}
 
 	private inline function bozoDeitadoAnimPos(animacaoNome:String) if(animacaoNome == "deitando") _bozoDeitado.animation.play("flexao");
@@ -570,7 +573,7 @@ class BozoRunGameState extends FlxState
 			_playDown ?
 				_bozoDeitado.animation.play("morrendoDeitado") :
 				_bozo.animation.play("morrendo");
-		else if (_playJump)
+		else if (_tocarPulo)
 			_bozo.animation.play("pulando")
 		else if (_bozo.velocity.y != 0)
 			_bozo.animation.play("caindo")
@@ -625,9 +628,9 @@ class BozoRunGameState extends FlxState
 		_fundoCenario.destroy();
 		_chao.destroy();
 		_fundosGrupo.destroy();
-		_collisions.destroy();
-		_books.destroy();
-		_oranges.destroy();
+		_grupoChao.destroy();
+		_grupoLivros.destroy();
+		_grupoLaranjas.destroy();
 		_plufts.destroy();
 		_pausarButton.destroy();
 		_voltarButton.destroy();
