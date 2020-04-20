@@ -607,8 +607,10 @@ class BozoRunGameState extends FlxState
 	
 	private inline function sfxDie():Void
 		if (_sfxDie) {
-			FlxG.sound.play(AssetPaths.goblin_9__ogg);
 			FlxG.sound.play(AssetPaths.tiro__ogg);
+			var timerTiro = new haxe.Timer(400);
+			timerTiro.run = () -> { FlxG.sound.play(AssetPaths.goblin_9__ogg); timerTiro.stop(); }
+
 			_sfxDie = false;
 			var timerPraReiniciar = new haxe.Timer(500);
 			timerPraReiniciar.run = () -> { _playDown = false; onReiniciar(); timerPraReiniciar.stop(); }
