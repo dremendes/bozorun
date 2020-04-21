@@ -53,8 +53,7 @@ class MainMenuState extends FlxState
 		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 86, 17);
 		aviao.animation.add("voando", [0,1], 10, true);
 		aviao.animation.play("voando");
-		aviao.setPosition(0, 20);
-		aviao.scale.set(FlxG.width/300, FlxG.height/300);
+		aviao.setPosition(-30, 40);
 		add(aviao);
 		
 		background = new FlxSprite();
@@ -73,7 +72,6 @@ class MainMenuState extends FlxState
 		pato.facing = FlxObject.LEFT;
 		pato.x += paddingSide;
 		pato.y += paddingTop;
-		pato.scale.set(FlxG.width/300, FlxG.height/300);
 		add(pato);
 		
 		bozoEspirra = new FlxSprite();
@@ -142,7 +140,7 @@ class MainMenuState extends FlxState
 	{
 		aviao.x += 0.8;
 
-		if(aviao.x >= 305 + paddingSide) aviao.x = 0 + paddingSide;
+		if(aviao.x >= 450 + paddingSide) aviao.x = -30 + paddingSide;
 
 		pato.x += 0.4 * multiplier;
 

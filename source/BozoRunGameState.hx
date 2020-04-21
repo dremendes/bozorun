@@ -12,7 +12,6 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import extension.eightsines.EsOrientation;
-import flixel.ui.FlxVirtualPad;
 /**
  * Based on HaxeRunner by william.thompsonj
  */
@@ -144,7 +143,7 @@ class BozoRunGameState extends FlxState
 		_aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 86, 17);
 		_aviao.animation.add("voando", [0,1], 10, true);
 		_aviao.animation.play("voando");
-		_aviao.setPosition(0, 20);
+		_aviao.setPosition(0, 40);
 
 		_fundosGrupo.add(_fundoCeu);
 		_fundosGrupo.add(_fundoCenario);
