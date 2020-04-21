@@ -6,6 +6,9 @@ import flixel.FlxSubState;
 class PausadoSubState extends FlxSubState
 {
 	private var _botaoFechar:FlxButton;
+	private var tocarMusica:Bool=true;
+	private var tocarSons:Bool=true;
+	
 
 	override public function create():Void
 	{
@@ -15,5 +18,8 @@ class PausadoSubState extends FlxSubState
 		_botaoFechar.loadGraphic(AssetPaths.pausar__png, true, 60, 34);
 		add(_botaoFechar);
 	}
+
+	public function toggleMusic() tocarMusica != tocarMusica;
+	public function toggleSons() tocarSons != tocarSons;
 
 }

@@ -376,6 +376,7 @@ class BozoRunGameState extends FlxState
 
 		if (_playDown ? FlxG.overlap(_bozoDeitado, _grupoLaranjas, (_bozoDeitado, _laranja) -> _laranja.destroy() ) : FlxG.overlap(_bozo, _grupoLaranjas, (_bozo, _laranja) -> _laranja.destroy() ) ){
 			_tocarPulo = false;
+			FlxG.sound.play(AssetPaths.laranja__ogg);
 			if(_quantiaLaranjas < 3 && ++_quantiaLaranjas == _quantiaLaranjas)
 				switch(_quantiaLaranjas){
 					case 1:
