@@ -50,7 +50,7 @@ class MainMenuState extends FlxState
 		fundoCeu.velocity.x = -20;
 		add(fundoCeu);
 		
-		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 86, 17);
+		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 91, 17);
 		aviao.animation.add("voando", [0,1], 10, true);
 		aviao.animation.play("voando");
 		aviao.setPosition(-30, 40);
@@ -154,7 +154,7 @@ class MainMenuState extends FlxState
 			multiplier = multiplier*-1;
 		}
 
-		super.update(FlxG.elapsed);
+		super.update(elapsed);
 	}
 	
 	override public function destroy():Void

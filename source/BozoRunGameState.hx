@@ -21,6 +21,8 @@ class BozoRunGameState extends FlxState
 	private static inline var TILE_HEIGHT:Int = 16;
 	private static var random = FlxG.random;
 	private static var _taPulando:Bool = false;
+	private static var _tocarSons:Bool=true;
+	private var _menuPausadoSubState:PausadoSubState;
 	
 	// base speed for player, stands for xVelocity
 	private static inline var BASE_SPEED:Int = 150;
@@ -118,6 +120,9 @@ class BozoRunGameState extends FlxState
 		// make sure world is wide enough, 400,000 tiles should be enough...
 		FlxG.worldBounds.setSize(TILE_WIDTH * 400000, 400 + _paddingTop*2);
 		FlxG.worldBounds.setPosition(FlxG.worldBounds.left, FlxG.worldBounds.top);
+		destroySubStates = false; //Necessário pra que o substate continue acessível
+
+		_menuPausadoSubState = new PausadoSubState(new FlxColor(0x99808080)); 
 		
 		configurarFundo();
 		configurarInterface();
@@ -140,7 +145,7 @@ class BozoRunGameState extends FlxState
 		_fundoCenario.scale.set(1.5, _paddingTop == 0 ? 1.5 : 2.5);
 		_fundosGrupo = new FlxSpriteGroup();
 
-		_aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 86, 17);
+		_aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 91, 17);
 		_aviao.animation.add("voando", [0,1], 10, true);
 		_aviao.animation.play("voando");
 		_aviao.setPosition(0, 40);
@@ -195,7 +200,7 @@ class BozoRunGameState extends FlxState
 		add(_grupoChao);
 		add(_plufts);
 		
-		_pausarButton = new FlxButton(0, 0, "", () -> openSubState(new PausadoSubState(new FlxColor(0x99808080))) );
+		_pausarButton = new FlxButton(0, 0, "", () -> openSubState(_menuPausadoSubState));
 		_pausarButton.loadGraphic(AssetPaths.pausar__png, true, 60, 34);
 		_pausarButton.setPosition(124, 4);
 		_pausarButton.scrollFactor.set(0, 0);
@@ -333,7 +338,7 @@ class BozoRunGameState extends FlxState
 		if ((_obj1.x + 30) < _obj2.x && (_obj1.y - 60) < _obj2.y && _quantiaLaranjas >= 1) {
 			tocarPluftAnimacao(_obj2.x, _obj2.y);
 			_obj2.destroy();
-			FlxG.sound.play(AssetPaths.tiro__ogg);
+			if(_tocarSons) FlxG.sound.play(AssetPaths.tiro__ogg);
 			if(_quantiaLaranjas >= 1) _quantiaLaranjas--;
 
 			switch(_quantiaLaranjas){
@@ -346,7 +351,9 @@ class BozoRunGameState extends FlxState
 			}
 		}
 	}
-	
+
+	private inline function atualizaControlesOpcoes():Void _tocarSons = _menuPausadoSubState.tocarSons;
+
 	/*************************
 	 * 
 	 * Updaters
@@ -358,25 +365,25 @@ class BozoRunGameState extends FlxState
 	 *************************/
 	override public function update(elapsed:Float):Void
 	{		
-		// platform garbage handling
-		updatePlatforms();
+		// objects garbage collector
+		atualizaObjetos();
+		atualizaControlesOpcoes();
 		
-		atualizaBozo();
+		atualizaBozo(elapsed);
 		
 		// collision group changed?
 		if (_mudou) {
 			// update collision group so it doesn't freak out
-			_grupoChao.update(FlxG.elapsed);
-			_grupoLaranjas.update(FlxG.elapsed);
-			_grupoLivros.update(FlxG.elapsed);
+			_grupoChao.update(elapsed);
+			_grupoLaranjas.update(elapsed);
+			_grupoLivros.update(elapsed);
 			
-			// collision group is up to date
-			_mudou = false;
+			_mudou = false; // collision group is up to date
 		}
 
 		if (_playDown ? FlxG.overlap(_bozoDeitado, _grupoLaranjas, (_bozoDeitado, _laranja) -> _laranja.destroy() ) : FlxG.overlap(_bozo, _grupoLaranjas, (_bozo, _laranja) -> _laranja.destroy() ) ){
 			_tocarPulo = false;
-			FlxG.sound.play(AssetPaths.laranja__ogg);
+			if(_tocarSons) FlxG.sound.play(AssetPaths.laranja__ogg);
 			if(_quantiaLaranjas < 3 && ++_quantiaLaranjas == _quantiaLaranjas)
 				switch(_quantiaLaranjas){
 					case 1:
@@ -421,7 +428,7 @@ class BozoRunGameState extends FlxState
 		playerAnimation();
 		atualizaAviao();
 		
-		super.update(FlxG.elapsed);
+		super.update(elapsed);
 		
 		updateUI();
 	}
@@ -446,7 +453,7 @@ class BozoRunGameState extends FlxState
 		}
 	}
 	
-	private inline function atualizaBozo():Void
+	private inline function atualizaBozo(elapsed:Float):Void
 	{
 		// acelera, até o máximo de 420
 		if(_bozo.maxVelocity.x < 420) {
@@ -475,12 +482,12 @@ class BozoRunGameState extends FlxState
 		{
 			// play jump sound just once
 			if (_jump == 0) {
-				FlxG.sound.play(AssetPaths.goblin_1__ogg);
+				if(_tocarSons) FlxG.sound.play(AssetPaths.goblin_1__ogg);
 				tocarPluftAnimacao(_bozo.x + 15, _bozo.y + 80, 1.5);
 			}
 			
 			// Duration of jump
-			_jump += FlxG.elapsed;
+			_jump += elapsed;
 			
 			if (_bozo.velocity.y >= 0) {
 				// play jump animation
@@ -520,7 +527,7 @@ class BozoRunGameState extends FlxState
 		}
 	}
 	
-	private inline function updatePlatforms():Void
+	private inline function atualizaObjetos():Void
 	{		
 		// confere se precisa fazer mais chão
 		while (( _bozo.x + FlxG.width) * 2 > _pontaDireitaCenario ) {
@@ -607,9 +614,9 @@ class BozoRunGameState extends FlxState
 	
 	private inline function sfxDie():Void
 		if (_sfxDie) {
-			FlxG.sound.play(AssetPaths.tiro__ogg);
+			if(_tocarSons) FlxG.sound.play(AssetPaths.tiro__ogg);
 			var timerTiro = new haxe.Timer(400);
-			timerTiro.run = () -> { FlxG.sound.play(AssetPaths.goblin_9__ogg); timerTiro.stop(); }
+			timerTiro.run = () -> { if(_tocarSons) FlxG.sound.play(AssetPaths.goblin_9__ogg); timerTiro.stop(); }
 
 			_sfxDie = false;
 			var timerPraReiniciar = new haxe.Timer(500);
