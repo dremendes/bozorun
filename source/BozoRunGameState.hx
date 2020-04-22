@@ -200,13 +200,13 @@ class BozoRunGameState extends FlxState
 		add(_grupoChao);
 		add(_plufts);
 		
-		_pausarButton = new FlxButton(0, 0, "", () -> openSubState(_menuPausadoSubState));
+		_pausarButton = new FlxButton(0, 0, "", () -> {if (_tocarSons) FlxG.sound.play(AssetPaths.beepbotao__ogg); openSubState(_menuPausadoSubState);});
 		_pausarButton.loadGraphic(AssetPaths.pausar__png, true, 60, 34);
 		_pausarButton.setPosition(124, 4);
 		_pausarButton.scrollFactor.set(0, 0);
 		add(_pausarButton);
 		
-		_voltarButton = new FlxButton(0, 0, "", () -> FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new MainMenuState()) ) );
+		_voltarButton = new FlxButton(0, 0, "", () -> {if (_tocarSons) FlxG.sound.play(AssetPaths.beepbotao__ogg); FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new MainMenuState()) );} );
 		_voltarButton.loadGraphic(AssetPaths.voltar__png, true, 60, 34);
 		_voltarButton.setPosition(189, 4);
 		_voltarButton.scrollFactor.set(0, 0);
@@ -464,7 +464,7 @@ class BozoRunGameState extends FlxState
 		_bozo.velocity.x > _bozoDeitado.velocity.x ? _bozo.velocity.x = _bozoDeitado.velocity.x : _bozoDeitado.velocity.x = _bozo.velocity.x;
 
 		var _taTocando:Bool = FlxG.touches.getFirst() != null;
-		_taPulando = _taTocando && (FlxG.touches.getFirst().justPressedPosition.y < (FlxG.height / 2)) ? true : false;
+		_taPulando = _taTocando && ((FlxG.touches.getFirst().justPressedPosition.y < (FlxG.height / 2)) && (FlxG.touches.getFirst().justPressedPosition.y > 40) ) ? true : false;
 		if(_taTocando && (FlxG.touches.getFirst().justPressedPosition.y > (FlxG.height / 2))) _playDown = true;
 		
 		#if html5

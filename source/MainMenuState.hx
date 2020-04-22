@@ -109,7 +109,7 @@ class MainMenuState extends FlxState
 		add(stringTitulo);
 		stringTitulo._chars.group.forEach(function (letra){ add(letra); });
 		
-		BtnColetiva = new FlxButton(10, division * 1.5 + 40, "", () -> FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new ColetivaGameState()) ));
+		BtnColetiva = new FlxButton(10, division * 1.5 + 40, "", () -> {FlxG.sound.play(AssetPaths.beepbotao__ogg); FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new ColetivaGameState()) );} );
 		BtnColetiva.label.size = 20;
 		BtnColetiva.loadGraphic(AssetPaths.coletiva__png , true, 60, 34);
 		BtnColetiva.scale.set(1.6, .9);
@@ -120,7 +120,7 @@ class MainMenuState extends FlxState
 		
 		//add(BtnColetiva);
 		
-		BtnRun = new FlxButton(0, 0, "", () -> FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new BozoRunGameState()) ));
+		BtnRun = new FlxButton(0, 0, "", () -> {FlxG.sound.play(AssetPaths.beepbotao__ogg); FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new BozoRunGameState()) );} );
 		BtnRun.label.size = 20;
 		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 34);
 		
