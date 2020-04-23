@@ -113,9 +113,7 @@ class MainMenuState extends FlxState
 		BtnColetiva.label.size = 20;
 		BtnColetiva.loadGraphic(AssetPaths.coletiva__png , true, 60, 34);
 		BtnColetiva.scale.set(1.6, .9);
-		BtnColetiva.x = 35 + paddingSide;
-		BtnColetiva.y += 25;
-		
+		BtnColetiva.setPosition(35 + paddingSide, BtnColetiva.y += 25);
 		BtnColetiva.scale.set(FlxG.width/300, FlxG.height/300);
 		
 		//add(BtnColetiva);
@@ -125,9 +123,7 @@ class MainMenuState extends FlxState
 		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 34);
 		
 		//BtnRun.x = 200;
-		BtnRun.x = 200 + paddingSide;
-		BtnRun.y = 112 + paddingTop * 2;
-		
+		BtnRun.setPosition(200 + paddingSide, 112 + paddingTop * 2);
 		BtnRun.scale.set(FlxG.width/300, FlxG.height/300);
 		
 		add(BtnRun);
