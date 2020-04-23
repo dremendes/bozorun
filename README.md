@@ -7,10 +7,8 @@ Nesse infinite runner politicamente carregado, Bozonaro precisa evitar que obst�
 
 Laranjas ajudam o Bozo a passar pelos obstáculos
 
-Evite os obstáculos pulando! 
+Evite os obstáculos pulando ou se abaixando! Se estiver num celular, basta tocar na tela pra isso.
 
-Toque e pressione a tela do celular para pular mais alto.
+Se estiver num pc, pressione UP para pular e DOWN para abaixar.
 
-Se estiver num pc, pressione UP ou ESPAÇO para pular.
-
-Source do jogo: [https://github.com/fullynotanalien/bozorun](https://github.com/fullynotanalien/bozorun)
+Código-fonte do jogo: [https://github.com/fullynotanalien/bozorun](https://github.com/fullynotanalien/bozorun)
