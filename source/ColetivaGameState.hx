@@ -23,6 +23,8 @@ class ColetivaGameState extends FlxState
     private var BtnRun:FlxButton;
     private var BtnMascara:FlxButton;
     private var hasMascara:Bool=false;
+	private var paddingSide:Float = (FlxG.width - 300) / 2;
+	private var paddingTop:Float = (FlxG.height - 300) / 2;
 	
 	override public function create():Void
 	{
@@ -34,6 +36,9 @@ class ColetivaGameState extends FlxState
 		
 		fundoColetiva = new FlxSprite();
 		fundoColetiva.loadGraphic(AssetPaths.backgroundbozo__png, false, 350, 300);
+		fundoColetiva.x += paddingSide;
+		fundoColetiva.y += paddingTop;
+		fundoColetiva.scale.set(FlxG.width/300, FlxG.height/300);
 		add(fundoColetiva);
 		
 		gueds = new FlxSprite();
@@ -55,16 +60,17 @@ class ColetivaGameState extends FlxState
 		mesaColetiva = new FlxSprite();
 		mesaColetiva.loadGraphic(AssetPaths.foregroundbozo__png, false, 350, 350);
 		add(mesaColetiva);
-		mesaColetiva.setPosition(-30,-20);
+		mesaColetiva.setPosition(30,-20);
 		
 		bozo = new FlxSprite();
-        bozo.loadGraphic(AssetPaths.bozotile__png, true, 150, 150);
+		bozo.loadGraphic(AssetPaths.bozotile__png, true, 69, 80);
+		bozo.scale.set(1.8, 1.8);
         bozo.animation.add("idle", [0, 1], 4, true);
         bozo.animation.add("idle_mascara", [10, 11], 4, true);
         bozo.animation.add("idle_mascara_centro", [12, 13], 4, true);
         bozo.animation.play("idle");
 		add(bozo);
-		bozo.setPosition(70,90);
+		bozo.setPosition(105, 120);
 
 		mic1 = new FlxSprite();
 		mic1.loadGraphic(AssetPaths.microfone__png, false, 23, 58);
