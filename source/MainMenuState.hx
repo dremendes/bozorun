@@ -116,22 +116,18 @@ class MainMenuState extends FlxState
 		BtnColetiva.setPosition(35 + paddingSide, BtnColetiva.y += 25);
 		BtnColetiva.scale.set(FlxG.width/300, FlxG.height/300);
 		BtnColetiva.updateHitbox();
-		
 		//add(BtnColetiva);
 		
 		BtnRun = new FlxButton(0, 0, "", () -> {FlxG.sound.play(AssetPaths.beepbotao__ogg); FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new BozoRunGameState()) );} );
 		BtnRun.label.size = 20;
 		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 34);
 		
-		//BtnRun.x = 200;
 		BtnRun.setPosition(200 + paddingSide, 112 + paddingTop * 2);
 		BtnRun.scale.set(FlxG.width/300, FlxG.height/300);
 		BtnRun.updateHitbox();
-		
 		add(BtnRun);
 
-		// música de fundo
-		FlxG.sound.playMusic("assets/music/bozosong.ogg");
+		FlxG.sound.playMusic(AssetPaths.bozosong__ogg); // música de fundo
 	}
 
 	override public function update(elapsed:Float):Void
