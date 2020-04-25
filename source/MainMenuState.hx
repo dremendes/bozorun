@@ -115,6 +115,7 @@ class MainMenuState extends FlxState
 		BtnColetiva.scale.set(1.6, .9);
 		BtnColetiva.setPosition(35 + paddingSide, BtnColetiva.y += 25);
 		BtnColetiva.scale.set(FlxG.width/300, FlxG.height/300);
+		BtnColetiva.updateHitbox();
 		
 		//add(BtnColetiva);
 		
@@ -125,6 +126,7 @@ class MainMenuState extends FlxState
 		//BtnRun.x = 200;
 		BtnRun.setPosition(200 + paddingSide, 112 + paddingTop * 2);
 		BtnRun.scale.set(FlxG.width/300, FlxG.height/300);
+		BtnRun.updateHitbox();
 		
 		add(BtnRun);
 

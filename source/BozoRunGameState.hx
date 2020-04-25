@@ -181,6 +181,7 @@ class BozoRunGameState extends FlxState
 		
 		// camera can follow player's x movement, not y (jump bobbing)
 		FlxG.camera.follow(_ghost);
+		FlxG.camera.followLerp = 0.1;
 	}
 
 	private inline function setTimerPulo():Void
@@ -442,7 +443,7 @@ class BozoRunGameState extends FlxState
 		_scoreText.text = Std.string("Recorde" + _score + "m");
 		
 		// camera tracks ghost, not player (prevent tracking jumps)
-		_ghost.x = -50 + _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
+		_ghost.x = _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
 	}
 
 	private inline function levantaBozo():Void
