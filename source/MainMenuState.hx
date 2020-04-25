@@ -53,7 +53,7 @@ class MainMenuState extends FlxState
 		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 91, 17);
 		aviao.animation.add("voando", [0,1], 10, true);
 		aviao.animation.play("voando");
-		aviao.setPosition(-30, 40);
+		aviao.setPosition(-40, 40);
 		add(aviao);
 		
 		background = new FlxSprite();
@@ -136,7 +136,7 @@ class MainMenuState extends FlxState
 	{
 		aviao.x += 0.8;
 
-		if(aviao.x >= 450 + paddingSide) aviao.x = -30 + paddingSide;
+		if(aviao.x >= 450 + paddingSide) aviao.x = -40 + paddingSide;
 
 		pato.x += 0.4 * multiplier;
 

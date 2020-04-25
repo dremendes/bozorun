@@ -18,7 +18,7 @@ class PausadoSubState extends FlxSubState
 		super.create();
 
 		_botaoPausar = new FlxButton(FlxG.width / 2 - 40, FlxG.height / 2 - 48, "", () -> {if (tocarSons) FlxG.sound.play(AssetPaths.beepbotao__ogg); close();});
-		_botaoPausar.loadGraphic(AssetPaths.pausar__png, true, 60, 34);
+		_botaoPausar.loadGraphic(AssetPaths.voltar__png, true, 60, 34);
 		add(_botaoPausar);
 		
 		_botaoToogleSons = new FlxButton(FlxG.width / 2 - 27, FlxG.height / 2 - 8, "", () -> tocarSons = !tocarSons);
@@ -44,5 +44,13 @@ class PausadoSubState extends FlxSubState
 		!tocarMusica ? _botaoToogleMusica.animation.play("pressionado") : _botaoToogleMusica.animation.play("solto");
 		!tocarSons ? _botaoToogleSons.animation.play("pressionado") : _botaoToogleSons.animation.play("solto");
 		super.update(elapsed);
+	}
+
+	override public function destroy():Void
+	{
+		_botaoToogleSons.destroy();
+		_botaoToogleMusica.destroy();
+		_botaoPausar.destroy();
+		super.destroy();
 	}
 }
