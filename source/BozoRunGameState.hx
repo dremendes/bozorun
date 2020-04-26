@@ -13,9 +13,6 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import extension.eightsines.EsOrientation;
 
-/**
- * Based on HaxeRunner by william.thompsonj
- */
 class BozoRunGameState extends FlxState
 {
 	private static inline var TILE_WIDTH:Int = 16;
@@ -65,7 +62,7 @@ class BozoRunGameState extends FlxState
 	private var _laranja3:FlxSprite;
 
 	// used to help with tracking camera movement
-	private var _ghost:FlxSprite;
+	private var _fantasma:FlxSprite;
 
 	// where to start generating platforms
 	private var _pontaDireitaCenario:Int;
@@ -95,7 +92,7 @@ class BozoRunGameState extends FlxState
 	private var _pausarButton:FlxButton;
 
 	private var _voltarButton:FlxButton;
-	private var _scoreText:FlxText;
+	private var _pontosTexto:FlxText;
 	private var _arrayLivros:Array<String> = [
 		AssetPaths.livros1__png,
 		AssetPaths.livros2__png,
@@ -179,10 +176,10 @@ class BozoRunGameState extends FlxState
 		add(_bozoDeitado);
 
 		// something that follows player's x movement
-		_ghost = new FlxSprite(_bozo.x + FlxG.width - TILE_WIDTH, FlxG.height / 2);
+		_fantasma = new FlxSprite(_bozo.x + FlxG.width - TILE_WIDTH, FlxG.height / 2);
 
 		// camera can follow player's x movement, not y (jump bobbing)
-		FlxG.camera.follow(_ghost);
+		FlxG.camera.follow(_fantasma);
 		FlxG.camera.followLerp = 0.1;
 	}
 
@@ -230,11 +227,11 @@ class BozoRunGameState extends FlxState
 		add(_voltarButton);
 
 		// add score counter
-		_scoreText = new FlxText(78, 8, TILE_WIDTH * 3 - 3, "");
-		_scoreText.scrollFactor.set(0, 0);
-		_scoreText.borderStyle = OUTLINE;
-		_scoreText.color = 0xFF0000; // red color
-		add(_scoreText);
+		_pontosTexto = new FlxText(78, 8, TILE_WIDTH * 3 - 3, "");
+		_pontosTexto.scrollFactor.set(0, 0);
+		_pontosTexto.borderStyle = OUTLINE;
+		_pontosTexto.color = 0xFF0000; // red color
+		add(_pontosTexto);
 
 		// add lives indicator
 		_live0 = new FlxSprite(0, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
@@ -329,7 +326,7 @@ class BozoRunGameState extends FlxState
 		configuraAnimacoes();
 
 		// move camera to match player
-		_ghost.x = _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
+		_fantasma.x = _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
 
 		_piscando = true;
 		var _timerPiscando = new haxe.Timer(3000);
@@ -490,10 +487,10 @@ class BozoRunGameState extends FlxState
 	{
 		_score = Std.int(_bozo.x / (TILE_WIDTH));
 
-		_scoreText.text = Std.string("Recorde" + _score + "m");
+		_pontosTexto.text = Std.string("Recorde" + _score + "m");
 
 		// camera tracks ghost, not player (prevent tracking jumps)
-		_ghost.x = _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
+		_fantasma.x = _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
 	}
 
 	private inline function levantaBozo():Void
@@ -622,7 +619,7 @@ class BozoRunGameState extends FlxState
 			|| ((x + _rangeProibido) < randomIntPosX) ? randomIntPosX : gerarIntForaDaFaixaX(x, _rangeProibido);
 	}
 
-	private inline function setObjAndAdd2Group(Path:FlxGraphicAsset, width:Int, height:Int, group:FlxSpriteGroup, isSolid:Bool = true,
+	private inline function criarObstaculoEColocarNoGrupo(Path:FlxGraphicAsset, width:Int, height:Int, group:FlxSpriteGroup, isSolid:Bool = true,
 			isImmovable:Bool = true):Void
 	{
 		var obj = new AssetLoader(Path, width, height);
@@ -640,9 +637,9 @@ class BozoRunGameState extends FlxState
 
 		if (_pontaDireitaCenario % 200 == 0)
 			if (random.int(0, 2) % 2 == 0)
-				setObjAndAdd2Group(_arrayLivros[random.int(0, 5)], 45, 55, _grupoLivros, true, true);
+				criarObstaculoEColocarNoGrupo(_arrayLivros[random.int(0, 5)], 45, 55, _grupoLivros, true, true);
 		if (_pontaDireitaCenario % 350 == 0)
-			setObjAndAdd2Group(AssetPaths.laranja__png, 23, 23, _grupoLaranjas, true, false);
+			criarObstaculoEColocarNoGrupo(AssetPaths.laranja__png, 23, 23, _grupoLaranjas, true, false);
 
 		_mudou = true;
 	}
@@ -724,7 +721,7 @@ class BozoRunGameState extends FlxState
 		_laranja1.destroy();
 		_laranja2.destroy();
 		_laranja3.destroy();
-		_ghost.destroy();
+		_fantasma.destroy();
 		_fundoCeu.destroy();
 		_fundoCenario.destroy();
 		_chao.destroy();
@@ -735,7 +732,7 @@ class BozoRunGameState extends FlxState
 		_plufts.destroy();
 		_pausarButton.destroy();
 		_voltarButton.destroy();
-		_scoreText.destroy();
+		_pontosTexto.destroy();
 		super.destroy();
 	}
 }
