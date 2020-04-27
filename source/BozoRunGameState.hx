@@ -463,7 +463,8 @@ class BozoRunGameState extends FlxState
 			if (!_piscando)
 				FlxG.collide(_estaAbaixado ? _bozoDeitado : _bozo, _grupoLivros);
 		}
-		else if (_piscando)
+
+		if (_piscando)
 			_bozo.visible = !_bozo.visible;
 
 		playerAnimation();
@@ -617,8 +618,7 @@ class BozoRunGameState extends FlxState
 	}
 
 	private inline function bozoDeitadoAnimPos(animacaoNome:String)
-		if (animacaoNome == "deitando")
-			_bozoDeitado.animation.play("flexao");
+		_bozoDeitado.animation.play("flexao");
 
 	private inline function playerAnimation():Void
 	{
@@ -631,7 +631,6 @@ class BozoRunGameState extends FlxState
 		else if (_estaAbaixado)
 		{
 			_bozo.visible = false;
-			_bozoDeitado.visible = true;
 			if (_bozoDeitado.animation.name != "deitando"
 				&& _bozoDeitado.animation.name != "flexao"
 				&& _bozoDeitado.animation.name != "levantando")
@@ -639,12 +638,16 @@ class BozoRunGameState extends FlxState
 				_bozoDeitado.animation.play("deitando");
 				_bozoDeitado.animation.finishCallback = bozoDeitadoAnimPos;
 			}
+			_piscando ? _bozoDeitado.visible = !_bozoDeitado.visible : _bozoDeitado.visible = true;
 		}
 		else
 		{
 			_bozo.animation.play("fugindo");
-			_bozoDeitado.visible = false;
-			_bozo.visible = true;
+			if (!_piscando)
+			{
+				_bozoDeitado.visible = false;
+				_bozo.visible = true;
+			}
 		}
 	}
 
