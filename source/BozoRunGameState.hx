@@ -62,6 +62,7 @@ class BozoRunGameState extends FlxState
 	private var _laranja3:FlxSprite;
 
 	private var _fantasma:FlxSprite;
+	private var _impeachmado:FlxSprite;
 
 	// onde começar a gerar objetos do jogo
 	private var _pontaDireitaCenario:Int;
@@ -77,7 +78,6 @@ class BozoRunGameState extends FlxState
 	private var _grupoChao:FlxSpriteGroup = new FlxSpriteGroup();
 	private var _grupoLivros:FlxSpriteGroup = new FlxSpriteGroup();
 	private var _grupoLaranjas:FlxSpriteGroup = new FlxSpriteGroup();
-	private var _plufts:FlxSpriteGroup = new FlxSpriteGroup(); // grupo pras fumacinhas
 	private var _quantiaLaranjas:Int = 0;
 
 	private var _mudou:Bool; // indica se os grupos de colisões mudaram
@@ -197,7 +197,6 @@ class BozoRunGameState extends FlxState
 		add(_grupoLivros);
 		add(_grupoLaranjas);
 		add(_grupoChao);
-		add(_plufts);
 
 		_pausarButton = new FlxButton(0, 0, "", () ->
 		{
@@ -333,7 +332,15 @@ class BozoRunGameState extends FlxState
 	}
 
 	private inline function onReiniciar():Void
-		_totalVidas > 0 ? iniciarBozo() : _bozo.acceleration.x = _bozoDeitado.acceleration.x = _bozo.velocity.x = _bozoDeitado.velocity.x = 0; // reseta parametros do Bozo
+		if (_totalVidas > 0)
+			iniciarBozo()
+		else
+		{
+			_bozo.acceleration.x = _bozoDeitado.acceleration.x = _bozo.velocity.x = _bozoDeitado.velocity.x = 0; // Bozo agora fica parado
+			_impeachmado = new FlxSprite().loadGraphic(AssetPaths.impitimado__png, false, 250, 117);
+			_impeachmado.setPosition(_bozo.x + ((FlxG.width / 2) - (_impeachmado.width / 2)), 80);
+			add(_impeachmado);
+		}
 
 	private inline function tocarPluftAnimacao(x:Float, y:Float, scale:Float = 3):Void
 	{
@@ -704,7 +711,6 @@ class BozoRunGameState extends FlxState
 		_grupoChao.destroy();
 		_grupoLivros.destroy();
 		_grupoLaranjas.destroy();
-		_plufts.destroy();
 		_pausarButton.destroy();
 		_voltarButton.destroy();
 		_pontosTexto.destroy();
