@@ -341,16 +341,8 @@ class BozoRunGameState extends FlxState
 			_impeachmado.setPosition(_bozo.x + ((FlxG.width / 2) - (_impeachmado.width / 2)), 80);
 			add(_impeachmado);
 			FlxG.camera.shake(0.01, 0.2);
-			_voltarButton = new FlxButton(0, 0, "", () ->
-			{
-				if (_tocarSons)
-					FlxG.sound.play(AssetPaths.beepbotao__ogg);
-				FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new MainMenuState()));
-			});
-			_voltarButton.loadGraphic(AssetPaths.voltar__png, true, 60, 34);
-			_voltarButton.setPosition(_bozo.x + ((FlxG.width / 2) - (_impeachmado.width / 2)), 180);
-			_voltarButton.scrollFactor.set(0, 0);
-			add(_voltarButton);
+			_voltarButton.scale.set(1.4, 1.4);
+			_voltarButton.setPosition(FlxG.width / 2 - 25, 220);
 		}
 
 	private inline function tocarPluftAnimacao(x:Float, y:Float, scale:Float = 3):Void
