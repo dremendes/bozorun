@@ -521,13 +521,14 @@ class BozoRunGameState extends FlxState
 		}
 		// sincroniza posição dos Bozos
 		_bozo.velocity.x > _bozoDeitado.velocity.x ? _bozo.velocity.x = _bozoDeitado.velocity.x : _bozoDeitado.velocity.x = _bozo.velocity.x;
-
+		#if (!windows && !linux)
 		var _taTocando:Bool = FlxG.touches.getFirst() != null;
 		_taPulando = _taTocando
 			&& ((FlxG.touches.getFirst().justPressedPosition.y < (FlxG.height / 2))
 				&& (FlxG.touches.getFirst().justPressedPosition.y > 40)) ? true : false;
 		if (_taTocando && (FlxG.touches.getFirst().justPressedPosition.y > (FlxG.height / 2)))
 			_estaAbaixado = true;
+		#end
 
 		#if html5
 		FlxG.keys.anyPressed(["DOWN"]) ? _estaAbaixado = true : null;
