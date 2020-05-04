@@ -63,6 +63,7 @@ class BozoRunGameState extends FlxState
 
 	private var _fantasma:FlxSprite;
 	private var _impeachmado:FlxSprite;
+	private var _bozomovel:FlxSprite;
 
 	// onde começar a gerar objetos do jogo
 	private var _pontaDireitaCenario:Int;
@@ -130,6 +131,7 @@ class BozoRunGameState extends FlxState
 		// prepare player related variables
 		configurarBozo();
 		iniciarBozo();
+		iniciarBozoMovel();
 	}
 
 	private inline function configurarFundo():Void
@@ -330,6 +332,21 @@ class BozoRunGameState extends FlxState
 		}
 	}
 
+	private inline function iniciarBozoMovel():Void
+	{
+		_bozomovel = new FlxSprite().loadGraphic(AssetPaths.bozomovel__png, true, 101, 85);
+		_bozomovel.animation.add("emMovimento", [0, 1, 2], 9);
+		_bozomovel.animation.play("emMovimento");
+		_bozomovel.setPosition(_bozo.x + 200, 90);
+		_bozomovel.velocity.y = yAcceleration * .25;
+		_bozomovel.velocity.x = 380;
+		_bozomovel.scale.set(3, 1.8);
+		_bozomovel.updateHitbox();
+		_bozomovel.scale.set(3, 3);
+		_bozomovel.y += 40;
+		add(_bozomovel);
+	}
+
 	private inline function aoReiniciar():Void
 		if (_totalVidas > 0)
 			iniciarBozo()
@@ -376,6 +393,15 @@ class BozoRunGameState extends FlxState
 					_laranja3.visible = false;
 			}
 		}
+	}
+
+	private inline function processaColisaoBozoMovelLivros(_obj1, _obj2):Void
+	{
+		tocarPluftAnimacao(_obj2.x, _obj2.y);
+		_obj2.destroy();
+		if (_tocarSons)
+			FlxG.sound.play(AssetPaths.tiro__ogg);
+		_bozomovel.velocity.x = 380;
 	}
 
 	private inline function atualizaControlesOpcoes():Void
@@ -426,6 +452,10 @@ class BozoRunGameState extends FlxState
 						_laranja3.visible = true;
 				}
 		}
+
+		FlxG.collide(_bozomovel, _grupoChao);
+		FlxG.collide(_bozomovel, _bozo);
+		FlxG.collide(_bozomovel, _grupoLivros, processaColisaoBozoMovelLivros);
 
 		FlxG.collide(_bozoDeitado, _grupoChao);
 		if (FlxG.collide(_bozo, _grupoChao))
