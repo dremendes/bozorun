@@ -48,13 +48,13 @@ class BozoRunGameState extends FlxState
 	private var _tocarPulo:Bool;
 	private var _pularPressionado:Bool;
 	private var _estaAbaixado:Bool;
-	private var _sfxDie:Bool;
+	private var _morrer:Bool;
 	private var _tooglePausar:Bool = false;
 	private var _auxX:Float = 0.0;
 	private var _totalVidas = 3;
-	private var _live0:FlxSprite;
-	private var _live1:FlxSprite;
-	private var _live2:FlxSprite;
+	private var _vida0:FlxSprite;
+	private var _vida1:FlxSprite;
+	private var _vida2:FlxSprite;
 	private var _paddingTop:Float = (FlxG.width < FlxG.height) ? (FlxG.height - 300) / 2 : 0;
 
 	private var _laranja1:FlxSprite;
@@ -125,7 +125,7 @@ class BozoRunGameState extends FlxState
 		configurarInterface();
 
 		// setup platform logic
-		setupPlatforms();
+		configuraPlataformas();
 
 		// prepare player related variables
 		configurarBozo();
@@ -227,23 +227,23 @@ class BozoRunGameState extends FlxState
 		add(_pontosTexto);
 
 		// add lives indicator
-		_live0 = new FlxSprite(0, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
-		_live0.scrollFactor.set(0, 0);
-		_live0.animation.add('vivo', [0], 1, false);
-		_live0.animation.add('morto', [1], 1, false);
-		add(_live0);
+		_vida0 = new FlxSprite(0, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
+		_vida0.scrollFactor.set(0, 0);
+		_vida0.animation.add('vivo', [0], 1, false);
+		_vida0.animation.add('morto', [1], 1, false);
+		add(_vida0);
 
-		_live1 = new FlxSprite(23, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
-		_live1.scrollFactor.set(0, 0);
-		_live1.animation.add('vivo', [0], 1, false);
-		_live1.animation.add('morto', [1], 1, false);
-		add(_live1);
+		_vida1 = new FlxSprite(23, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
+		_vida1.scrollFactor.set(0, 0);
+		_vida1.animation.add('vivo', [0], 1, false);
+		_vida1.animation.add('morto', [1], 1, false);
+		add(_vida1);
 
-		_live2 = new FlxSprite(46, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
-		_live2.scrollFactor.set(0, 0);
-		_live2.animation.add('vivo', [0], 1, false);
-		_live2.animation.add('morto', [1], 1, false);
-		add(_live2);
+		_vida2 = new FlxSprite(46, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
+		_vida2.scrollFactor.set(0, 0);
+		_vida2.animation.add('vivo', [0], 1, false);
+		_vida2.animation.add('morto', [1], 1, false);
+		add(_vida2);
 
 		_laranja1 = new FlxSprite(0, 24, AssetPaths.laranja__png);
 		_laranja1.scrollFactor.set(0, 0);
@@ -277,7 +277,7 @@ class BozoRunGameState extends FlxState
 		_fundoCenario.y += _paddingTop == 0 ? 70 : 170;
 	}
 
-	private inline function setupPlatforms():Void
+	private inline function configuraPlataformas():Void
 	{
 		_chao = new FlxBackdrop(AssetPaths.groundtiles__png, 1, 0, true, false, 0, 0);
 		_chao.allowCollisions = FlxObject.ANY;
@@ -298,14 +298,13 @@ class BozoRunGameState extends FlxState
 		_tocarPulo = true;
 		_estaAbaixado = false;
 		_pularPressionado = false;
-		_sfxDie = true;
+		_morrer = true;
 
-		// setup player position
 		_bozo.setPosition(_distancia * TILE_WIDTH, 0 + _paddingTop);
 		_bozoDeitado.visible = false;
 		_bozoDeitado.setPosition(_distancia * TILE_WIDTH, -20 + _paddingTop);
 
-		// Basic player physics
+		// Física básica pro Bozo
 		_bozo.drag.x = xDrag;
 		_bozo.velocity.set(0, 0);
 		_bozo.maxVelocity.set(BASE_SPEED, yVelocity);
@@ -331,7 +330,7 @@ class BozoRunGameState extends FlxState
 		}
 	}
 
-	private inline function onReiniciar():Void
+	private inline function aoReiniciar():Void
 		if (_totalVidas > 0)
 			iniciarBozo()
 		else
@@ -453,22 +452,22 @@ class BozoRunGameState extends FlxState
 				// player went splat
 				_jump = -1;
 				_tocarPulo = false;
-				if (xAcceleration > 0 && _sfxDie)
+				if (xAcceleration > 0 && _morrer)
 					FlxG.camera.shake(0.01, 0.2);
-				if (_sfxDie)
+				if (_morrer)
 				{
 					_totalVidas -= 1;
 					switch (_totalVidas)
 					{
 						case 2:
-							_live2.animation.play("morto");
+							_vida2.animation.play("morto");
 						case 1:
-							_live1.animation.play("morto");
+							_vida1.animation.play("morto");
 						case 0:
-							_live0.animation.play("morto");
+							_vida0.animation.play("morto");
 					}
 				}
-				sfxDie();
+				morrer();
 			}
 			if (!_piscando)
 				FlxG.collide(_estaAbaixado ? _bozoDeitado : _bozo, _grupoLivros);
@@ -477,7 +476,7 @@ class BozoRunGameState extends FlxState
 		if (_piscando)
 			_bozo.visible = !_bozo.visible;
 
-		playerAnimation();
+		animacaoBozo();
 		atualizaAviao();
 
 		super.update(elapsed);
@@ -494,7 +493,7 @@ class BozoRunGameState extends FlxState
 
 		_pontosTexto.text = Std.string("Recorde" + _distancia + "m");
 
-		// camera tracks ghost, not player (prevent tracking jumps)
+		// camera segue fantasma, não jogador, pra que não suba com os pulos
 		_fantasma.x = _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);
 	}
 
@@ -541,7 +540,7 @@ class BozoRunGameState extends FlxState
 
 		// Se Bozo parou ou mal está andando, ele pode morrer (e tocar o som de machucado)
 		if (_bozo.velocity.x > 10)
-			_sfxDie = true;
+			_morrer = true;
 
 		if (_jump != -1 && _pularPressionado)
 		{
@@ -581,7 +580,7 @@ class BozoRunGameState extends FlxState
 		// confere se precisa fazer mais objetos e remover antigos
 		while ((_bozo.x + FlxG.width) * 2 > _pontaDireitaCenario)
 		{
-			makeBozoObjects();
+			fazerObjetos();
 			// remove livros e laranjas assim que estão fora da tela
 			_grupoLivros.forEach((book) -> if (book.x < (_bozo.x - 85))
 			{
@@ -615,7 +614,7 @@ class BozoRunGameState extends FlxState
 		group.add(obj);
 	}
 
-	private inline function makeBozoObjects(wide:Int = 0, high:Int = 0):Void
+	private inline function fazerObjetos(wide:Int = 0, high:Int = 0):Void
 	{
 		_pontaDireitaCenario += TILE_WIDTH * 2;
 
@@ -631,7 +630,7 @@ class BozoRunGameState extends FlxState
 	private inline function bozoDeitadoAnimPos(animacaoNome:String)
 		_bozoDeitado.animation.play("flexao");
 
-	private inline function playerAnimation():Void
+	private inline function animacaoBozo():Void
 	{
 		if (_bozo.velocity.x <= 3)
 			_estaAbaixado ? _bozoDeitado.animation.play("morrendoDeitado") : _bozo.animation.play("morrendo");
@@ -676,8 +675,8 @@ class BozoRunGameState extends FlxState
 		_bozoDeitado.animation.add("morrendoDeitado", [9, 10], 6, true);
 	}
 
-	private inline function sfxDie():Void
-		if (_sfxDie)
+	private inline function morrer():Void
+		if (_morrer)
 		{
 			if (_tocarSons)
 				FlxG.sound.play(AssetPaths.tiro__ogg);
@@ -688,12 +687,12 @@ class BozoRunGameState extends FlxState
 					FlxG.sound.play(AssetPaths.goblin_9__ogg);
 				timerTiro.stop();
 			}
-			_sfxDie = false;
+			_morrer = false;
 			var timerPraReiniciar = new haxe.Timer(500);
 			timerPraReiniciar.run = () ->
 			{
 				_estaAbaixado = false;
-				onReiniciar();
+				aoReiniciar();
 				timerPraReiniciar.stop();
 			}
 		}
@@ -701,9 +700,9 @@ class BozoRunGameState extends FlxState
 	override public function destroy():Void
 	{
 		_bozo.destroy();
-		_live0.destroy();
-		_live1.destroy();
-		_live2.destroy();
+		_vida0.destroy();
+		_vida1.destroy();
+		_vida2.destroy();
 		_laranja1.destroy();
 		_laranja2.destroy();
 		_laranja3.destroy();
