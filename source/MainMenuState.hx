@@ -10,6 +10,17 @@ import flixel.FlxObject;
 import flixel.util.FlxColor;
 import flixel.addons.display.FlxBackdrop;
 import extension.eightsines.EsOrientation;
+import openfl.filters.BitmapFilter;
+import openfl.filters.ColorMatrixFilter;
+#if shaders_supported
+#if (openfl >= "8.0.0")
+import openfl8.*;
+#else
+import openfl3.*;
+#end
+import openfl.filters.ShaderFilter;
+import openfl.Lib;
+#end
 
 /**
  * Based on work from
@@ -30,6 +41,7 @@ class MainMenuState extends FlxState
 	private var paddingSide:Float = (FlxG.width - 300) / 2;
 	private var paddingTop:Float = (FlxG.height - 300) / 2;
 	private var fundoCeu:FlxBackdrop;
+	private var shaderGranulado = new Grain();
 
 	override public function create():Void
 	{
@@ -38,24 +50,27 @@ class MainMenuState extends FlxState
 		FlxG.camera.antialiasing = true;
 		EsOrientation.setScreenOrientation(EsOrientation.ORIENTATION_LANDSCAPE);
 
+		var filters:Array<BitmapFilter> = [];
+		var filterMap:{filter:BitmapFilter};
+
+		filters = [#if shaders_supported new ShaderFilter(shaderGranulado) #end];
+		FlxG.camera.setFilters(filters);
+		FlxG.game.setFilters(filters);
 		var division:Int = Std.int(FlxG.height / 3);
 
 		#if html5
 		FlxG.mouse.visible = true;
 		#end
-
 		fundoCeu = new FlxBackdrop(AssetPaths.sky__png, -2, 0, true, false, 0, 0);
 		fundoCeu.scale.set(FlxG.width / 300, FlxG.height / 300);
 		fundoCeu.y -= 40;
 		fundoCeu.velocity.x = -20;
 		add(fundoCeu);
-
 		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 91, 17);
 		aviao.animation.add("voando", [0, 1], 10, true);
 		aviao.animation.play("voando");
 		aviao.setPosition(-40, 40);
 		add(aviao);
-
 		background = new FlxSprite();
 		background.loadGraphic(AssetPaths.senado_bg__png, true, 300, 300);
 		background.animation.add("idle", [0, 1, 2], 3, true);
@@ -64,7 +79,6 @@ class MainMenuState extends FlxState
 		background.y += paddingTop;
 		background.scale.set(FlxG.width / 300, FlxG.height / 300);
 		add(background);
-
 		pato = new FlxSprite().loadGraphic(AssetPaths.patin__png, false, 30, 29);
 		pato.setPosition(180, 160);
 		pato.setFacingFlip(FlxObject.RIGHT, false, false);
@@ -73,7 +87,6 @@ class MainMenuState extends FlxState
 		pato.x += paddingSide;
 		pato.y += paddingTop;
 		add(pato);
-
 		bozoEspirra = new FlxSprite();
 		bozoEspirra.loadGraphic(AssetPaths.bozotile__png, true, 69, 80, true);
 		bozoEspirra.animation.add("idle", [26, 27, 28, 29, 30, 31, 32, 33, 35, 34, 35, 36, 37, 38, 39, 40, 41, 42, 35], 4, true);
@@ -82,7 +95,6 @@ class MainMenuState extends FlxState
 		bozoEspirra.x += paddingSide;
 		bozoEspirra.y += paddingTop * 2;
 		add(bozoEspirra);
-
 		bozoRun = new FlxSprite();
 		bozoRun.loadGraphic(AssetPaths.Jair__png, true, 104, 122, true);
 		bozoRun.animation.add("arminha_com_a_mao", [20, 19], 4, true);
@@ -90,22 +102,17 @@ class MainMenuState extends FlxState
 		bozoRun.setPosition(180, 160);
 		bozoRun.x += paddingSide;
 		bozoRun.y += paddingTop * 2;
-
 		add(bozoRun);
-
 		pedestal = new FlxSprite().loadGraphic(AssetPaths.pedestal__png, false, 12, 102);
 		pedestal.setPosition(255, 180);
 		pedestal.x += paddingSide;
 		pedestal.y += paddingTop * 2;
-
 		add(pedestal);
-
 		#if android
 		stringTitulo = new InaraString("bozorun", 10 + paddingSide, 60 + paddingTop, 280 * (FlxG.width / 300), 0, 0, FlxG.width / 300, FlxG.height / 300);
 		#else
 		stringTitulo = new InaraString("bozorun", 70 + paddingSide, 60 + paddingTop, 280, 0, 0);
 		#end
-
 		add(stringTitulo);
 		stringTitulo._chars.group.forEach(function(letra)
 		{
@@ -124,7 +131,6 @@ class MainMenuState extends FlxState
 		BtnColetiva.scale.set(FlxG.width / 300, FlxG.height / 300);
 		BtnColetiva.updateHitbox();
 		// add(BtnColetiva);
-
 		BtnRun = new FlxButton(0, 0, "", () ->
 		{
 			FlxG.sound.play(AssetPaths.beepbotao__ogg);
@@ -132,17 +138,21 @@ class MainMenuState extends FlxState
 		});
 		BtnRun.label.size = 20;
 		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 34);
-
 		BtnRun.setPosition(200 + paddingSide, 112 + paddingTop * 2);
 		BtnRun.scale.set(FlxG.width / 300, FlxG.height / 300);
 		BtnRun.updateHitbox();
 		add(BtnRun);
-
 		FlxG.sound.playMusic(AssetPaths.bozosong__ogg); // música de fundo
 	}
 
 	override public function update(elapsed:Float):Void
 	{
+		#if (openfl >= "8.0.0")
+		shaderGranulado.uTime.value = [Lib.getTimer() / 1000];
+		#else
+		shaderGranulado.uTime = Lib.getTimer() / 1000;
+		#end
+
 		aviao.x += 0.8;
 
 		if (aviao.x >= 450 + paddingSide)
