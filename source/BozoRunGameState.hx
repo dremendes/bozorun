@@ -64,6 +64,7 @@ class BozoRunGameState extends FlxState
 	private var _fantasma:FlxSprite;
 	private var _impeachmado:FlxSprite;
 	private var _bozomovel:FlxSprite;
+	private var _barreiraBozomovel:FlxSprite;
 
 	// onde começar a gerar objetos do jogo
 	private var _pontaDireitaCenario:Int;
@@ -344,7 +345,14 @@ class BozoRunGameState extends FlxState
 		_bozomovel.updateHitbox();
 		_bozomovel.scale.set(3, 3);
 		_bozomovel.y += 40;
+		_barreiraBozomovel = new FlxSprite().loadGraphic(AssetPaths.barreiraBozoMovel__png, false, 8, 140);
+		_barreiraBozomovel.velocity.y = yAcceleration * .25;
+		_barreiraBozomovel.velocity.x = _bozomovel.velocity.x;
+		_barreiraBozomovel.scale.set(2, 1.5);
+		_barreiraBozomovel.updateHitbox();
+		_barreiraBozomovel.setPosition(_bozomovel.x + 280, 90);
 		add(_bozomovel);
+		add(_barreiraBozomovel);
 	}
 
 	private inline function aoReiniciar():Void
@@ -358,6 +366,7 @@ class BozoRunGameState extends FlxState
 			add(_impeachmado);
 			FlxG.camera.shake(0.01, 0.2);
 			_voltarButton.scale.set(1.4, 1.4);
+			_voltarButton.updateHitbox();
 			_voltarButton.setPosition(FlxG.width / 2 - 25, 220);
 		}
 
@@ -402,6 +411,7 @@ class BozoRunGameState extends FlxState
 		if (_tocarSons)
 			FlxG.sound.play(AssetPaths.tiro__ogg);
 		_bozomovel.velocity.x = 380;
+		_barreiraBozomovel.velocity.x = _bozomovel.velocity.x;
 	}
 
 	private inline function atualizaControlesOpcoes():Void
@@ -422,6 +432,7 @@ class BozoRunGameState extends FlxState
 		// realiza coleta de lixo (garbage collection)
 		atualizaObjetos();
 		atualizaControlesOpcoes();
+		atualizaBozoMovel();
 
 		atualizaBozo(elapsed);
 
@@ -454,9 +465,10 @@ class BozoRunGameState extends FlxState
 		}
 
 		FlxG.collide(_bozomovel, _grupoChao);
+		FlxG.collide(_barreiraBozomovel, _grupoChao);
+		FlxG.collide(_barreiraBozomovel, _bozo);
 		FlxG.collide(_bozomovel, _bozo);
 		FlxG.collide(_bozomovel, _grupoLivros, processaColisaoBozoMovelLivros);
-
 		FlxG.collide(_bozoDeitado, _grupoChao);
 		if (FlxG.collide(_bozo, _grupoChao))
 		{
@@ -625,6 +637,11 @@ class BozoRunGameState extends FlxState
 		}
 	}
 
+	private inline function atualizaBozoMovel():Void
+	{
+		_barreiraBozomovel.setPosition(_bozomovel.x + 280, _barreiraBozomovel.y);
+	}
+
 	private inline function gerarIntForaDaFaixaX(x:Float, _rangeProibido:Float):Float
 	{
 		var randomIntPosX:Float = _bozo.x + FlxG.width + random.int(250, 380);
@@ -657,9 +674,6 @@ class BozoRunGameState extends FlxState
 		_mudou = true;
 	}
 
-	private inline function bozoDeitadoAnimPos(animacaoNome:String)
-		_bozoDeitado.animation.play("flexao");
-
 	private inline function animacaoBozo():Void
 	{
 		if (_bozo.velocity.x <= 3)
@@ -676,7 +690,7 @@ class BozoRunGameState extends FlxState
 				&& _bozoDeitado.animation.name != "levantando")
 			{
 				_bozoDeitado.animation.play("deitando");
-				_bozoDeitado.animation.finishCallback = bozoDeitadoAnimPos;
+				_bozoDeitado.animation.finishCallback = (s) -> _bozoDeitado.animation.play("flexao");
 			}
 			_piscando ? _bozoDeitado.visible = !_bozoDeitado.visible : _bozoDeitado.visible = true;
 		}
@@ -730,6 +744,8 @@ class BozoRunGameState extends FlxState
 	override public function destroy():Void
 	{
 		_bozo.destroy();
+		barreiraBozomovel.destroy();
+		_bozomovel.destroy();
 		_vida0.destroy();
 		_vida1.destroy();
 		_vida2.destroy();
