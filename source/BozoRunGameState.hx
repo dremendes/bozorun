@@ -26,25 +26,22 @@ class BozoRunGameState extends FlxState
 	// base speed for player, stands for xVelocity
 	private static inline var BASE_SPEED:Int = 150;
 
-	// how fast the player speeds up going to the right
+	// aceleração horizontal do Bozo
 	private static inline var xAcceleration:Int = 120;
 
-	// force that pulls sprite to the right
-	private static inline var xDrag:Int = 100;
-
-	// represents how strong gravity pulls up or down
+	// força da 'gravidade'
 	private static inline var yAcceleration:Int = 1400;
 
-	// maximum speed the player can fall
+	// velocidade máxima de 'queda'
 	private static inline var yVelocity:Int = 1400;
 
-	// how long holding jump makes player jump in seconds
-	private static inline var jumpDuration:Float = .25;
+	// tempo máximo de subida no pulo, antes de começar a descer
+	private static inline var _duracaoPulo:Float = .25;
 
 	private var _bozo:FlxSprite;
 	private var _bozoDeitado:FlxSprite;
 	private var _aviao:FlxSprite;
-	private var _jump:Float;
+	private var _pular:Float;
 	private var _tocarPulo:Bool;
 	private var _pularPressionado:Bool;
 	private var _estaAbaixado:Bool;
@@ -127,8 +124,8 @@ class BozoRunGameState extends FlxState
 		configurarFundo();
 		iniciarGruposDeColisoes();
 
-		// setup platform logic
-		configuraPlataformas();
+		// lógica do chão e de da ponta até onde serão criados objetos do cenário
+		configuraPlataforma();
 
 		// prepare player related variables
 		configurarBozo();
@@ -137,11 +134,11 @@ class BozoRunGameState extends FlxState
 		iniciarBozoMovel();
 	}
 
+	// Procure iniciar os grupos dos objetos ao estado antes da interface
+	// pra que os objetos da interface fiquem visualmente na frente, veja:
+	// https://groups.google.com/d/msg/haxeflixel/DrDXEani_oY/Om_KzuCVWeEJ
 	private inline function iniciarGruposDeColisoes():Void
 	{
-		// Abaixo adiciono os grupos dos objetos ao estado antes da interface
-		// pra que os objetos do hud fiquem na frente, veja:
-		// https://groups.google.com/d/msg/haxeflixel/DrDXEani_oY/Om_KzuCVWeEJ
 		add(_grupoLivros);
 		add(_grupoLaranjas);
 		add(_grupoChao);
@@ -179,13 +176,13 @@ class BozoRunGameState extends FlxState
 		_bozoDeitado.height = 40;
 		_bozoDeitado.offset.set(0, 90);
 		_bozoDeitado.visible = false; // false pois só será exibido quando o jogador abaixar o Bozo
-		// set animations to use this run
 		configuraAnimacoes();
 
 		// Adiciona Bozo em pé e deitado mas a princípio só exibe ele em pé
 		add(_bozo);
 		add(_bozoDeitado);
 		add(_grupoBozoMovel);
+		// por último adiciona _grupoBozoMovel pra criar efeito do Bozo atrás das grades do carro-de-som
 
 		// 'fantasma' que segue o Bozo, mas sem pular, e é seguido pela camera.
 		_fantasma = new FlxSprite(_bozo.x + FlxG.width - TILE_WIDTH, FlxG.height / 2);
@@ -235,7 +232,7 @@ class BozoRunGameState extends FlxState
 		_pontosTexto.color = 0xFF0000; // red color
 		add(_pontosTexto);
 
-		// add lives indicator
+		// adiciona indicadores de vidas do Bozo
 		_vida0 = new FlxSprite(0, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
 		_vida0.scrollFactor.set(0, 0);
 		_vida0.animation.add('vivo', [0], 1, false);
@@ -286,7 +283,7 @@ class BozoRunGameState extends FlxState
 		_fundoCenario.y += _paddingTop == 0 ? 70 : 170;
 	}
 
-	private inline function configuraPlataformas():Void
+	private inline function configuraPlataforma():Void
 	{
 		_chao = new FlxBackdrop(AssetPaths.groundtiles__png, 1, 0, true, false, 0, 0);
 		_chao.allowCollisions = FlxObject.ANY;
@@ -297,13 +294,13 @@ class BozoRunGameState extends FlxState
 		_chao.setSize(400000, 32);
 
 		_grupoChao.add(_chao);
-		_pontaDireitaCenario = (_distancia - 1) * TILE_WIDTH;
+		_pontaDireitaCenario = (_distancia - 1) * TILE_WIDTH; // Onde objetos serão criados até aí
 	}
 
 	private inline function iniciarBozo():Void
 	{
 		// Começa pulando, caindo do alto.
-		_jump = -1;
+		_pular = -1;
 		_tocarPulo = true;
 		_estaAbaixado = false;
 		_pularPressionado = false;
@@ -314,12 +311,10 @@ class BozoRunGameState extends FlxState
 		_bozoDeitado.setPosition(_distancia * TILE_WIDTH, -20 + _paddingTop);
 
 		// Física básica pro Bozo
-		_bozo.drag.x = xDrag;
 		_bozo.velocity.set(0, 0);
 		_bozo.maxVelocity.set(BASE_SPEED, yVelocity);
 		_bozo.acceleration.set(xAcceleration, yAcceleration);
 
-		_bozoDeitado.drag.x = xDrag;
 		_bozoDeitado.velocity.set(0, 0);
 		_bozoDeitado.maxVelocity.set(BASE_SPEED, yVelocity);
 		_bozoDeitado.acceleration.set(xAcceleration, yAcceleration);
@@ -481,7 +476,7 @@ class BozoRunGameState extends FlxState
 			_tocarPulo = false;
 			// bozo tá no chão?
 			if (_bozo.velocity.x > 0 && !_pularPressionado)
-				_jump = 0; // reset jump variable
+				_pular = 0; // reseta variável do pulo
 		};
 
 		// colidiu com livro?
@@ -490,7 +485,7 @@ class BozoRunGameState extends FlxState
 				processaColisaoBozoLivros) : FlxG.overlap(_bozo, _grupoLivros, processaColisaoBozoLivros)))
 		{
 			_tocarPulo = false;
-			_jump = 0;
+			_pular = 0;
 
 			if (_quantiaLaranjas == 0
 				&& (_estaAbaixado ? FlxG.collide(_bozoDeitado, _grupoLivros) : FlxG.collide(_bozo, _grupoLivros))
@@ -498,7 +493,7 @@ class BozoRunGameState extends FlxState
 				&& _quantiaLaranjas <= 0)
 			{
 				// player went splat
-				_jump = -1;
+				_pular = -1;
 				_tocarPulo = false;
 				if (xAcceleration > 0 && _morrer)
 					FlxG.camera.shake(0.01, 0.2);
@@ -590,10 +585,10 @@ class BozoRunGameState extends FlxState
 		if (_bozo.velocity.x > 10)
 			_morrer = true;
 
-		if (_jump != -1 && _pularPressionado)
+		if (_pular != -1 && _pularPressionado)
 		{
 			// toca o som de pulo somente no primeiro instante do pulo
-			if (_jump == 0)
+			if (_pular == 0)
 			{
 				if (_tocarSons)
 					FlxG.sound.play(AssetPaths.goblin_1__ogg);
@@ -601,7 +596,7 @@ class BozoRunGameState extends FlxState
 			}
 
 			// Soma na conta o tempo do frame atual caso esteja pulando
-			_jump += elapsed;
+			_pular += elapsed;
 
 			if (_bozo.velocity.y >= 0)
 			{
@@ -611,10 +606,10 @@ class BozoRunGameState extends FlxState
 				_bozo.acceleration.y = -yAcceleration; // Aceleração do pulo pra ir pro alto (y negativo)
 			}
 
-			if (_jump > jumpDuration)
-				_jump = -1; // pára de subir pro alto se o tempo de pulo já deu
+			if (_pular > _duracaoPulo)
+				_pular = -1; // pára de subir pro alto se o tempo de pulo já deu
 		}
-		else if (!_pularPressionado || _jump == -1)
+		else if (!_pularPressionado || _pular == -1)
 		{
 			if (_bozo.velocity.y < 0)
 			{
