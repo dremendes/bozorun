@@ -80,6 +80,7 @@ class BozoRunGameState extends FlxState
 	private var _grupoChao:FlxSpriteGroup = new FlxSpriteGroup();
 	private var _grupoLivros:FlxSpriteGroup = new FlxSpriteGroup();
 	private var _grupoLaranjas:FlxSpriteGroup = new FlxSpriteGroup();
+	private var _grupoBozoMovel:FlxSpriteGroup = new FlxSpriteGroup();
 	private var _quantiaLaranjas:Int = 0;
 
 	private var _mudou:Bool; // indica se os grupos de colisões mudaram
@@ -124,15 +125,26 @@ class BozoRunGameState extends FlxState
 		_menuPausadoSubState = new PausadoSubState(new FlxColor(0x99808080));
 
 		configurarFundo();
-		configurarInterface();
+		iniciarGruposDeColisoes();
 
 		// setup platform logic
 		configuraPlataformas();
 
 		// prepare player related variables
 		configurarBozo();
+		configurarInterface();
 		iniciarBozo();
 		iniciarBozoMovel();
+	}
+
+	private inline function iniciarGruposDeColisoes():Void
+	{
+		// Abaixo adiciono os grupos dos objetos ao estado antes da interface
+		// pra que os objetos do hud fiquem na frente, veja:
+		// https://groups.google.com/d/msg/haxeflixel/DrDXEani_oY/Om_KzuCVWeEJ
+		add(_grupoLivros);
+		add(_grupoLaranjas);
+		add(_grupoChao);
 	}
 
 	private inline function configurarFundo():Void
@@ -173,6 +185,7 @@ class BozoRunGameState extends FlxState
 		// Adiciona Bozo em pé e deitado mas a princípio só exibe ele em pé
 		add(_bozo);
 		add(_bozoDeitado);
+		add(_grupoBozoMovel);
 
 		// 'fantasma' que segue o Bozo, mas sem pular, e é seguido pela camera.
 		_fantasma = new FlxSprite(_bozo.x + FlxG.width - TILE_WIDTH, FlxG.height / 2);
@@ -194,13 +207,6 @@ class BozoRunGameState extends FlxState
 
 	private inline function configurarInterface():Void
 	{
-		// Abaixo adiciono os grupos dos objetos ao estado antes da interface
-		// pra que os objetos do hud fiquem na frente, veja:
-		// https://groups.google.com/d/msg/haxeflixel/DrDXEani_oY/Om_KzuCVWeEJ
-		add(_grupoLivros);
-		add(_grupoLaranjas);
-		add(_grupoChao);
-
 		_pausarButton = new FlxButton(0, 0, "", () ->
 		{
 			if (_tocarSons)
@@ -351,8 +357,8 @@ class BozoRunGameState extends FlxState
 		_barreiraBozomovel.scale.set(2, 1.5);
 		_barreiraBozomovel.updateHitbox();
 		_barreiraBozomovel.setPosition(_bozomovel.x + 280, 90);
-		add(_bozomovel);
-		add(_barreiraBozomovel);
+		_grupoBozoMovel.add(_bozomovel);
+		_grupoBozoMovel.add(_barreiraBozomovel);
 	}
 
 	private inline function aoReiniciar():Void
@@ -464,11 +470,11 @@ class BozoRunGameState extends FlxState
 				}
 		}
 
-		FlxG.collide(_bozomovel, _grupoChao);
+		FlxG.collide(_grupoBozoMovel, _grupoChao);
 		FlxG.collide(_barreiraBozomovel, _grupoChao);
 		FlxG.collide(_barreiraBozomovel, _bozo);
-		FlxG.collide(_bozomovel, _bozo);
-		FlxG.collide(_bozomovel, _grupoLivros, processaColisaoBozoMovelLivros);
+		FlxG.collide(_grupoBozoMovel, _bozo);
+		FlxG.collide(_grupoBozoMovel, _grupoLivros, processaColisaoBozoMovelLivros);
 		FlxG.collide(_bozoDeitado, _grupoChao);
 		if (FlxG.collide(_bozo, _grupoChao))
 		{
@@ -649,7 +655,7 @@ class BozoRunGameState extends FlxState
 			|| ((x + _rangeProibido) < randomIntPosX) ? randomIntPosX : gerarIntForaDaFaixaX(x, _rangeProibido);
 	}
 
-	private inline function criarObstaculoEColocarNoGrupo(Path:FlxGraphicAsset, width:Int, height:Int, group:FlxSpriteGroup, isSolid:Bool = true,
+	private inline function criarObstaculoEColocarNoGrupo(Path:FlxGraphicAsset, width:Int, height:Int, grupo:FlxSpriteGroup, isSolid:Bool = true,
 			isImmovable:Bool = true):Void
 	{
 		var obj = new AssetLoader(Path, width, height);
@@ -658,7 +664,7 @@ class BozoRunGameState extends FlxState
 		obj.solid = isSolid;
 		obj.immovable = isImmovable;
 		_posicaoOcupadaX = obj.x;
-		group.add(obj);
+		grupo.add(obj);
 	}
 
 	private inline function fazerObjetos(wide:Int = 0, high:Int = 0):Void
@@ -744,7 +750,7 @@ class BozoRunGameState extends FlxState
 	override public function destroy():Void
 	{
 		_bozo.destroy();
-		barreiraBozomovel.destroy();
+		_barreiraBozomovel.destroy();
 		_bozomovel.destroy();
 		_vida0.destroy();
 		_vida1.destroy();
@@ -760,6 +766,7 @@ class BozoRunGameState extends FlxState
 		_grupoChao.destroy();
 		_grupoLivros.destroy();
 		_grupoLaranjas.destroy();
+		_grupoBozoMovel.destroy();
 		_pausarButton.destroy();
 		_voltarButton.destroy();
 		_pontosTexto.destroy();
