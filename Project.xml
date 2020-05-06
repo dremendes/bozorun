@@ -11,12 +11,17 @@
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
 	<set name="SWF_VERSION" value="11.8" />
 
+	<!--Enable OpenFL next -->
+	<set name="next" />
+
+	<!--Enable webgl -->
+	<set name="webgl" if="html5" />
+	<haxedef name="webgl" if="html5" />
+
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
-	<window width="0" height="0" background="#000000" fps="60" />
-	<window resizable="true" hardware="true" allow-shaders="true" require-shaders="true" if="cpp"/>
-	<window vsync="true" />
+	<window width="0" height="0" background="#000000" fps="60" hardware="true" vsync="false" />
 
 	<!--HTML5-specific-->
 	<window if="html5" resizable="true" />
@@ -39,10 +44,10 @@
 
 	<!--In case you want to use the addons package-->
 	<haxelib name="flixel-addons" />
-	<haxelib name="extension-orientation" />
 
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
+	
 
 	<!--In case you want to use nape with flixel-->
 	<!--<haxelib name="nape-haxe4" />-->
@@ -76,12 +81,11 @@
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
-	<!-- <haxedef name="NAPE_RELEASE_BUILD" unless="debug" /> -->
+	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
-	<haxedef name="shaders_supported" unless="flash || openfl-legacy" />
+	<haxedef name="shaders_supported" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	<template path="lib/AndroidManifest.xml" rename="AndroidManifest.xml" if="android"/>
 </project>

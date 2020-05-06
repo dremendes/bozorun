@@ -11,7 +11,6 @@ import flixel.ui.FlxButton;
 import flixel.addons.display.FlxBackdrop;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
-import extension.eightsines.EsOrientation;
 import openfl.filters.BitmapFilter;
 import openfl.filters.ColorMatrixFilter;
 #if shaders_supported
@@ -111,6 +110,7 @@ class BozoRunGameState extends FlxState
 	];
 	private var _piscando:Bool = true;
 	private var _levantando:Bool = false;
+	#if shaders_supported
 	private var shaderGranulado = new Grain();
 	private var matrixGrayScale:Array<Float> = [
 		0.3, 0.3, 0.3,    0, 0,
@@ -118,15 +118,12 @@ class BozoRunGameState extends FlxState
 		0.3, 0.3, 0.3,    0, 0,
 		  0,   0,   0, 0.99, 0,
 	];
+	#end
 
 	override public function create():Void
 	{
 		#if html5
 		FlxG.mouse.visible = true;
-		#end
-
-		#if android
-		EsOrientation.setScreenOrientation(EsOrientation.ORIENTATION_LANDSCAPE);
 		#end
 
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
@@ -387,15 +384,13 @@ class BozoRunGameState extends FlxState
 			_voltarButton.scale.set(1.4, 1.4);
 			_voltarButton.updateHitbox();
 			_voltarButton.setPosition(FlxG.width / 2 - 25, 220);
+			#if shaders_supported
 			var filters:Array<BitmapFilter> = [];
 			var filterMap:{filter:BitmapFilter};
-			filters = [
-				#if shaders_supported new ShaderFilter(shaderGranulado),
-				#end
-				new ColorMatrixFilter(matrixGrayScale)
-			];
+			filters = [new ColorMatrixFilter(matrixGrayScale), new ShaderFilter(shaderGranulado)];
 			FlxG.camera.setFilters(filters);
 			FlxG.game.setFilters(filters);
+			#end
 		}
 
 	private inline function tocarPluftAnimacao(x:Float, y:Float, scale:Float = 3):Void
