@@ -11,7 +11,6 @@ import flixel.util.FlxColor;
 import flixel.addons.display.FlxBackdrop;
 #if shaders_supported
 import openfl.filters.BitmapFilter;
-import openfl.filters.ColorMatrixFilter;
 #if (openfl >= "8.0.0")
 import openfl8.*;
 #else
@@ -52,7 +51,6 @@ class MainMenuState extends FlxState
 
 		#if shaders_supported
 		var filters:Array<BitmapFilter> = [];
-		var filterMap:{filter:BitmapFilter};
 
 		filters = [new ShaderFilter(shaderGranulado)];
 		FlxG.camera.setFilters(filters);

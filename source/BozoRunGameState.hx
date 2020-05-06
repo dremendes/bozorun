@@ -386,7 +386,6 @@ class BozoRunGameState extends FlxState
 			_voltarButton.setPosition(FlxG.width / 2 - 25, 220);
 			#if shaders_supported
 			var filters:Array<BitmapFilter> = [];
-			var filterMap:{filter:BitmapFilter};
 			filters = [new ColorMatrixFilter(matrixGrayScale), new ShaderFilter(shaderGranulado)];
 			FlxG.camera.setFilters(filters);
 			FlxG.game.setFilters(filters);
@@ -661,9 +660,7 @@ class BozoRunGameState extends FlxState
 	}
 
 	private inline function atualizaBozoMovel():Void
-	{
 		_barreiraBozomovel.setPosition(_bozomovel.x + 280, _barreiraBozomovel.y);
-	}
 
 	private inline function gerarIntForaDaFaixaX(x:Float, _rangeProibido:Float):Float
 	{
