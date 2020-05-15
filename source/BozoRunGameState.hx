@@ -351,24 +351,27 @@ class BozoRunGameState extends FlxState
 
 	private inline function iniciarBozoMovel():Void
 	{
-		_bozomovel = new FlxSprite().loadGraphic(AssetPaths.bozomovel__png, true, 101, 85);
-		_bozomovel.animation.add("emMovimento", [0, 1, 2], 9);
-		_bozomovel.animation.play("emMovimento");
-		_bozomovel.setPosition(_bozo.x + 200, 90);
-		_bozomovel.velocity.y = yAcceleration * .25;
-		_bozomovel.velocity.x = 380;
-		_bozomovel.scale.set(3, 1.8);
-		_bozomovel.updateHitbox();
-		_bozomovel.scale.set(3, 3);
-		_bozomovel.y += 40;
-		_barreiraBozomovel = new FlxSprite().loadGraphic(AssetPaths.barreiraBozoMovel__png, false, 8, 140);
-		_barreiraBozomovel.velocity.y = yAcceleration * .25;
-		_barreiraBozomovel.velocity.x = _bozomovel.velocity.x;
-		_barreiraBozomovel.scale.set(2, 1.5);
-		_barreiraBozomovel.updateHitbox();
-		_barreiraBozomovel.setPosition(_bozomovel.x + 280, 90);
-		_grupoBozoMovel.add(_bozomovel);
-		_grupoBozoMovel.add(_barreiraBozomovel);
+		// Estou comentando as linhas abaixos enquanto não está pronto todo o ciclo do Bozomóvel
+		/*
+			_bozomovel = new FlxSprite().loadGraphic(AssetPaths.bozomovel__png, true, 101, 85);
+			_bozomovel.animation.add("emMovimento", [0, 1, 2], 9);
+			_bozomovel.animation.play("emMovimento");
+			_bozomovel.setPosition(_bozo.x + 200, 90);
+			_bozomovel.velocity.y = yAcceleration * .25;
+			_bozomovel.velocity.x = 380;
+			_bozomovel.scale.set(3, 1.8);
+			_bozomovel.updateHitbox();
+			_bozomovel.scale.set(3, 3);
+			_bozomovel.y += 40;
+			_barreiraBozomovel = new FlxSprite().loadGraphic(AssetPaths.barreiraBozoMovel__png, false, 8, 140);
+			_barreiraBozomovel.velocity.y = yAcceleration * .25;
+			_barreiraBozomovel.velocity.x = _bozomovel.velocity.x;
+			_barreiraBozomovel.scale.set(2, 1.5);
+			_barreiraBozomovel.updateHitbox();
+			_barreiraBozomovel.setPosition(_bozomovel.x + 280, 90);
+			_grupoBozoMovel.add(_bozomovel);
+			_grupoBozoMovel.add(_barreiraBozomovel);
+		 */
 	}
 
 	private inline function aoReiniciar():Void
@@ -454,7 +457,7 @@ class BozoRunGameState extends FlxState
 		// realiza coleta de lixo (garbage collection)
 		atualizaObjetos();
 		atualizaControlesOpcoes();
-		atualizaBozoMovel();
+		// atualizaBozoMovel();
 
 		atualizaBozo(elapsed);
 
@@ -486,11 +489,11 @@ class BozoRunGameState extends FlxState
 				}
 		}
 
-		FlxG.collide(_grupoBozoMovel, _grupoChao);
-		FlxG.collide(_barreiraBozomovel, _grupoChao);
-		FlxG.collide(_barreiraBozomovel, _bozo);
-		FlxG.collide(_grupoBozoMovel, _bozo);
-		FlxG.collide(_grupoBozoMovel, _grupoLivros, processaColisaoBozoMovelLivros);
+		// FlxG.collide(_grupoBozoMovel, _grupoChao);
+		// FlxG.collide(_barreiraBozomovel, _grupoChao);
+		// FlxG.collide(_barreiraBozomovel, _bozo);
+		// FlxG.collide(_grupoBozoMovel, _bozo);
+		// FlxG.collide(_grupoBozoMovel, _grupoLivros, processaColisaoBozoMovelLivros);
 		FlxG.collide(_bozoDeitado, _grupoChao);
 		if (FlxG.collide(_bozo, _grupoChao))
 		{
