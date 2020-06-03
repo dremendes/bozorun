@@ -768,7 +768,7 @@ class BozoRunGameState extends FlxState
 	{
 		_bozo.destroy();
 		// _barreiraBozomovel.destroy();
-		_bozomovel.destroy();
+		// _bozomovel.destroy();
 		_vida0.destroy();
 		_vida1.destroy();
 		_vida2.destroy();
