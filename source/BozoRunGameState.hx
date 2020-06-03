@@ -244,7 +244,7 @@ class BozoRunGameState extends FlxState
 		_pontosTexto = new FlxText(78, 8, TILE_WIDTH * 3 - 3, "");
 		_pontosTexto.scrollFactor.set(0, 0);
 		_pontosTexto.borderStyle = OUTLINE;
-		_pontosTexto.color = 0xFF0000; // red color
+		_pontosTexto.color = 0xFF0000; // cor vermelha
 		add(_pontosTexto);
 
 		// adiciona indicadores de vidas do Bozo
@@ -436,7 +436,7 @@ class BozoRunGameState extends FlxState
 		if (_tocarSons)
 			FlxG.sound.play(AssetPaths.tiro__ogg);
 		_bozomovel.velocity.x = 380;
-		_barreiraBozomovel.velocity.x = _bozomovel.velocity.x;
+		// _barreiraBozomovel.velocity.x = _bozomovel.velocity.x;
 	}
 
 	private inline function atualizaControlesOpcoes():Void
