@@ -1,4 +1,4 @@
-# [bozorun.netlify.app](https://www.newgrounds.com/portal/view/750869)
+# [https://newgrounds.com/portal/view/750869](https://www.newgrounds.com/portal/view/750869)
 ![Tela do site](https://raw.githubusercontent.com/fullynotanalien/bozorun/master/assets/images/bozorun2020.png)
 
 # Bozorun
