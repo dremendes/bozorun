@@ -1,11 +1,11 @@
-# [bozorun.netlify.app](http://bozorun.netlify.app)
+# [https://newgrounds.com/portal/view/750869](https://www.newgrounds.com/portal/view/750869)
 ![Tela do site](https://raw.githubusercontent.com/fullynotanalien/bozorun/master/assets/images/bozorun2020.png)
 
 # Bozorun
 
 Nesse infinite runner politicamente carregado, Bozonaro precisa evitar que obstáculos travem seu caminho.
 
-Laranjas ajudam o Bozo a passar pelos obstáculos
+Laranjas ajudam Bozo a passar pelos obstáculos
 
 Evite os obstáculos pulando ou se abaixando! Se estiver num celular, basta tocar na tela pra isso.
 
