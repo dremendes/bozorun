@@ -9,16 +9,6 @@ import flixel.ui.FlxButton;
 import flixel.FlxObject;
 import flixel.util.FlxColor;
 import flixel.addons.display.FlxBackdrop;
-#if shaders_supported
-import openfl.filters.BitmapFilter;
-#if (openfl >= "8.0.0")
-import openfl8.*;
-#else
-import openfl3.*;
-#end
-import openfl.filters.ShaderFilter;
-import openfl.Lib;
-#end
 
 /**
  * Based on work from
@@ -39,9 +29,6 @@ class MainMenuState extends FlxState
 	private var paddingSide:Float = (FlxG.width - 300) / 2;
 	private var paddingTop:Float = (FlxG.height - 300) / 2;
 	private var fundoCeu:FlxBackdrop;
-	#if shaders_supported
-	private var shaderGranulado = new Grain();
-	#end
 
 	override public function create():Void
 	{
@@ -49,13 +36,6 @@ class MainMenuState extends FlxState
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 		FlxG.camera.antialiasing = true;
 
-		#if shaders_supported
-		var filters:Array<BitmapFilter> = [];
-
-		filters = [new ShaderFilter(shaderGranulado)];
-		FlxG.camera.setFilters(filters);
-		FlxG.game.setFilters(filters);
-		#end
 		var division:Int = Std.int(FlxG.height / 3);
 
 		#if html5
@@ -147,14 +127,6 @@ class MainMenuState extends FlxState
 
 	override public function update(elapsed:Float):Void
 	{
-		#if shaders_supported
-		#if (openfl >= "8.0.0")
-		shaderGranulado.uTime.value = [Lib.getTimer() / 1000];
-		#else
-		shaderGranulado.uTime = Lib.getTimer() / 1000;
-		#end
-		#end
-
 		aviao.x += 0.8;
 
 		if (aviao.x >= 450 + paddingSide)
