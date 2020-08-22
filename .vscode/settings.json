@@ -3,6 +3,10 @@
 		"export/**/*.hx": true
 	},
 	"[haxe]": {
+		"haxe.displayConfigurations": [
+			["export/linux/cpp/haxe/debug.hxml"],
+			["export/android/haxe/debug.hxml"],
+			// ["export/flash/haxe/debug.hxml"],
 		"editor.formatOnSave": true
 	}
 }

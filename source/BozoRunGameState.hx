@@ -11,8 +11,8 @@ import flixel.ui.FlxButton;
 import flixel.addons.display.FlxBackdrop;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
-import openfl.filters.BitmapFilter;
-import openfl.filters.ColorMatrixFilter;
+import extension.admob.AdMob;
+import extension.admob.GravityMode;
 
 class BozoRunGameState extends FlxState
 {
@@ -119,6 +119,9 @@ class BozoRunGameState extends FlxState
 		_menuPausadoSubState = new PausadoSubState(new FlxColor(0x99808080));
 
 		configurarFundo();
+		#if android
+		configurarAdMob();
+		#end
 		iniciarGruposDeColisoes();
 
 		// lógica do chão e de da ponta até onde serão criados objetos do cenário
@@ -129,6 +132,32 @@ class BozoRunGameState extends FlxState
 		configurarInterface();
 		iniciarBozo();
 		iniciarBozoMovel();
+	}
+
+	private inline function configurarAdMob():Void
+	{
+		// google ads (testing)
+		AdMob.onInterstitialEvent = onInterstitialEvent;
+		AdMob.showBanner();
+	}
+
+	static private inline function onInterstitialEvent(event:String)
+	{
+		trace("THE INSTERSTITIAL IS " + event);
+		/*
+			Note that the "event" String will be one of this:
+				AdMob.LEAVING
+				AdMob.FAILED
+				AdMob.CLOSED
+				AdMob.DISPLAYING
+				AdMob.LOADED
+				AdMob.LOADING
+
+			So, you can do something like:
+			if(event == AdMob.CLOSED) trace("The player dismissed the ad!");
+			else if(event == AdMob.LEAVING) trace("The player clicked the ad :), and we're leaving to the ad destination");
+			else if(event == AdMob.FAILED) trace("Failed to load the ad... the extension will retry automatically.");
+		 */
 	}
 
 	// Procure iniciar os grupos dos objetos ao estado antes da interface
@@ -361,6 +390,10 @@ class BozoRunGameState extends FlxState
 			iniciarBozo()
 		else
 		{
+			#if android
+			AdMob.hideBanner();
+			AdMob.showInterstitial(120, 3);
+			#end
 			_bozo.acceleration.x = _bozoDeitado.acceleration.x = _bozo.velocity.x = _bozoDeitado.velocity.x = 0; // Bozo agora fica parado
 			_impeachmado = new FlxSprite().loadGraphic(AssetPaths.impitimado__png, false, 250, 117);
 			_impeachmado.setPosition(_bozo.x + ((FlxG.width / 2) - (_impeachmado.width / 2)), 80);

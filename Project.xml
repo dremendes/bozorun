@@ -47,8 +47,9 @@
 
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
-	
 
+	<haxelib name="extension-admob" />
+	
 	<!--In case you want to use nape with flixel-->
 	<!--<haxelib name="nape-haxe4" />-->
 
@@ -88,4 +89,7 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
+	<android target-sdk-version="28" if="android" />
+	<haxedef name="HXCPP_CHECK_POINTER" if="debug" />
+	<haxedef name="HXCPP_STACK_TRACE" if="debug" />
 </project>

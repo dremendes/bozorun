@@ -9,6 +9,8 @@ import flixel.ui.FlxButton;
 import flixel.FlxObject;
 import flixel.util.FlxColor;
 import flixel.addons.display.FlxBackdrop;
+import extension.admob.AdMob;
+import extension.admob.GravityMode;
 
 /**
  * Based on work from
@@ -32,6 +34,11 @@ class MainMenuState extends FlxState
 
 	override public function create():Void
 	{
+		AdMob.enableTestingAds();
+		AdMob.onInterstitialEvent = onInterstitialEvent;
+		AdMob.initAndroid("ca-app-pub-6476709060042535/2529633910", "ca-app-pub-6476709060042535/9946580195",
+			GravityMode.BOTTOM); 
+
 		// FlxG.debugger.visible = true;
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 		FlxG.camera.antialiasing = true;
@@ -124,6 +131,25 @@ class MainMenuState extends FlxState
 		add(BtnRun);
 		FlxG.sound.playMusic(AssetPaths.bozosong__ogg); // música de fundo
 	}
+
+	static private inline function onInterstitialEvent(event:String)
+		{
+			trace("THE INSTERSTITIAL IS " + event);
+			/*
+				Note that the "event" String will be one of this:
+					AdMob.LEAVING
+					AdMob.FAILED
+					AdMob.CLOSED
+					AdMob.DISPLAYING
+					AdMob.LOADED
+					AdMob.LOADING
+	
+				So, you can do something like:
+				if(event == AdMob.CLOSED) trace("The player dismissed the ad!");
+				else if(event == AdMob.LEAVING) trace("The player clicked the ad :), and we're leaving to the ad destination");
+				else if(event == AdMob.FAILED) trace("Failed to load the ad... the extension will retry automatically.");
+			 */
+		}
 
 	override public function update(elapsed:Float):Void
 	{
