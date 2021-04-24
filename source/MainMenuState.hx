@@ -11,6 +11,8 @@ import flixel.util.FlxColor;
 import flixel.addons.display.FlxBackdrop;
 import extension.admob.AdMob;
 import extension.admob.GravityMode;
+import extension.eightsines.EsOrientation;
+import flixel.system.scaleModes.BaseScaleMode;
 
 /**
  * Based on work from
@@ -34,7 +36,9 @@ class MainMenuState extends FlxState
 
 	override public function create():Void
 	{
-		AdMob.enableTestingAds();
+		EsOrientation.setScreenOrientation(EsOrientation.ORIENTATION_LANDSCAPE);
+		FlxG.scaleMode = new BaseScaleMode();
+
 		AdMob.onInterstitialEvent = onInterstitialEvent;
 		AdMob.initAndroid("ca-app-pub-6476709060042535/2529633910", "ca-app-pub-6476709060042535/9946580195",
 			GravityMode.BOTTOM); 
@@ -42,8 +46,6 @@ class MainMenuState extends FlxState
 		// FlxG.debugger.visible = true;
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 		FlxG.camera.antialiasing = true;
-
-		var division:Int = Std.int(FlxG.height / 3);
 
 		#if html5
 		FlxG.mouse.visible = true;
@@ -67,7 +69,7 @@ class MainMenuState extends FlxState
 		background.scale.set(FlxG.width / 300, FlxG.height / 300);
 		add(background);
 		pato = new FlxSprite().loadGraphic(AssetPaths.patin__png, false, 30, 29);
-		pato.setPosition(180, 160);
+		pato.setPosition(180, 150);
 		pato.setFacingFlip(FlxObject.RIGHT, false, false);
 		pato.setFacingFlip(FlxObject.LEFT, true, false);
 		pato.facing = FlxObject.LEFT;
@@ -86,9 +88,10 @@ class MainMenuState extends FlxState
 		bozoRun.loadGraphic(AssetPaths.Jair__png, true, 104, 122, true);
 		bozoRun.animation.add("arminha_com_a_mao", [20, 19], 4, true);
 		bozoRun.animation.play("arminha_com_a_mao");
-		bozoRun.setPosition(180, 160);
+		bozoRun.setPosition(180, 100);
 		bozoRun.x += paddingSide;
 		bozoRun.y += paddingTop * 2;
+		bozoRun.scale.set(1,1.6);
 		add(bozoRun);
 		pedestal = new FlxSprite().loadGraphic(AssetPaths.pedestal__png, false, 12, 102);
 		pedestal.setPosition(255, 180);
@@ -106,7 +109,7 @@ class MainMenuState extends FlxState
 			add(letra);
 		});
 
-		BtnColetiva = new FlxButton(10, division * 1.5 + 40, "", () ->
+		BtnColetiva = new FlxButton(10, Std.int(FlxG.height / 3) * 1.5 + 40, "", () ->
 		{
 			FlxG.sound.play(AssetPaths.beepbotao__ogg);
 			FlxG.camera.fade(FlxColor.BLACK, 0.33, false, () -> FlxG.switchState(new ColetivaGameState()));
@@ -125,31 +128,14 @@ class MainMenuState extends FlxState
 		});
 		BtnRun.label.size = 20;
 		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 34);
-		BtnRun.setPosition(200 + paddingSide, 112 + paddingTop * 2);
+		BtnRun.setPosition(200 + paddingSide, -50 + paddingTop * 2);
 		BtnRun.scale.set(FlxG.width / 300, FlxG.height / 300);
 		BtnRun.updateHitbox();
 		add(BtnRun);
 		FlxG.sound.playMusic(AssetPaths.bozosong__ogg); // música de fundo
 	}
 
-	static private inline function onInterstitialEvent(event:String)
-		{
-			trace("THE INSTERSTITIAL IS " + event);
-			/*
-				Note that the "event" String will be one of this:
-					AdMob.LEAVING
-					AdMob.FAILED
-					AdMob.CLOSED
-					AdMob.DISPLAYING
-					AdMob.LOADED
-					AdMob.LOADING
-	
-				So, you can do something like:
-				if(event == AdMob.CLOSED) trace("The player dismissed the ad!");
-				else if(event == AdMob.LEAVING) trace("The player clicked the ad :), and we're leaving to the ad destination");
-				else if(event == AdMob.FAILED) trace("Failed to load the ad... the extension will retry automatically.");
-			 */
-		}
+	static private inline function onInterstitialEvent(event:String){}
 
 	override public function update(elapsed:Float):Void
 	{

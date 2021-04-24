@@ -13,7 +13,8 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import extension.admob.AdMob;
 import extension.admob.GravityMode;
-
+import extension.eightsines.EsOrientation;
+import flixel.system.scaleModes.FillScaleMode;
 class BozoRunGameState extends FlxState
 {
 	private static inline var TILE_WIDTH:Int = 16;
@@ -104,6 +105,9 @@ class BozoRunGameState extends FlxState
 
 	override public function create():Void
 	{
+		EsOrientation.setScreenOrientation(EsOrientation.ORIENTATION_LANDSCAPE);
+		FlxG.scaleMode = new FillScaleMode();
+		
 		#if html5
 		FlxG.mouse.visible = true;
 		#end
@@ -131,7 +135,7 @@ class BozoRunGameState extends FlxState
 		configurarBozo();
 		configurarInterface();
 		iniciarBozo();
-		iniciarBozoMovel();
+		//iniciarBozoMovel();
 	}
 
 	private inline function configurarAdMob():Void
@@ -141,24 +145,7 @@ class BozoRunGameState extends FlxState
 		AdMob.showBanner();
 	}
 
-	static private inline function onInterstitialEvent(event:String)
-	{
-		trace("THE INSTERSTITIAL IS " + event);
-		/*
-			Note that the "event" String will be one of this:
-				AdMob.LEAVING
-				AdMob.FAILED
-				AdMob.CLOSED
-				AdMob.DISPLAYING
-				AdMob.LOADED
-				AdMob.LOADING
-
-			So, you can do something like:
-			if(event == AdMob.CLOSED) trace("The player dismissed the ad!");
-			else if(event == AdMob.LEAVING) trace("The player clicked the ad :), and we're leaving to the ad destination");
-			else if(event == AdMob.FAILED) trace("Failed to load the ad... the extension will retry automatically.");
-		 */
-	}
+	static private inline function onInterstitialEvent(event:String){}
 
 	// Procure iniciar os grupos dos objetos ao estado antes da interface
 	// pra que os objetos da interface fiquem visualmente na frente, veja:
@@ -176,7 +163,7 @@ class BozoRunGameState extends FlxState
 		_fundoCeu.velocity.x = -20;
 		_fundoCenario = new FlxBackdrop(AssetPaths.bg__png, -5, 0, true, false, 0, 0);
 		_fundoCeu.scale.set(1, _paddingTop == 0 ? 1.2 : 2);
-		_fundoCenario.scale.set(1.5, _paddingTop == 0 ? 1.5 : 2.5);
+		_fundoCenario.scale.set(0.6, _paddingTop == 0 ? 1.5 : 2.5);
 		_fundosGrupo = new FlxSpriteGroup();
 
 		_aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 91, 17);
@@ -194,14 +181,17 @@ class BozoRunGameState extends FlxState
 	private inline function configurarBozo():Void
 	{
 		_bozo = new FlxSprite().loadGraphic(AssetPaths.Jair__png, true, 104, 122);
-		_bozo.scale.set(0.4, 1);
+		_bozo.scale.set(0.3, 1.2);
 		_bozo.updateHitbox();
-		_bozo.scale.set(1, 1);
+		_bozo.scale.set(0.6, 1.2);
 
 		_bozoDeitado = new FlxSprite().loadGraphic(AssetPaths.jairtomando__png, true, 122, 140);
 		_bozoDeitado.height = 40;
 		_bozoDeitado.offset.set(0, 90);
 		_bozoDeitado.visible = false; // false pois só será exibido quando o jogador abaixar o Bozo
+		_bozoDeitado.scale.set(0.4, 1.2);
+		_bozoDeitado.updateHitbox();
+		_bozoDeitado.scale.set(0.56, 1.2);
 		configuraAnimacoes();
 
 		// Adiciona Bozo em pé e deitado mas a princípio só exibe ele em pé
@@ -252,7 +242,8 @@ class BozoRunGameState extends FlxState
 		_voltarButton.scrollFactor.set(0, 0);
 		add(_voltarButton);
 
-		_pontosTexto = new FlxText(78, 8, TILE_WIDTH * 3 - 3, "");
+		_pontosTexto = new FlxText(52, 8, TILE_WIDTH * 3 + 25, "", 12);
+		_pontosTexto.scale.set(1,2);
 		_pontosTexto.scrollFactor.set(0, 0);
 		_pontosTexto.borderStyle = OUTLINE;
 		_pontosTexto.color = 0xFF0000; // cor vermelha
@@ -260,34 +251,40 @@ class BozoRunGameState extends FlxState
 
 		// adiciona indicadores de vidas do Bozo
 		_vida0 = new FlxSprite(0, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
+		_vida0.scale.set(0.4, 1);
 		_vida0.scrollFactor.set(0, 0);
 		_vida0.animation.add('vivo', [0], 1, false);
 		_vida0.animation.add('morto', [1], 1, false);
 		add(_vida0);
 
-		_vida1 = new FlxSprite(23, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
+		_vida1 = new FlxSprite(15, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
+		_vida1.scale.set(0.4, 1);
 		_vida1.scrollFactor.set(0, 0);
 		_vida1.animation.add('vivo', [0], 1, false);
 		_vida1.animation.add('morto', [1], 1, false);
 		add(_vida1);
 
-		_vida2 = new FlxSprite(46, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
+		_vida2 = new FlxSprite(30, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
+		_vida2.scale.set(0.4, 1);
 		_vida2.scrollFactor.set(0, 0);
 		_vida2.animation.add('vivo', [0], 1, false);
 		_vida2.animation.add('morto', [1], 1, false);
 		add(_vida2);
 
-		_laranja1 = new FlxSprite(0, 24, AssetPaths.laranja__png);
+		_laranja1 = new FlxSprite(3, 24, AssetPaths.laranja__png);
+		_laranja1.scale.set(0.5, 1);
 		_laranja1.scrollFactor.set(0, 0);
 		_laranja1.visible = false;
 		add(_laranja1);
 
-		_laranja2 = new FlxSprite(24, 24, AssetPaths.laranja__png);
+		_laranja2 = new FlxSprite(15, 24, AssetPaths.laranja__png);
+		_laranja2.scale.set(0.5, 1);
 		_laranja2.scrollFactor.set(0, 0);
 		_laranja2.visible = false;
 		add(_laranja2);
 
-		_laranja3 = new FlxSprite(48, 24, AssetPaths.laranja__png);
+		_laranja3 = new FlxSprite(28, 24, AssetPaths.laranja__png);
+		_laranja3.scale.set(0.5, 1);
 		_laranja3.scrollFactor.set(0, 0);
 		_laranja3.visible = false;
 		add(_laranja3);
@@ -306,7 +303,7 @@ class BozoRunGameState extends FlxState
 		_botaoIndicadorDown.facing = FlxObject.DOWN;
 		add(_botaoIndicadorDown);
 
-		_fundoCenario.y += _paddingTop == 0 ? 70 : 170;
+		_fundoCenario.y += 110;
 	}
 
 	private inline function configuraPlataforma():Void
@@ -315,9 +312,8 @@ class BozoRunGameState extends FlxState
 		_chao.allowCollisions = FlxObject.ANY;
 		_chao.immovable = true;
 		_chao.solid = true;
-		_chao.scale.set(1, 3);
-		_chao.setPosition(0, 290 + _paddingTop * 2);
-		_chao.setSize(400000, 32);
+		_chao.setPosition(0, FlxG.height * .85);
+		_chao.setSize(400000, 70);
 
 		_grupoChao.add(_chao);
 		_pontaDireitaCenario = (_distancia - 1) * TILE_WIDTH; // Onde objetos serão criados até aí
@@ -362,27 +358,24 @@ class BozoRunGameState extends FlxState
 
 	private inline function iniciarBozoMovel():Void
 	{
-		// Estou comentando as linhas abaixos enquanto não está pronto todo o ciclo do Bozomóvel
-		/*
-			_bozomovel = new FlxSprite().loadGraphic(AssetPaths.bozomovel__png, true, 101, 85);
-			_bozomovel.animation.add("emMovimento", [0, 1, 2], 9);
-			_bozomovel.animation.play("emMovimento");
-			_bozomovel.setPosition(_bozo.x + 200, 90);
-			_bozomovel.velocity.y = yAcceleration * .25;
-			_bozomovel.velocity.x = 380;
-			_bozomovel.scale.set(3, 1.8);
-			_bozomovel.updateHitbox();
-			_bozomovel.scale.set(3, 3);
-			_bozomovel.y += 40;
-			_barreiraBozomovel = new FlxSprite().loadGraphic(AssetPaths.barreiraBozoMovel__png, false, 8, 140);
-			_barreiraBozomovel.velocity.y = yAcceleration * .25;
-			_barreiraBozomovel.velocity.x = _bozomovel.velocity.x;
-			_barreiraBozomovel.scale.set(2, 1.5);
-			_barreiraBozomovel.updateHitbox();
-			_barreiraBozomovel.setPosition(_bozomovel.x + 280, 90);
-			_grupoBozoMovel.add(_bozomovel);
-			_grupoBozoMovel.add(_barreiraBozomovel);
-		 */
+		_bozomovel = new FlxSprite().loadGraphic(AssetPaths.bozomovel__png, true, 101, 85);
+		_bozomovel.animation.add("emMovimento", [0, 1, 2], 9);
+		_bozomovel.animation.play("emMovimento");
+		_bozomovel.setPosition(_bozo.x + 200, 90);
+		_bozomovel.velocity.y = yAcceleration * .25;
+		_bozomovel.velocity.x = 380;
+		_bozomovel.scale.set(3, 1.8);
+		_bozomovel.updateHitbox();
+		_bozomovel.scale.set(3, 3);
+		_bozomovel.y += 40;
+		_barreiraBozomovel = new FlxSprite().loadGraphic(AssetPaths.barreiraBozoMovel__png, false, 8, 140);
+		_barreiraBozomovel.velocity.y = yAcceleration * .25;
+		_barreiraBozomovel.velocity.x = _bozomovel.velocity.x;
+		_barreiraBozomovel.scale.set(2, 1.5);
+		_barreiraBozomovel.updateHitbox();
+		_barreiraBozomovel.setPosition(_bozomovel.x + 280, 90);
+		_grupoBozoMovel.add(_bozomovel);
+		_grupoBozoMovel.add(_barreiraBozomovel);
 	}
 
 	private inline function aoReiniciar():Void
@@ -399,7 +392,7 @@ class BozoRunGameState extends FlxState
 			_impeachmado.setPosition(_bozo.x + ((FlxG.width / 2) - (_impeachmado.width / 2)), 80);
 			add(_impeachmado);
 			FlxG.camera.shake(0.01, 0.2);
-			_voltarButton.scale.set(1.4, 1.4);
+			_voltarButton.scale.set(1, 1.4);
 			_voltarButton.updateHitbox();
 			_voltarButton.setPosition(FlxG.width / 2 - 25, 220);
 		}
@@ -685,8 +678,11 @@ class BozoRunGameState extends FlxState
 			isImmovable:Bool = true):Void
 	{
 		var obj = new AssetLoader(Path, width, height);
+		obj.scale.set(0.6, 1.4);
+		obj.updateHitbox();
+		obj.scale.set(0.9, 1.4);
 		obj.x = gerarIntForaDaFaixaX(_posicaoOcupadaX, 50);
-		obj.y = random.float(140 + _paddingTop * 2, 250 + _paddingTop * 2);
+		obj.y = random.float(FlxG.height - 240, FlxG.height - 100);
 		obj.solid = isSolid;
 		obj.immovable = isImmovable;
 		_posicaoOcupadaX = obj.x;

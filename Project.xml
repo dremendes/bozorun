@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
+	<meta build-number="205" />
+	<env name="meta-build-number" value="205" /> 
 
-	<app title="Bozorun" file="Bozorun" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app title="Bozorun" file="Bozorun" main="Main" version="0.2" build="205" code="205" company="DrDe Games" package="com.mendesc.bozorun"/>
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
 	<app preloader="flixel.system.FlxPreloader" />
+	
+	<setenv name="ANDROID_GRADLE_TASK" value=":app:bundleRelease" />
 
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
 	<set name="SWF_VERSION" value="11.8" />
@@ -30,7 +34,7 @@
 	<window if="desktop" orientation="landscape" fullscreen="true" resizable="true" />
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" />
+	<window if="mobile" fullscreen="true" width="0" height="0" />
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
@@ -44,6 +48,7 @@
 
 	<!--In case you want to use the addons package-->
 	<haxelib name="flixel-addons" />
+	<haxelib name="extension-orientation" />
 
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
@@ -89,7 +94,14 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	<android target-sdk-version="28" if="android" />
+	<android target-sdk-version="29" if="android" />
+	<android version-code="205" if="android" />
 	<haxedef name="HXCPP_CHECK_POINTER" if="debug" />
 	<haxedef name="HXCPP_STACK_TRACE" if="debug" />
+	<icon path="icon.png" if="android"/>
+	<setenv name="version" value="205" />
+	<set name="version" value="205" />
+	<app build="205" />
+	
+	<certificate path="Bozorun.keystore" alias="Bozorun" password="b8f!!gr@f%9vkdK@oC" if="android" />
 </project>
