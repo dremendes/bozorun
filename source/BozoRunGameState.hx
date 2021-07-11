@@ -163,7 +163,7 @@ class BozoRunGameState extends FlxState
 		_fundoCeu.velocity.x = -20;
 		_fundoCenario = new FlxBackdrop(AssetPaths.bg__png, -5, 0, true, false, 0, 0);
 		_fundoCeu.scale.set(1, _paddingTop == 0 ? 1.2 : 2);
-		_fundoCenario.scale.set(0.6, _paddingTop == 0 ? 1.5 : 2.5);
+		_fundoCenario.scale.set(1, _paddingTop == 0 ? 1.5 : 2.5);
 		_fundosGrupo = new FlxSpriteGroup();
 
 		_aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 91, 17);
