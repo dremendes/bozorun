@@ -183,13 +183,13 @@ class BozoRunGameState extends FlxState
 		_bozo = new FlxSprite().loadGraphic(AssetPaths.Jair__png, true, 104, 122);
 		_bozo.scale.set(0.3, 1.2);
 		_bozo.updateHitbox();
-		_bozo.scale.set(0.6, 1.2);
+		_bozo.scale.set(0.9, 1.2);
 
 		_bozoDeitado = new FlxSprite().loadGraphic(AssetPaths.jairtomando__png, true, 122, 140);
 		_bozoDeitado.height = 40;
 		_bozoDeitado.offset.set(0, 90);
 		_bozoDeitado.visible = false; // false pois só será exibido quando o jogador abaixar o Bozo
-		_bozoDeitado.scale.set(0.4, 1.2);
+		_bozoDeitado.scale.set(0.6, 1.2);
 		_bozoDeitado.updateHitbox();
 		_bozoDeitado.scale.set(0.56, 1.2);
 		configuraAnimacoes();
@@ -242,7 +242,7 @@ class BozoRunGameState extends FlxState
 		_voltarButton.scrollFactor.set(0, 0);
 		add(_voltarButton);
 
-		_pontosTexto = new FlxText(52, 8, TILE_WIDTH * 3 + 25, "", 12);
+		_pontosTexto = new FlxText(52, 12, TILE_WIDTH * 3 + 25, "", 11);
 		_pontosTexto.scale.set(1,2);
 		_pontosTexto.scrollFactor.set(0, 0);
 		_pontosTexto.borderStyle = OUTLINE;
@@ -251,40 +251,40 @@ class BozoRunGameState extends FlxState
 
 		// adiciona indicadores de vidas do Bozo
 		_vida0 = new FlxSprite(0, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
-		_vida0.scale.set(0.4, 1);
+		_vida0.scale.set(0.6, 1);
 		_vida0.scrollFactor.set(0, 0);
 		_vida0.animation.add('vivo', [0], 1, false);
 		_vida0.animation.add('morto', [1], 1, false);
 		add(_vida0);
 
 		_vida1 = new FlxSprite(15, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
-		_vida1.scale.set(0.4, 1);
+		_vida1.scale.set(0.6, 1);
 		_vida1.scrollFactor.set(0, 0);
 		_vida1.animation.add('vivo', [0], 1, false);
 		_vida1.animation.add('morto', [1], 1, false);
 		add(_vida1);
 
 		_vida2 = new FlxSprite(30, 0).loadGraphic(AssetPaths.coracao__png, true, 28, 23);
-		_vida2.scale.set(0.4, 1);
+		_vida2.scale.set(0.6, 1);
 		_vida2.scrollFactor.set(0, 0);
 		_vida2.animation.add('vivo', [0], 1, false);
 		_vida2.animation.add('morto', [1], 1, false);
 		add(_vida2);
 
 		_laranja1 = new FlxSprite(3, 24, AssetPaths.laranja__png);
-		_laranja1.scale.set(0.5, 1);
+		_laranja1.scale.set(0.7, 1);
 		_laranja1.scrollFactor.set(0, 0);
 		_laranja1.visible = false;
 		add(_laranja1);
 
 		_laranja2 = new FlxSprite(15, 24, AssetPaths.laranja__png);
-		_laranja2.scale.set(0.5, 1);
+		_laranja2.scale.set(0.7, 1);
 		_laranja2.scrollFactor.set(0, 0);
 		_laranja2.visible = false;
 		add(_laranja2);
 
 		_laranja3 = new FlxSprite(28, 24, AssetPaths.laranja__png);
-		_laranja3.scale.set(0.5, 1);
+		_laranja3.scale.set(0.7, 1);
 		_laranja3.scrollFactor.set(0, 0);
 		_laranja3.visible = false;
 		add(_laranja3);
@@ -560,7 +560,7 @@ class BozoRunGameState extends FlxState
 	{
 		_distancia = Std.int(_bozo.x / (TILE_WIDTH));
 
-		_pontosTexto.text = Std.string("Recorde" + _distancia + "m");
+		_pontosTexto.text = Std.string("Recorde:  " + _distancia + "m");
 
 		// camera segue fantasma, não jogador, pra que não suba com os pulos
 		_fantasma.x = _bozo.x - (TILE_WIDTH * .2) + (FlxG.width * .5);

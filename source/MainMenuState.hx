@@ -80,7 +80,7 @@ class MainMenuState extends FlxState
 		bozoEspirra.loadGraphic(AssetPaths.bozotile__png, true, 69, 80, true);
 		bozoEspirra.animation.add("idle", [26, 27, 28, 29, 30, 31, 32, 33, 35, 34, 35, 36, 37, 38, 39, 40, 41, 42, 35], 4, true);
 		bozoEspirra.animation.play("idle");
-		bozoEspirra.setPosition(0, 200);
+		bozoEspirra.setPosition(40, 200);
 		bozoEspirra.x += paddingSide;
 		bozoEspirra.y += paddingTop * 2;
 		add(bozoEspirra);
@@ -90,8 +90,8 @@ class MainMenuState extends FlxState
 		bozoRun.animation.play("arminha_com_a_mao");
 		bozoRun.setPosition(180, 100);
 		bozoRun.x += paddingSide;
-		bozoRun.y += paddingTop * 2;
-		bozoRun.scale.set(1,1.6);
+		bozoRun.y += paddingTop * 2 + 50;
+		bozoRun.scale.set(1,1.1);
 		add(bozoRun);
 		pedestal = new FlxSprite().loadGraphic(AssetPaths.pedestal__png, false, 12, 102);
 		pedestal.setPosition(255, 180);
@@ -128,7 +128,7 @@ class MainMenuState extends FlxState
 		});
 		BtnRun.label.size = 20;
 		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 34);
-		BtnRun.setPosition(200 + paddingSide, -50 + paddingTop * 2);
+		BtnRun.setPosition(250, 100);
 		BtnRun.scale.set(FlxG.width / 300, FlxG.height / 300);
 		BtnRun.updateHitbox();
 		add(BtnRun);
@@ -167,7 +167,6 @@ class MainMenuState extends FlxState
 		BtnRun.destroy();
 		bozoEspirra.destroy();
 		bozoRun.destroy();
-		BtnRun.destroy();
 		BtnColetiva.destroy();
 		fundoCeu.destroy();
 		pato.destroy();
