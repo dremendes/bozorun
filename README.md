@@ -12,3 +12,14 @@ Evite os obstáculos pulando ou se abaixando! Se estiver num celular, basta toca
 Se estiver num pc, pressione UP para pular e DOWN para abaixar.
 
 Código-fonte do jogo: [https://github.com/fullynotanalien/bozorun](https://github.com/fullynotanalien/bozorun)
+
+### Como buildar:
+    #Instalar haxe
+    haxelib install lime
+    haxelib run lime install flixel
+    haxelib git extension-orientation https://github.com/HaxeExtension/extension-orientation
+    haxelib git extension-admob https://github.com/HaxeExtension/extension-admob
+    haxelib run lime build html5
+    haxelib run lime test html5
+
+13/08/2021 - Versão web no firefox buildado da maneira acima no Windows 10 não funciona após MainMenuState com HEAD em f78d5f585ddbc4d0ff2744900ab70c491c2e02f5
