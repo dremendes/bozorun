@@ -1,5 +1,5 @@
 # [https://newgrounds.com/portal/view/750869](https://www.newgrounds.com/portal/view/750869)
-![Tela do site](https://raw.githubusercontent.com/fullynotanalien/bozorun/master/assets/images/bozorun2020.png)
+![Tela do site](https://raw.githubusercontent.com/dremendes/bozorun/master/assets/images/bozorun2020.png)
 
 # Bozorun
 
@@ -11,7 +11,7 @@ Evite os obstáculos pulando ou se abaixando! Se estiver num celular, basta toca
 
 Se estiver num pc, pressione UP para pular e DOWN para abaixar.
 
-Código-fonte do jogo: [https://github.com/fullynotanalien/bozorun](https://github.com/fullynotanalien/bozorun)
+Código-fonte do jogo: [https://github.com/dremendes/bozorun](https://github.com/dremendes/bozorun)
 
 ### Como buildar:
     #Instalar haxe
