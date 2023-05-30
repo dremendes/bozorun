@@ -11,10 +11,11 @@ import flixel.ui.FlxButton;
 import flixel.addons.display.FlxBackdrop;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
-import extension.admob.AdMob;
-import extension.admob.GravityMode;
+import flixel.util.FlxAxes;
 import extension.eightsines.EsOrientation;
 import flixel.system.scaleModes.FillScaleMode;
+import flixel.util.FlxDirectionFlags;
+
 class BozoRunGameState extends FlxState
 {
 	private static inline var TILE_WIDTH:Int = 16;
@@ -106,14 +107,13 @@ class BozoRunGameState extends FlxState
 	override public function create():Void
 	{
 		EsOrientation.setScreenOrientation(EsOrientation.ORIENTATION_LANDSCAPE);
-		FlxG.scaleMode = new FillScaleMode();
-		
+
 		#if html5
 		FlxG.mouse.visible = true;
 		#end
 
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
-		FlxG.camera.antialiasing = true;
+		FlxG.camera.antialiasing = false;
 
 		// garate que o mundo é grande o bastante, 400,000 tiles devem ser suficientes...
 		FlxG.worldBounds.setSize(TILE_WIDTH * 400000, 400 + _paddingTop * 2);
@@ -123,9 +123,7 @@ class BozoRunGameState extends FlxState
 		_menuPausadoSubState = new PausadoSubState(new FlxColor(0x99808080));
 
 		configurarFundo();
-		#if android
-		configurarAdMob();
-		#end
+
 		iniciarGruposDeColisoes();
 
 		// lógica do chão e de da ponta até onde serão criados objetos do cenário
@@ -136,13 +134,6 @@ class BozoRunGameState extends FlxState
 		configurarInterface();
 		iniciarBozo();
 		//iniciarBozoMovel();
-	}
-
-	private inline function configurarAdMob():Void
-	{
-		// google ads (testing)
-		AdMob.onInterstitialEvent = onInterstitialEvent;
-		AdMob.showBanner();
 	}
 
 	static private inline function onInterstitialEvent(event:String){}
@@ -159,9 +150,9 @@ class BozoRunGameState extends FlxState
 
 	private inline function configurarFundo():Void
 	{
-		_fundoCeu = new FlxBackdrop(AssetPaths.sky__png, -2, 0, true, false, 0, 0);
+		_fundoCeu = new FlxBackdrop(AssetPaths.sky__png, FlxAxes.X, 0, 0);
 		_fundoCeu.velocity.x = -20;
-		_fundoCenario = new FlxBackdrop(AssetPaths.bg__png, -5, 0, true, false, 0, 0);
+		_fundoCenario = new FlxBackdrop(AssetPaths.bg__png, FlxAxes.X, 0, 0);
 		_fundoCeu.scale.set(1, _paddingTop == 0 ? 1.2 : 2);
 		_fundoCenario.scale.set(1, _paddingTop == 0 ? 1.5 : 2.5);
 		_fundosGrupo = new FlxSpriteGroup();
@@ -204,7 +195,6 @@ class BozoRunGameState extends FlxState
 		_fantasma = new FlxSprite(_bozo.x + FlxG.width - TILE_WIDTH, FlxG.height / 2);
 
 		FlxG.camera.follow(_fantasma);
-		FlxG.camera.followLerp = 0.1;
 	}
 
 	private inline function fazBozoPular():Void
@@ -299,8 +289,8 @@ class BozoRunGameState extends FlxState
 		_botaoIndicadorDown.loadGraphic(AssetPaths.seta__png, true, 36, 36);
 		_botaoIndicadorDown.setPosition(FlxG.width - 40, FlxG.height / 2 + 5);
 		_botaoIndicadorDown.scrollFactor.set(0, 0);
-		_botaoIndicadorDown.setFacingFlip(FlxObject.DOWN, false, true);
-		_botaoIndicadorDown.facing = FlxObject.DOWN;
+		_botaoIndicadorDown.setFacingFlip(FlxDirectionFlags.DOWN, false, true);
+		_botaoIndicadorDown.facing = FlxDirectionFlags.DOWN;
 		add(_botaoIndicadorDown);
 
 		_fundoCenario.y += 110;
@@ -308,8 +298,8 @@ class BozoRunGameState extends FlxState
 
 	private inline function configuraPlataforma():Void
 	{
-		_chao = new FlxBackdrop(AssetPaths.groundtiles__png, 1, 0, true, false, 0, 0);
-		_chao.allowCollisions = FlxObject.ANY;
+		_chao = new FlxBackdrop(AssetPaths.groundtiles__png, FlxAxes.X, 0, 0);
+		_chao.allowCollisions = FlxDirectionFlags.ANY;
 		_chao.immovable = true;
 		_chao.solid = true;
 		_chao.setPosition(0, FlxG.height * .85);
@@ -383,10 +373,6 @@ class BozoRunGameState extends FlxState
 			iniciarBozo()
 		else
 		{
-			#if android
-			AdMob.hideBanner();
-			AdMob.showInterstitial(120, 3);
-			#end
 			_bozo.acceleration.x = _bozoDeitado.acceleration.x = _bozo.velocity.x = _bozoDeitado.velocity.x = 0; // Bozo agora fica parado
 			_impeachmado = new FlxSprite().loadGraphic(AssetPaths.impitimado__png, false, 250, 117);
 			_impeachmado.setPosition(_bozo.x + ((FlxG.width / 2) - (_impeachmado.width / 2)), 80);
@@ -588,7 +574,8 @@ class BozoRunGameState extends FlxState
 			_bozoDeitado.maxVelocity.x = 420;
 		}
 		// sincroniza posição dos Bozos
-		_bozo.velocity.x > _bozoDeitado.velocity.x ? _bozo.velocity.x = _bozoDeitado.velocity.x : _bozoDeitado.velocity.x = _bozo.velocity.x;
+
+		_bozo.velocity.x = _bozo.velocity.x > _bozoDeitado.velocity.x ? _bozoDeitado.velocity.x : _bozo.velocity.x;
 		#if (!windows && !linux)
 		var _taTocando:Bool = FlxG.touches.getFirst() != null;
 		_taPulando = _taTocando
@@ -647,7 +634,7 @@ class BozoRunGameState extends FlxState
 	private inline function atualizaObjetos():Void
 	{
 		// confere se precisa fazer mais objetos e remover antigos
-		while ((_bozo.x + FlxG.width) * 2 > _pontaDireitaCenario)
+		if ((_bozo.x + FlxG.width) * 2 > _pontaDireitaCenario)
 		{
 			fazerObjetos();
 			// remove livros e laranjas assim que estão fora da tela

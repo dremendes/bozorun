@@ -1,6 +1,5 @@
 package;
 
-import flixel.addons.display.FlxBackdrop;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
@@ -9,11 +8,9 @@ import flixel.ui.FlxButton;
 import flixel.FlxObject;
 import flixel.util.FlxColor;
 import flixel.addons.display.FlxBackdrop;
-import extension.admob.AdMob;
-import extension.admob.GravityMode;
 import extension.eightsines.EsOrientation;
 import flixel.system.scaleModes.BaseScaleMode;
-
+import flixel.util.FlxDirectionFlags;
 /**
  * Based on work from
  * william.thompsonj
@@ -39,21 +36,16 @@ class MainMenuState extends FlxState
 		EsOrientation.setScreenOrientation(EsOrientation.ORIENTATION_LANDSCAPE);
 		FlxG.scaleMode = new BaseScaleMode();
 
-		AdMob.onInterstitialEvent = onInterstitialEvent;
-		AdMob.initAndroid("ca-app-pub-6476709060042535/2529633910", "ca-app-pub-6476709060042535/9946580195",
-			GravityMode.BOTTOM); 
-
 		// FlxG.debugger.visible = true;
 		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
-		FlxG.camera.antialiasing = true;
+		FlxG.camera.antialiasing = false;
 
 		#if html5
 		FlxG.mouse.visible = true;
 		#end
-		fundoCeu = new FlxBackdrop(AssetPaths.sky__png, -2, 0, true, false, 0, 0);
-		fundoCeu.scale.set(FlxG.width / 300, FlxG.height / 300);
+		fundoCeu = new FlxBackdrop(AssetPaths.sky__png, flixel.util.FlxAxes.X, 0, 0);
 		fundoCeu.y -= 40;
-		fundoCeu.velocity.x = -20;
+		fundoCeu.velocity.x = 1;
 		add(fundoCeu);
 		aviao = new FlxSprite().loadGraphic(AssetPaths.aviao__png, true, 91, 17);
 		aviao.animation.add("voando", [0, 1], 10, true);
@@ -70,9 +62,9 @@ class MainMenuState extends FlxState
 		add(background);
 		pato = new FlxSprite().loadGraphic(AssetPaths.patin__png, false, 30, 29);
 		pato.setPosition(180, 150);
-		pato.setFacingFlip(FlxObject.RIGHT, false, false);
-		pato.setFacingFlip(FlxObject.LEFT, true, false);
-		pato.facing = FlxObject.LEFT;
+		pato.setFacingFlip(FlxDirectionFlags.RIGHT, false, false);
+		pato.setFacingFlip(FlxDirectionFlags.LEFT, true, false);
+		pato.facing = FlxDirectionFlags.LEFT;
 		pato.x += paddingSide;
 		pato.y += paddingTop;
 		add(pato);
@@ -128,7 +120,7 @@ class MainMenuState extends FlxState
 		});
 		BtnRun.label.size = 20;
 		BtnRun.loadGraphic(AssetPaths.fugir__png, true, 60, 34);
-		BtnRun.setPosition(250, 100);
+		BtnRun.setPosition(FlxG.width * 0.25, FlxG.height * 0.35);
 		BtnRun.scale.set(FlxG.width / 300, FlxG.height / 300);
 		BtnRun.updateHitbox();
 		add(BtnRun);
@@ -149,12 +141,12 @@ class MainMenuState extends FlxState
 		if (pato.x >= 270 + paddingSide)
 		{
 			multiplier = multiplier * -1;
-			pato.facing = FlxObject.RIGHT;
+			pato.facing = FlxDirectionFlags.RIGHT;
 		}
 
 		if (pato.x <= 180 + paddingSide)
 		{
-			pato.facing = FlxObject.LEFT;
+			pato.facing = FlxDirectionFlags.LEFT;
 			multiplier = multiplier * -1;
 		}
 
