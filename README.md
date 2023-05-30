@@ -18,7 +18,6 @@ Código-fonte do jogo: [https://github.com/dremendes/bozorun](https://github.com
     haxelib install lime
     haxelib run lime install flixel
     haxelib git extension-orientation https://github.com/HaxeExtension/extension-orientation
-    haxelib git extension-admob https://github.com/HaxeExtension/extension-admob
     haxelib run lime build html5
     haxelib run lime test html5
 

@@ -21,6 +21,7 @@
 	<!--Enable webgl -->
 	<set name="webgl" if="html5" />
 	<haxedef name="webgl" if="html5" />
+	<haxedef name="no-deprecation-warnings" unless="debug" />
 
 	<!-- ____________________________ Window Settings ___________________________ -->
 
@@ -53,8 +54,6 @@
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
 
-	<haxelib name="extension-admob" />
-	
 	<!--In case you want to use nape with flixel-->
 	<!--<haxelib name="nape-haxe4" />-->
 
